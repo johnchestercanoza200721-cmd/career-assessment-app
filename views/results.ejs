@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NCAE Results</title>
+    <style>
+        /* 1. THEME VARIABLES (Must match index.ejs) */
+        :root {
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-main: #2c3e50;
+            --text-muted: #5f6368;
+            --nav-bg-rgb: 255, 255, 255;
+            --nav-text: #2c3e50;
+            --border-color: #dadce0;
+            --accent-blue: #1a73e8;
+            --shadow: rgba(0,0,0,0.1);
+        }
+
+        body.dark-mode {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #e8eaed;
+            --text-muted: #9aa0a6;
+            --nav-bg-rgb: 30, 30, 30;
+            --nav-text: #e8eaed;
+            --border-color: #3c4043;
+            --shadow: rgba(0,0,0,0.4);
+        }
+
+        /* Jariz Mode (Warm) */
+        body.warm-mode::after {
+            content: ""; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(255, 145, 0, 0.12); pointer-events: none; z-index: 9999;
+            mix-blend-mode: multiply;
+        }
+
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background-color: var(--bg-color); 
+            color: var(--text-main);
+            margin: 0; padding-top: 80px;
+            transition: background-color 0.3s;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: rgba(var(--nav-bg-rgb), 0.7); 
+            backdrop-filter: blur(10px);
+            height: 60px; width: 100%;
+            display: flex; justify-content: center; align-items: center;
+            position: fixed; top: 0; z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .nav-container { width: 95%; max-width: 1200px; display: flex; justify-content: space-between; align-items: center; }
+        .nav-logo { font-size: 1.4rem; font-weight: bold; text-decoration: none; color: var(--nav-text); }
+        .nav-logo span { color: var(--accent-blue); }
+
+        /* Results Layout */
+        .container { max-width: 700px; margin: 0 auto; padding: 20px; }
+        
+        .result-card {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px var(--shadow);
+            text-align: center;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .holland-badge {
+            display: inline-block;
+            background: var(--accent-blue);
+            color: white;
+            padding: 10px 40px;
+            border-radius: 50px;
+            font-size: 2.5rem;
+            font-weight: bold;
+            letter-spacing: 5px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(26, 115, 232, 0.4);
+        }
+
+        .recommendation {
+            text-align: left;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 12px;
+            background: var(--bg-color);
+            border-left: 5px solid var(--accent-blue);
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 25px;
+            background: var(--text-main);
+            color: var(--card-bg);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+    <script>
+        // IMMEDIATE THEME CHECK (Prevents White Flash)
+        const savedTheme = localStorage.getItem('theme');
+        const savedWarm = localStorage.getItem('warm');
+        if (savedTheme === 'dark') document.documentElement.classList.add('dark-mode');
+        if (savedWarm === 'true') document.documentElement.classList.add('warm-mode');
+    </script>
+</head>
+<body class="<%= typeof theme !== 'undefined' && theme === 'dark' ? 'dark-mode' : '' %>">
+
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-logo">NCAE <span>Portal</span></a>
+        <div style="font-size: 0.9rem; opacity: 0.7;">Assessment Complete</div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="result-card">
+        <% if (locals.isDev) { %>
+            <div style="color: #e67e22; font-weight: bold; margin-bottom: 10px; border: 1px dashed #e67e22; padding: 5px; display:inline-block; border-radius: 4px;">🛠 DEV MODE</div>
+        <% } %>
+        
+        <h1 style="margin:0;">Your Career Match</h1>
+        <div class="holland-badge"><%= hollandCode %></div>
+        
+        <p style="color: var(--text-muted);">Based on your interests, you align best with these fields:</p>
+
+        <% topMatches.forEach(rec => { %>
+            <div class="recommendation">
+                <h3 style="margin: 0; color: var(--accent-blue);"><%= rec.course %></h3>
+                <p style="margin: 5px 0; font-size: 0.9rem;"><strong>Careers:</strong> <%= rec.careers.join(', ') %></p>
+                <p style="margin: 0; font-size: 0.85rem; opacity: 0.8;"><strong>Top Schools:</strong> <%= rec.unis.join(', ') %></p>
+            </div>
+        <% }) %>
+
+        <a href="/" class="btn">Retake Assessment</a>
+    </div>
+</div>
+
+<script>
+    // Ensure body gets classes too if script ran on head
+    if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
+    if (localStorage.getItem('warm') === 'true') document.body.classList.add('warm-mode');
+</script>
+</body>
+</html>

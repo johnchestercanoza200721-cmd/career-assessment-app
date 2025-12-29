@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NCAE Assessment</title>
+    
+    <style>
+
+        html, body {
+    max-width: 100%;
+    overflow-x: hidden; /* This is the most important line for mobile */
+    position: relative;
+}
+
+/* --- SECTION 1: GLOBAL RESET (Put this at the top of your <style> tag) --- */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    /* This prevents the "rubber-band" effect on mobile that can shift the navbar */
+    overflow-x: hidden;
+    overscroll-behavior-y: none; 
+}
+
+    /* 1. THEME VARIABLES */
+    :root {
+        --bg-color: #f0f2f5;
+        --card-bg: #ffffff;
+        --text-main: #2c3e50;
+        --text-muted: #5f6368;
+        --nav-bg-rgb: 255, 255, 255; /* Needed for Glassmorphism */
+        --nav-text: #2c3e50;
+        --likert-bg: #f8f9fa;
+        --border-color: #dadce0;
+        --shadow: rgba(0,0,0,0.1);
+        --accent-blue: #1a73e8;
+        --inner-ring: white;
+    }
+
+    body.dark-mode {
+        --bg-color: #121212;
+        --card-bg: #1e1e1e;
+        --text-main: #e8eaed;
+        --text-muted: #9aa0a6;
+        --nav-bg-rgb: 30, 30, 30; /* Darker RGB for Glassmorphism */
+        --nav-text: #e8eaed;
+        --likert-bg: #2d2d2d;
+        --border-color: #3c4043;
+        --shadow: rgba(0,0,0,0.4);
+        --inner-ring: #1e1e1e; 
+    }
+
+    /* 2. WARM TONE EFFECT (Jariz Mode) */
+    body.warm-mode::after {
+        content: "";
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        background: rgba(255, 145, 0, 0.15); /* Tuned for comfort */
+        pointer-events: none; 
+        z-index: 9999;
+        mix-blend-mode: multiply;
+    }
+
+    /* 3. DEV TOOLS STYLING */
+    #dev-panel {
+        position: fixed;
+        top: 80px; right: 20px;
+        width: 240px;
+        background: var(--card-bg);
+        border: 2px solid var(--accent-blue);
+        border-radius: 12px;
+        padding: 15px;
+        z-index: 2000;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        display: none; /* Hidden by default - Toggle with Shift+D */
+    }
+    #dev-panel h3 { margin: 0 0 10px 0; font-size: 1rem; color: var(--accent-blue); }
+    .dev-input-group { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .dev-input-group label { font-size: 0.8rem; font-weight: bold; }
+    .dev-input-group input { width: 60px; padding: 4px; border-radius: 4px; border: 1px solid var(--border-color); background: var(--likert-bg); color: var(--text-main); }
+    .dev-btn { width: 100%; padding: 10px; background: var(--accent-blue); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+
+    /* 4. GLOBAL RESET & LAYOUT */
+    body { 
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        margin: 0; padding: 0; padding-top: 80px; 
+        line-height: 1.6; 
+        background-color: var(--bg-color); 
+        color: var(--text-main);
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .content-wrapper { max-width: 800px; margin: 0 auto; padding: 20px; }
+    h1 { color: var(--accent-blue); text-align: center; font-size: 2.2em; margin-top: 10px; }
+    
+    /* 5. GLASSMORPHISM NAVBAR */
+    .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0; /* Explicitly anchor to both sides */
+    width: 100%;
+    height: 70px;
+    
+    /* Background & Effects */
+    background-color: rgba(var(--nav-bg-rgb), 0.85); /* Slightly more opaque for stability */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); 
+    
+    /* Layout */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    /* Layering */
+    z-index: 2000;
+    box-shadow: 0 2px 10px var(--shadow);
+    border-bottom: 1px solid var(--border-color);
+    
+    /* Prevent mobile shifting */
+    transform: translateZ(0); /* Forces the browser to treat it as a separate layer */
+    -webkit-transform: translateZ(0);
+    margin: 0;
+    padding: 0;
+}
+
+    .nav-container {
+        display: grid; 
+        grid-template-columns: 1fr auto 1fr; 
+        align-items: center;
+        width: 95%;
+        max-width: 1200px;
+    }
+
+    .nav-logo { font-size: 1.4rem; font-weight: bold; text-decoration: none; color: var(--nav-text); }
+    .nav-logo span { color: var(--accent-blue); }
+    .nav-menu { display: flex; list-style: none; gap: 30px; margin: 0; padding: 0; justify-content: center; }
+    .nav-menu a { text-decoration: none; color: var(--text-muted); font-weight: 500; }
+    .nav-controls { justify-self: end; display: flex; align-items: center; gap: 8px; }
+
+   /* Specific targeting to prevent affecting cards */
+.nav-status#progress-status {
+    position: relative; /* Default for mobile: flows with the text */
+    display: inline-block;
+    min-width: 120px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: white;
+    background: #ccc;
+    overflow: hidden;
+    text-align: center;
+    z-index: 1;
+    border: none;
+    padding: 0 10px;
+    
+    /* Keep your existing transition/bop logic here */
+}
+
+body.dark-mode .nav-status#progress-status {
+    background: #333;
+}
+
+/* THE SPRINGY FILLER */
+.nav-status#progress-status::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: var(--accent-blue);
+    z-index: -1;
+    transform-origin: left;
+    
+    /* The Scale Variable */
+    transform: scaleX(var(--p-scale, 0));
+    
+    /* THE PHYSICS:
+       0.68: Start fast
+       -0.55: Slight wind-up (anticipation)
+       0.265: Mid-speed
+       1.55: LARGE overshoot (this creates the spring)
+    */
+    transition: transform 0.8s cubic-bezier(1, -10, 0.265, 10), background 0.3s ease;
+}
+
+/* Green state for 100% */
+.nav-status#progress-status.is-complete::before {
+    background: #27ae60;
+}
+
+@keyframes bop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.nav-status.bop-animate {
+    animation: bop 0.5s ease-out;
+}
+
+    /* 6. FOCUS MODE CARDS */
+    .card { 
+        background: var(--card-bg); 
+        padding: 30px; margin-bottom: 60px; border-radius:15px; 
+        box-shadow: 0 4px 6px var(--shadow); 
+        transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); 
+        opacity: 0.4; filter: grayscale(100%);
+        transform: scale(0.95); cursor: pointer; 
+    }
+    .card.active { opacity: 1; filter: grayscale(0%); transform: scale(1); cursor: default; box-shadow: 0 15px 30px var(--shadow); }
+    .card.completed { opacity: 0.6; filter: grayscale(100%); transform: scale(0.98); }
+
+    /* 7. LIKERT SCALES */
+    .likert-container { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px; padding: 15px; background: var(--likert-bg); border-radius: 100px; }
+    input[type="radio"] { -webkit-appearance: none; appearance: none; background-color: var(--card-bg); margin: 0; border: 2px solid var(--border-color); border-radius: 50%; cursor: pointer; transition: 0.2s; flex-shrink: 0; }
+    input[value="1"], input[value="5"] { width: 52px; height: 52px; }
+    input[value="2"], input[value="4"] { width: 44px; height: 44px; }
+    input[value="3"] { width: 40px; height: 40px; }
+    input[value="1"], input[value="2"] { border: 3px solid #ed891e; }
+    input[value="3"] { border: 3px solid var(--border-color); }
+    input[value="4"], input[value="5"] { border: 3px solid var(--accent-blue); }
+    
+    input[value="1"]:checked, input[value="2"]:checked { background-color: #ed891e; box-shadow: inset 0 0 0 4px var(--inner-ring), 0 0 12px rgba(237, 137, 30, 0.6); }
+    input[value="3"]:checked { background-color: #9aa0a6; box-shadow: inset 0 0 0 4px var(--inner-ring), 0 0 10px rgba(154, 160, 166, 0.4); }
+    input[value="4"]:checked, input[value="5"]:checked { background-color: var(--accent-blue); box-shadow: inset 0 0 0 4px var(--inner-ring), 0 0 12px rgba(26, 115, 232, 0.6); }
+
+    .label-text { font-family: 'Segoe UI', sans-serif; font-weight: 600; color: var(--text-muted); font-size: 0.85em; width: 100px; text-align: center; text-transform: uppercase; }
+    .theme-toggle, .warm-toggle { background: var(--likert-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: 600; transition: 0.2s; }
+    .warm-toggle.active { border-color: #ed891e; background: rgba(237, 137, 30, 0.1); }
+    
+    button[type="submit"] { width: 100%; padding: 15px; background: var(--accent-blue); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1.2em; font-weight: bold; margin-top: 40px; margin-bottom: 100px; }
+    html { scroll-behavior: smooth; }
+
+    /* Add a nice "Press" effect */
+button[type="submit"]:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 8px rgba(26, 115, 232, 0.2);
+}
+
+/* THE TOGGLE SWITCH CONTAINER */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+}
+
+/* HIDE THE ACTUAL CHECKBOX */
+.switch input { opacity: 0; width: 0; height: 0; }
+
+/* THE SLIDER BACKGROUND */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #ccc;
+  transition: .4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  border-radius: 34px;
+}
+
+/* THE WHITE CIRCLE (KNOB) */
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px; width: 16px;
+  left: 3px; bottom: 3px;
+  background-color: white;
+  transition: .4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  border-radius: 50%;
+}
+
+/* COLORS WHEN ACTIVE */
+input:checked + .slider.dark { background-color: #6366f1; }
+input:checked + .slider.warm { background-color: #ed891e; }
+
+/* MOVING THE KNOB */
+input:checked + .slider:before {
+  transform: translateX(18px);
+}
+
+/* MODAL STYLES */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    display: none; /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    /* Glassmorphism Effect */
+    background: rgba(var(--nav-bg-rgb), 0.7) !important; 
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px); 
+    
+    /* Layout & Positioning */
+    position: relative;
+    width: 85%;            /* Reduced from 90% to prevent edge-touching */
+    max-width: 500px;
+    margin: 100px auto 40px; /* margin-top: 100px ensures it starts BELOW the navbar */
+    padding: 40px;
+    border-radius: 50px;
+    
+    /* The Fix for the Cutoff */
+    z-index: 10000;        /* Higher than the Navbar's 9999 */
+    
+    /* Shadow and Border */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 50px 40px rgba(0,0,0,0.3);
+    
+    /* Prevent overflowing screen height */
+    max-height: calc(100vh - 140px); 
+    overflow-y: auto;
+}
+
+/* Adjust the overlay background so it's not too dark */
+.modal-overlay {
+    background: rgba(0, 0, 0, 0.3); /* Lighter dimming */
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px; right: 20px;
+    background: none; border: none;
+    font-size: 24px; color: var(--text-muted);
+    cursor: pointer;
+}
+
+.help-item { margin-bottom: 20px; }
+.help-item strong { color: var(--accent-blue); display: block; margin-bottom: 5px; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.researchers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.researcher {
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+}
+
+.researcher:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.avatar {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.researcher strong {
+    display: block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: var(--accent-blue);
+    letter-spacing: 1px;
+}
+
+.researcher span {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* 1. Navbar & Hamburger */
+.hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.hamburger span { width: 25px; height: 3px; background: var(--text-main); border-radius: 3px; }
+
+/* 2. Unified Settings Bar (In Content) */
+.settings-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    margin: 0 auto 40px auto;
+    padding: 15px 25px;
+    background: var(--card-bg);
+    border-radius: 20px;
+    box-shadow: 0 4px 15px var(--shadow);
+    border: 1px solid var(--border-color);
+    max-width: fit-content;
+}
+
+.setting-item { display: flex; align-items: center; gap: 12px; }
+.setting-item span { font-size: 0.75rem; font-weight: 800; color: var(--text-muted); letter-spacing: 1px; }
+
+/* 3. The Sidebar Menu */
+/* FIX: Completely hide the drawer when inactive */
+/* Sidebar Drawer Styling */
+/* Sidebar Drawer Styling - Adaptive Version */
+.mobile-drawer {
+    position: fixed;
+    top: 0;
+    /* 1. Push it further than 100% to account for shadows */
+    right: -110%; 
+    width: 300px;
+    height: 100vh;
+    background: var(--card-bg);
+    z-index: 3000;
+    transition: right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), visibility 0.4s;
+    padding: 40px 20px;
+    
+    /* 2. Hide it from the "eyes" of the browser when closed */
+    visibility: hidden; 
+    
+    /* 3. Prevent any accidental horizontal overflow on the body */
+    pointer-events: none; 
+}
+
+.mobile-drawer.active {
+    right: 0;
+    visibility: visible;
+    pointer-events: auto;
+    /* Only show the shadow when the menu is actually on screen */
+    box-shadow: -10px 0 30px rgba(0,0,0,0.3);
+}
+
+.mobile-drawer h3 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent-blue);
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+/* Removes bullets and extra spacing */
+.drawer-links {
+    list-style: none !important; /* Forces bullets to disappear */
+    padding: 0 !important;      /* Removes the left indent */
+    margin: 0;
+}
+
+.drawer-links li {
+    list-style: none;            /* Double-check for list items */
+    margin-bottom: 12px;
+}
+
+.drawer-links a {
+    text-decoration: none;
+    color: var(--text-main);
+    font-size: 1.1rem;
+    font-weight: 500;
+    display: block;
+    padding: 12px 15px;
+    border-radius: 10px;
+    background: var(--likert-bg);
+    transition: all 0.3s ease;
+}
+
+/* Hover Effect */
+.drawer-links a:hover {
+    background: var(--accent-blue);
+    color: white;
+    transform: translateX(8px);
+}
+
+/* Close Button Styling */
+/* Ensure the close button is always on top */
+.close-drawer {
+    position: absolute;
+    /* This ensures it moves down on iPhones with notches */
+    top: calc(15px + env(safe-area-inset-top)); 
+    right: 20px;
+    z-index: 4000; /* Higher than the drawer itself */
+    background: var(--likert-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    width: 45px; /* Larger tap area for fingers */
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    line-height: 1;
+}
+
+/* --- THE DESKTOP FIX --- */
+@media (min-width: 1024px) {
+    .nav-status#progress-status {
+        position: absolute; /* Lock it to the center on large screens */
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0;
+    }
+}
+
+@media (min-width: 1024px) {
+    @keyframes bop {
+        0% { transform: translate(-50%, -50%) scale(1); }
+        50% { transform: translate(-50%, -50%) scale(1.05); }
+        100% { transform: translate(-50%, -50%) scale(1); }
+    }
+}
+
+/* Mobile-specific adjustment */
+@media (max-width: 600px) {
+    .modal-content {
+        width: 88%;        /* Slight increase for mobile but still has a margin */
+        padding: 30px 20px; /* Less side padding gives text more room */
+        border-radius: 30px; /* 50px is too round for small screens */
+        margin-top: 85px;  /* Specifically cleared for the 70px navbar */
+    }
+}
+
+@media (max-width: 600px) {
+    /* Adjust the vertical spacing between cards */
+    .question-card {
+        margin-bottom: 15px !important; /* Reduces the gap from likely 30px-40px down to 15px */
+    }
+
+    /* Reduce the padding inside the content wrapper if needed */
+    .content-wrapper {
+        padding: 10px; /* Brings cards closer to the edges of the screen */
+        gap: 15px;      /* If you are using flexbox/grid for the wrapper */
+    }
+    
+    /* Optional: Shrink the padding inside the cards to make them look tighter */
+    .question-card {
+        padding: 15px; 
+    }
+}
+
+@media (max-width: 600px) 
+
+{
+    .close-drawer {
+        top: 15px;    /* Slightly tighter for mobile */
+        right: 15px;
+        background: var(--card-bg); /* Ensure it's opaque */
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2); /* Make it pop */
+    }
+    
+    /* Ensure the drawer content doesn't overlap the X */
+    .drawer-content {
+        padding-top: 40px; 
+    }
+}
+
+.close-drawer:hover {
+    background: #ff4d4d;
+    border-color: #ff4d4d;
+}
+
+.mobile-drawer.active { right: 0; }
+.drawer-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.4); backdrop-filter: blur(3px);
+    display: none; z-index: 2500;
+}
+.drawer-overlay.active { display: block; }
+
+@media (max-width: 600px) {
+    .settings-container { width: 90%; gap: 15px; }
+    .nav-status#progress-status { min-width: 90px; font-size: 0.65rem; }
+}
+
+/* --- CLEAN CONSOLIDATED MOBILE STYLES --- */
+@media (max-width: 600px) {
+    
+    /* 1. Navbar Layout */
+    .nav-container {
+    display: flex;
+    justify-content: space-between; /* Pushes Logo to left, Controls to right */
+    align-items: center;
+    width: 95%;
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 100%;
+}
+
+    .nav-menu {
+        width: 100%;
+        justify-content: center;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        padding-top: 10px;
+        gap: 20px;
+    }
+
+    .nav-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Spacing between Progress Bar and Hamburger */
+    justify-content: flex-end; /* Ensures they stick to the right edge */
+}
+
+/* Ensure the hamburger itself has no extra margins pushing it */
+.hamburger {
+    margin: 0;
+    padding: 10px 5px; /* Horizontal padding adjustment */
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+    /* 2. Progress Bar & Toggles */
+    .nav-status#progress-status {
+        min-width: 90px;
+        font-size: 0.65rem;
+        padding: 0 8px;
+        height: 28px;
+        line-height: 28px;
+    }
+
+    /* 3. Main Content & Cards */
+    .content-wrapper {
+    max-width: 700px; /* Slightly narrower for better readability */
+    width: 95%; 
+    margin: 0 auto;
+}
+
+    .card {
+        width: 92%;
+        margin: 0 auto 60px auto; /* Slightly less margin for mobile */
+        padding: 20px 15px;
+    }
+
+    /* 4. Questionnaire UI (Tappability) */
+    .likert-container {
+        flex-direction: row !important; 
+        flex-wrap: nowrap !important;
+        gap: 8px; /* Reduced gap */
+        padding: 10px;
+        justify-content: space-evenly;
+    }
+
+    input[type="radio"] {
+        width: 30px; /* Bigger touch targets for thumbs */
+        height: 30px;
+        cursor: pointer;
+    }
+
+    .label-text {
+        font-size: 0.65rem;
+        width: 60px; /* Much smaller width */
+        line-height: 1.1;
+    }
+
+    /* 5. Modals & Researchers */
+    .researchers-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+   .modal-content h2 {
+        font-size: 1.3rem;
+        margin-top: 10px;
+    }
+
+/* Shrink radio buttons for mobile real estate */
+    input[type="radio"][value="1"], 
+    input[type="radio"][value="5"] { 
+        width: 38px; height: 38px; 
+    }
+    input[type="radio"][value="2"], 
+    input[type="radio"][value="4"] { 
+        width: 32px; height: 32px; 
+    }
+    input[type="radio"][value="3"] { 
+        width: 28px; height: 28px; 
+    }
+
+    /* Adjust the inner ring of the checked state for smaller buttons */
+    input[type="radio"]:checked {
+        box-shadow: inset 0 0 0 3px var(--inner-ring) !important;
+
+    }
+}
+
+.settings-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    margin-bottom: 40px;
+    padding: 15px;
+    background: var(--card-bg);
+    border-radius: 15px;
+    box-shadow: 0 4px 6px var(--shadow);
+    border: 1px solid var(--border-color);
+}
+
+.setting-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.setting-item span {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+}
+
+/* Ensure Navbar stays clean */
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.content-wrapper {
+    /* Push content down so it starts after the 70px navbar */
+    padding-top: 90px; 
+}
+
+@media (max-width: 600px) {
+    .content-wrapper {
+        padding-top: 80px;
+    }
+}
+
+    </style>
+</head>
+
+<div id="about-modal" class="modal-overlay">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal('about-modal')">&times;</button>
+        
+        <h2>About the Study</h2>
+        <p>This Career Assessment Platform is a research initiative based on the <strong>Holland Codes (RIASEC)</strong> theory, designed to help students align their interests with future career paths.</p>
+        
+        <hr style="margin: 25px 0; border: 0; border-top: 1px solid rgba(255,255,255,0.1);">
+        
+        <h3>The Research Team</h3>
+        <div class="researchers-grid">
+            <div class="researcher">
+                <div class="avatar">👤</div>
+                <strong>Lead Researcher</strong>
+                <span>Name Here</span>
+            </div>
+            <div class="researcher">
+                <div class="avatar">👤</div>
+                <strong>Researcher</strong>
+                <span>Name Here</span>
+            </div>
+            <div class="researcher">
+                <div class="avatar">👤</div>
+                <strong>Researcher</strong>
+                <span>Name Here</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="help-modal" class="modal-overlay">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal('help-modal')">&times;</button>
+        <h2>Need Help?</h2>
+        <div class="help-item">
+            <strong>How do I answer?</strong>
+            <p>Select the circle that best describes your interest in the activity. "Disagree" means you have little to no interest, while "Agree" means you would enjoy it.</p>
+        </div>
+        <div class="help-item">
+            <strong>Does it auto-save?</strong>
+            <p>The test remains active as long as the tab is open. If you refresh, your progress may reset.</p>
+        </div>
+        <div class="help-item">
+            <strong>Contact Support</strong>
+            <p>For technical issues, please email: <em>Jariz Gose</em></p>
+        </div>
+    </div>
+</div>
+
+<body>
+
+<div id="dev-panel">
+    <h3>🛠 Dev Tools</h3>
+    <div class="dev-input-group"><label>R</label><input type="number" id="dev-r" value="12"></div>
+    <div class="dev-input-group"><label>I</label><input type="number" id="dev-i" value="8"></div>
+    <div class="dev-input-group"><label>A</label><input type="number" id="dev-a" value="20"></div>
+    <div class="dev-input-group"><label>S</label><input type="number" id="dev-s" value="15"></div>
+    <div class="dev-input-group"><label>E</label><input type="number" id="dev-e" value="5"></div>
+    <div class="dev-input-group"><label>C</label><input type="number" id="dev-c" value="10"></div>
+    <button class="dev-btn" onclick="devSubmit()">Jump to Results</button>
+    <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 8px; text-align: center;">Press Shift + D to hide</div>
+</div>
+
+<div class="mobile-drawer" id="mobile-drawer">
+    <button class="close-drawer" id="close-drawer">&times;</button>
+    
+    <div class="drawer-content">
+        <h3>Menu</h3>
+        <ul class="drawer-links">
+            <li><a href="javascript:void(0)" onclick="handleMenuClick('about-modal')">About the Study</a></li>
+            <li><a href="javascript:void(0)" onclick="handleMenuClick('help-modal')">Need Help?</a></li>
+        </ul>
+        
+        <div style="position: absolute; bottom: 30px; font-size: 0.7rem; color: #555;">
+            NCAE Career Portal v1.0
+        </div>
+    </div>
+</div>
+<div class="drawer-overlay" id="drawer-overlay"></div>
+
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-logo">Name ng <span>Website</span></a>
+
+        <div class="nav-status" id="progress-status">0% Complete</div>
+
+        <div class="nav-controls">
+            <button class="hamburger" id="hamburger-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<div class="content-wrapper">
+    <h1>Career Assessment Platform</h1>
+    <p style="text-align: center; margin-bottom: 20px;">Choose your own interests ayon:</p>
+
+<div class="settings-container">
+        <div class="setting-item">
+            <span>JARIZ MODE</span>
+            <label class="switch">
+                <input type="checkbox" id="warm-check">
+                <span class="slider warm"></span>
+            </label>
+        </div>
+        <div class="setting-item">
+            <span>DARK MODE</span>
+            <label class="switch">
+                <input type="checkbox" id="dark-check">
+                <span class="slider dark"></span>
+            </label>
+        </div>
+    </div>
+
+    <form action="/submit" method="POST">
+        <% quizQuestions.forEach((q, index) => { %>
+            <div class="card <%= index === 0 ? 'active' : '' %>" id="card-<%= index %>">
+                <p style="font-size: 1.1em; margin-bottom: 15px;">
+    <strong><%= index + 1 %>. <%= q.text %></strong> 
+</p>
+                <div class="likert-container">
+                    <span class="label-text">Strongly Dislike</span>
+                    <input type="radio" name="q<%= q.id %>" value="1" required>
+                    <input type="radio" name="q<%= q.id %>" value="2">
+                    <input type="radio" name="q<%= q.id %>" value="3">
+                    <input type="radio" name="q<%= q.id %>" value="4">
+                    <input type="radio" name="q<%= q.id %>" value="5">
+                    <span class="label-text">Strongly Enjoy</span>
+                </div>
+            </div>
+        <% }) %>
+        <button type="submit">Submit My Answers</button>
+    </form>
+</div>
+
+<script>
+    const cards = document.querySelectorAll('.card');
+    const themeToggle = document.getElementById('theme-toggle');
+    const warmToggle = document.getElementById('warm-toggle');
+    const devPanel = document.getElementById('dev-panel');
+    const body = document.body;
+
+    // --- DEV TOOLS (Shift + D) ---
+    window.addEventListener('keydown', (e) => {
+        if (e.shiftKey && e.key.toUpperCase() === 'D') {
+            devPanel.style.display = devPanel.style.display === 'block' ? 'none' : 'block';
+        }
+    });
+
+    function devSubmit() {
+        const r = document.getElementById('dev-r').value;
+        const i = document.getElementById('dev-i').value;
+        const a = document.getElementById('dev-a').value;
+        const s = document.getElementById('dev-s').value;
+        const e = document.getElementById('dev-e').value;
+        const c = document.getElementById('dev-c').value;
+        
+        // Redirect to results with scores in URL
+        window.location.href = `/results?r=${r}&i=${i}&a=${a}&s=${s}&e=${e}&c=${c}`;
+    }
+
+    const darkCheck = document.getElementById('dark-check');
+    const warmCheck = document.getElementById('warm-check');
+
+    // 1. Load Saved Preferences on Page Load
+    if (localStorage.getItem('theme') === 'dark') {
+        body.classList.add('dark-mode');
+        darkCheck.checked = true; // Makes the switch look "On"
+    }
+    if (localStorage.getItem('warm') === 'true') {
+        body.classList.add('warm-mode');
+        warmCheck.checked = true; // Makes the switch look "On"
+    }
+
+    // 2. Listen for Dark Mode Switch
+    darkCheck.addEventListener('change', () => {
+        if (darkCheck.checked) {
+            body.classList.add('dark-mode');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            body.classList.remove('dark-mode');
+            localStorage.setItem('theme', 'light');
+        }
+    });
+
+    // 3. Listen for Jariz Mode Switch
+    warmCheck.addEventListener('change', () => {
+        body.classList.toggle('warm-mode', warmCheck.checked);
+        localStorage.setItem('warm', warmCheck.checked);
+    });
+
+    // --- FOCUS MODE SCROLLING ---
+    function jumpToQuestion(index) {
+        cards.forEach((card, i) => {
+            card.classList.remove('active', 'completed');
+            if (i < index) card.classList.add('completed');
+            else if (i === index) card.classList.add('active');
+        });
+        cards[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+cards.forEach((card, index) => {
+        // --- 1. KEEP YOUR ORIGINAL CLICK LOGIC ---
+        // This allows users to click any card (even previous ones) to focus on them
+        card.addEventListener('click', () => {
+            if (!card.classList.contains('active')) {
+                jumpToQuestion(index);
+            }
+        });
+
+        const inputs = card.querySelectorAll('input[type="radio"]');
+        inputs.forEach(input => {
+            input.addEventListener('change', (e) => {
+                // Prevent the card's click event from firing twice
+                e.stopPropagation(); 
+
+                // --- 2. AUTO-PROCEED TO NEXT ---
+                if (index + 1 < cards.length) {
+                    setTimeout(() => jumpToQuestion(index + 1), 500);
+                }
+
+                // --- 3. UPDATE PROGRESS ---
+                updateProgressBar();
+            });
+        });
+    });
+
+    // --- 4. THE CALCULATION FUNCTION ---
+    function updateProgressBar() {
+    const totalQuestions = cards.length;
+    const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
+    const percentage = Math.round((answeredQuestions / totalQuestions) * 100);
+    
+    const statusElement = document.getElementById('progress-status');
+    if (statusElement) {
+        statusElement.innerText = `${percentage}% Complete`;
+        statusElement.style.setProperty('--p-scale', answeredQuestions / totalQuestions);
+
+        // Add the 'bop' animation class
+        statusElement.classList.remove('bop-animate');
+        void statusElement.offsetWidth; // This "reflows" the element to restart the animation
+        statusElement.classList.add('bop-animate');
+
+        if (percentage === 100) {
+            statusElement.classList.add('is-complete');
+        } else {
+            statusElement.classList.remove('is-complete');
+        }
+    }
+}
+    // --- MODAL LOGIC ---
+
+// Function to show the modal
+function openModal(id) {
+    const modal = document.getElementById(id);
+    modal.style.display = 'flex';
+    // This stops the background (the test) from scrolling while the modal is open
+    document.body.style.overflow = 'hidden'; 
+}
+
+// Function to hide the modal
+function closeModal(id) {
+    const modal = document.getElementById(id);
+    modal.style.display = 'none';
+    // This lets the user scroll the test again
+    document.body.style.overflow = 'auto'; 
+}
+
+// Close modal if user clicks the dark area outside the white box
+window.addEventListener('click', (event) => {
+    if (event.target.classList.contains('modal-overlay')) {
+        event.target.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+});
+
+// Call this once on load so the progress bar reflects any pre-filled browser data
+updateProgressBar();
+
+const hamburgerBtn = document.getElementById('hamburger-btn');
+const closeBtn = document.getElementById('close-drawer');
+const drawer = document.getElementById('mobile-drawer');
+const overlay = document.getElementById('drawer-overlay');
+
+function toggleDrawer() {
+    drawer.classList.toggle('active');
+    overlay.classList.toggle('active');
+}
+
+hamburgerBtn.addEventListener('click', toggleDrawer);
+closeBtn.addEventListener('click', toggleDrawer);
+overlay.addEventListener('click', toggleDrawer); // Close when clicking outside
+
+// Helper for opening modals from the drawer
+function handleMenuClick(modalId) {
+    toggleDrawer(); // Close drawer first
+    openModal(modalId); // Then open modal
+}
+
+</script>
+
+</body>
+</html>
