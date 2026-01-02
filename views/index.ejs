@@ -797,15 +797,27 @@ input:checked + .slider:before {
 <body>
 
 <div id="dev-panel">
-    <h3>🛠 Dev Tools</h3>
-    <div class="dev-input-group"><label>R</label><input type="number" id="dev-r" value="12"></div>
-    <div class="dev-input-group"><label>I</label><input type="number" id="dev-i" value="8"></div>
-    <div class="dev-input-group"><label>A</label><input type="number" id="dev-a" value="20"></div>
-    <div class="dev-input-group"><label>S</label><input type="number" id="dev-s" value="15"></div>
-    <div class="dev-input-group"><label>E</label><input type="number" id="dev-e" value="5"></div>
-    <div class="dev-input-group"><label>C</label><input type="number" id="dev-c" value="10"></div>
-    <button class="dev-btn" onclick="devSubmit()">Jump to Results</button>
-    <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 8px; text-align: center;">Press Shift + D to hide</div>
+    <h3>🛠 Dev Profiles</h3>
+    <div id="profile-buttons" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;">
+        <button class="dev-btn" style="background: #e67e22;" onclick="loadProfile('MY_IA')">My Profile (IA)</button>
+        
+        <button class="dev-btn" onclick="loadProfile('SCIENTIST')">Pure Scientist (I)</button>
+        <button class="dev-btn" onclick="loadProfile('CREATIVE')">Creative Comm (AS)</button>
+        <button class="dev-btn" onclick="loadProfile('LEADER')">Business Leader (EC)</button>
+        <button class="dev-btn" onclick="loadProfile('BUILDER')">Technical Builder (RI)</button>
+    </div>
+
+    <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 10px 0;">
+    
+    <div class="dev-input-group"><label>R</label><input type="number" id="dev-r" value="0"></div>
+    <div class="dev-input-group"><label>I</label><input type="number" id="dev-i" value="0"></div>
+    <div class="dev-input-group"><label>A</label><input type="number" id="dev-a" value="0"></div>
+    <div class="dev-input-group"><label>S</label><input type="number" id="dev-s" value="0"></div>
+    <div class="dev-input-group"><label>E</label><input type="number" id="dev-e" value="0"></div>
+    <div class="dev-input-group"><label>C</label><input type="number" id="dev-c" value="0"></div>
+    
+    <button class="dev-btn" onclick="devSubmit()">Jump with Manual Scores</button>
+    <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 8px; text-align: center;">Shift + D to Toggle</div>
 </div>
 
 <div class="mobile-drawer" id="mobile-drawer">
@@ -827,7 +839,7 @@ input:checked + .slider:before {
 
 <nav class="navbar">
     <div class="nav-container">
-        <a href="/" class="nav-logo">Name ng <span>Website</span></a>
+        <a href="/" class="nav-logo">NCAE<span> Portal</span></a>
 
         <div class="nav-status" id="progress-status">0% Complete</div>
 
@@ -891,23 +903,39 @@ input:checked + .slider:before {
     const body = document.body;
 
     // --- DEV TOOLS (Shift + D) ---
-    window.addEventListener('keydown', (e) => {
-        if (e.shiftKey && e.key.toUpperCase() === 'D') {
-            devPanel.style.display = devPanel.style.display === 'block' ? 'none' : 'block';
-        }
-    });
+    // --- UPDATED DEV TOOLS LOGIC ---
+const profiles = {
+    MY_IA:     { r: -4, i: 11, a: 3,  s: -12, e: -16, c: 0 },
+    SCIENTIST: { r: 4,  i: 20, a: -2, s: -12, e: -18, c: 6 },
+    CREATIVE:  { r: -8, i: 2,  a: 18, s: 16,  e: 4,   c: -20 },
+    LEADER:    { r: 2,  i: -4, a: -15,s: 8,   e: 22,  c: 14 },
+    BUILDER:   { r: 24, i: 12, a: 0,  s: -22, e: -6,  c: 5 }
+};
 
-    function devSubmit() {
-        const r = document.getElementById('dev-r').value;
-        const i = document.getElementById('dev-i').value;
-        const a = document.getElementById('dev-a').value;
-        const s = document.getElementById('dev-s').value;
-        const e = document.getElementById('dev-e').value;
-        const c = document.getElementById('dev-c').value;
-        
-        // Redirect to results with scores in URL
-        window.location.href = `/results?r=${r}&i=${i}&a=${a}&s=${s}&e=${e}&c=${c}`;
+window.addEventListener('keydown', (e) => {
+    if (e.shiftKey && e.key.toUpperCase() === 'D') {
+        const panel = document.getElementById('dev-panel');
+        panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
     }
+});
+
+// Function to instantly load a preset and jump
+function loadProfile(key) {
+    const p = profiles[key];
+    window.location.href = `/results?r=${p.r}&i=${p.i}&a=${p.a}&s=${p.s}&e=${p.e}&c=${p.c}`;
+}
+
+// Function for the manual inputs
+function devSubmit() {
+    const r = document.getElementById('dev-r').value;
+    const i = document.getElementById('dev-i').value;
+    const a = document.getElementById('dev-a').value;
+    const s = document.getElementById('dev-s').value;
+    const e = document.getElementById('dev-e').value;
+    const c = document.getElementById('dev-c').value;
+    
+    window.location.href = `/results?r=${r}&i=${i}&a=${a}&s=${s}&e=${e}&c=${c}`;
+}
 
     const darkCheck = document.getElementById('dark-check');
     const warmCheck = document.getElementById('warm-check');
