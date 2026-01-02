@@ -59,7 +59,7 @@
 
         /* Navbar (Matches Index Glassmorphism) */
         .navbar {
-            background-color: rgba(var(--nav-bg-rgb), 0.85); 
+            background-color: rgba(var(--nav-bg-rgb), 0.25); 
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             height: 70px; width: 100%;
@@ -74,9 +74,9 @@
         /* Results Layout (Mobile Optimized) */
         .container { 
             max-width: 800px; 
-            width: 95%; /* Responsive width */
+            width: 95%; 
             margin: 0 auto; 
-            padding: 10px 0; /* Tighter padding for mobile */
+            padding: 10px 0; 
         }
         
         .result-card {
@@ -102,6 +102,21 @@
             margin: 20px 0;
             box-shadow: 0 5px 15px rgba(26, 115, 232, 0.4);
         }
+
+        /* --- RIASEC DESCRIPTION CARDS --- */
+        .profile-breakdown {
+            margin: 25px 0;
+            text-align: left;
+        }
+        .desc-pill {
+            background: var(--bg-color);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--accent-blue);
+        }
+        .desc-pill h4 { margin: 0; font-size: 0.9rem; color: var(--accent-blue); text-transform: uppercase; }
+        .desc-pill p { margin: 5px 0 0; font-size: 0.85rem; color: var(--text-main); line-height: 1.4; }
 
         /* --- SCORE DASHBOARD --- */
         .score-dashboard {
@@ -181,7 +196,6 @@
             text-align: center;
         }
 
-        /* --- MOBILE MEDIA QUERIES (The Fix) --- */
         @media (max-width: 600px) {
             body { padding-top: 70px; }
             .result-card { padding: 30px 15px; border-radius: 0; box-shadow: none; }
@@ -189,7 +203,6 @@
             .trait-name { width: 85px; font-size: 0.7rem; }
             .course-title { font-size: 1rem; }
             .score-dashboard { padding: 15px 5px; }
-            .group-header div[style*="font-size: 0.75rem"] { font-size: 0.65rem !important; }
         }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -199,7 +212,7 @@
 
 <nav class="navbar">
     <div class="nav-container">
-        <a href="/" class="nav-logo">NCAE <span>Portal</span></a>
+        <a href="/" class="nav-logo">Website <span>Name</span></a>
         <div style="font-size: 0.8rem; opacity: 0.7; font-weight: bold;">COMPLETE</div>
     </div>
 </nav>
@@ -210,8 +223,35 @@
             <div style="color: #e67e22; font-weight: bold; margin-bottom: 15px; border: 1px dashed #e67e22; padding: 5px; display:inline-block; border-radius: 4px; font-size: 0.7rem;">🛠 DEV MODE</div>
         <% } %>
         
-        <h1 style="margin:0; font-size: 1.5rem;">Your Career Match</h1>
+        <h1 style="margin:0; font-size: 1.5rem;">Your Holland Code:</h1>
         <div class="holland-badge"><%= hollandCode %></div>
+
+        <div class="profile-breakdown">
+            <h3 style="font-size: 0.9rem; text-align: center; color: var(--text-muted); margin-bottom: 15px;">PROFILE BREAKDOWN</h3>
+            <% 
+                const riasecInfo = {
+                    'R': { name: 'Realistic', desc: 'You prefer physical activities that require skill, strength, and coordination. You likely enjoy working with your hands, tools, machinery, or animals. You value practical solutions over abstract theories and prefer a work environment that produces tangible, visible results—often outdoors or in technical settings. You tend to be down-to-earth, reliable, and persistent in solving mechanical or physical challenges.' },
+                    'I': { name: 'Investigative', desc: 'You are naturally curious and enjoy observing, learning, and evaluating data. You prefer tasks that involve complex problem-solving, research, and independent thinking. You value intellectual challenges and often prefer working in scientific, medical, or academic environments where you can uncover how things work. You tend to be introspective, analytical, and precise, preferring to understand a problem thoroughly before taking action.' },
+                    'A': { name: 'Artistic', desc: 'You value self-expression, original ideas, and aesthetics. You prefer unstructured environments that allow for creativity and innovation. Whether it is through language, art, music, or design, you enjoy tasks that allow you to communicate ideas in unique ways and often shy away from highly repetitive or rule-bound work. You tend to be imaginative, sensitive, and independent, viewing the world through a lens of possibilities and emotions.' },
+                    'S': { name: 'Social', desc: 'You are dedicated to the well-being of others and enjoy teaching, counseling, or providing service. You have strong communication skills and value cooperation over competition. You thrive in environments where you can lead people toward growth, help them solve personal problems, or contribute to the betterment of society. You tend to be empathetic, friendly, and persuasive, finding your greatest fulfillment in human connection and service.' },
+                    'E': { name: 'Enterprising', desc: 'You are energetic, ambitious, and enjoy leading or influencing others. You are comfortable taking risks and making decisions to achieve organizational or financial goals. You value status, power, and competition, and you thrive in fast-paced environments like business, politics, or management where leadership is key. You tend to be self-confident, talkative, and assertive, with a natural ability to motivate others toward a common vision.' },
+                    'C': { name: 'Conventional', desc: 'You enjoy working with data, numbers, and structured systems. You value order, accuracy, and efficiency above all else. You are detail-oriented and excel at following through on instructions, managing records, and organizing information. You prefer stable, predictable environments where expectations and rules are clearly defined. You tend to be methodical, efficient, and thorough, ensuring that complex systems run smoothly and without error.' }
+                };
+
+                // Split the hollandCode string (e.g., "RIC") into individual letters and loop
+                hollandCode.split('').forEach(letter => {
+                    const info = riasecInfo[letter];
+                    if (info) {
+            %>
+                <div class="desc-pill">
+                    <h4><%= info.name %></h4>
+                    <p><%= info.desc %></p>
+                </div>
+            <% 
+                    }
+                }); 
+            %>
+        </div>
 
         <div class="score-dashboard">
             <h3 style="margin-top: 0; font-size: 0.9rem; text-align: center; margin-bottom: 20px; color: var(--text-muted);">INTEREST INTENSITY PROFILE</h3>
@@ -288,7 +328,6 @@
 </div>
 
 <script>
-    // Theme application logic
     if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
     if (localStorage.getItem('warm') === 'true') document.body.classList.add('warm-mode');
 </script>

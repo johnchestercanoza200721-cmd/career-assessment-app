@@ -70,8 +70,7 @@ html, body {
         top: 80px; right: 20px;
         width: 240px;
         background: var(--card-bg);
-        border: 2px solid var(--accent-blue);
-        border-radius: 12px;
+        border-radius: 15px;
         padding: 15px;
         z-index: 2000;
         box-shadow: 0 10px 25px rgba(0,0,0,0.2);
@@ -106,7 +105,7 @@ html, body {
     height: 70px;
     
     /* Background & Effects */
-    background-color: rgba(var(--nav-bg-rgb), 0.85); /* Slightly more opaque for stability */
+    background-color: rgba(var(--nav-bg-rgb), 0.25); /* Slightly more opaque for stability */
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px); 
     
@@ -152,7 +151,7 @@ html, body {
     font-size: 0.75rem;
     font-weight: 600;
     color: white;
-    background: #ccc;
+    background: hsla(0, 0%, 0%, 0.25);
     overflow: hidden;
     text-align: center;
     z-index: 1;
@@ -163,7 +162,7 @@ html, body {
 }
 
 body.dark-mode .nav-status#progress-status {
-    background: #333;
+    background: hsla(0, 0%, 100%, 0.050);
 }
 
 /* THE SPRINGY FILLER */
@@ -209,7 +208,7 @@ body.dark-mode .nav-status#progress-status {
         padding: 30px; margin-bottom: 60px; border-radius:15px; 
         box-shadow: 0 4px 6px var(--shadow); 
         transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); 
-        opacity: 0.4; filter: grayscale(100%);
+        opacity: 0.25; filter: grayscale(100%);
         transform: scale(0.95); cursor: pointer; 
     }
     .card.active { opacity: 1; filter: grayscale(0%); transform: scale(1); cursor: default; box-shadow: 0 15px 30px var(--shadow); }
@@ -260,7 +259,7 @@ button[type="submit"]:active {
   top: 0; left: 0; right: 0; bottom: 0;
   background-color: #ccc;
   transition: .4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  border-radius: 34px;
+  border-radius: 15px;
 }
 
 /* THE WHITE CIRCLE (KNOB) */
@@ -269,13 +268,13 @@ button[type="submit"]:active {
   content: "";
   height: 16px; width: 16px;
   left: 3px; bottom: 3px;
-  background-color: white;
+  background-color: rgb(255, 255, 255);
   transition: .4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   border-radius: 50%;
 }
 
 /* COLORS WHEN ACTIVE */
-input:checked + .slider.dark { background-color: #6366f1; }
+input:checked + .slider.dark { background-color: #1a73e8; }
 input:checked + .slider.warm { background-color: #ed891e; }
 
 /* MOVING THE KNOB */
@@ -308,14 +307,14 @@ input:checked + .slider:before {
     max-width: 500px;
     margin: 100px auto 40px; /* margin-top: 100px ensures it starts BELOW the navbar */
     padding: 40px;
-    border-radius: 50px;
+    border-radius: 15px;
     
     /* The Fix for the Cutoff */
     z-index: 10000;        /* Higher than the Navbar's 9999 */
     
     /* Shadow and Border */
     border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 50px 40px rgba(0,0,0,0.3);
+    box-shadow: 0 50px 40px rgba(0,0,0,0.25);
     
     /* Prevent overflowing screen height */
     max-height: calc(100vh - 140px); 
@@ -324,14 +323,14 @@ input:checked + .slider:before {
 
 /* Adjust the overlay background so it's not too dark */
 .modal-overlay {
-    background: rgba(0, 0, 0, 0.3); /* Lighter dimming */
+    background: rgba(0, 0, 0, 0.25); /* Lighter dimming */
 }
 
 .modal-close {
     position: absolute;
-    top: 15px; right: 20px;
+    top: 25px; right: 25px;
     background: none; border: none;
-    font-size: 24px; color: var(--text-muted);
+    font-size: 30px; color: var(--text-muted);
     cursor: pointer;
 }
 
@@ -351,7 +350,7 @@ input:checked + .slider:before {
 .researcher {
     padding: 10px;
     background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
+    border-radius: 15px;
     transition: transform 0.3s ease;
 }
 
@@ -422,7 +421,6 @@ input:checked + .slider:before {
     height: 100vh;
     background: var(--card-bg);
     z-index: 3000;
-    transition: right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), visibility 0.4s;
     padding: 40px 20px;
     
     /* 2. Hide it from the "eyes" of the browser when closed */
@@ -503,6 +501,7 @@ input:checked + .slider:before {
     line-height: 1;
 }
 
+
 /* --- THE DESKTOP FIX --- */
 @media (min-width: 1024px) {
     .nav-status#progress-status {
@@ -567,8 +566,9 @@ input:checked + .slider:before {
 }
 
 .close-drawer:hover {
-    background: #ff4d4d;
-    border-color: #ff4d4d;
+    color: white;
+    background: #ff0000;
+    border-color: #ff0000;
 }
 
 .mobile-drawer.active { right: 0; }
@@ -754,22 +754,27 @@ input:checked + .slider:before {
         
         <hr style="margin: 25px 0; border: 0; border-top: 1px solid rgba(255,255,255,0.1);">
         
-        <h3>The Research Team</h3>
+        <h3>The Researchers</h3>
         <div class="researchers-grid">
             <div class="researcher">
                 <div class="avatar">👤</div>
-                <strong>Lead Researcher</strong>
-                <span>Name Here</span>
+                <strong></strong>
+                <span>Marcus Lord Isiah R. Basanes</span>
             </div>
             <div class="researcher">
                 <div class="avatar">👤</div>
-                <strong>Researcher</strong>
-                <span>Name Here</span>
+                <strong></strong>
+                <span>John Chester C. Canoza</span>
             </div>
             <div class="researcher">
                 <div class="avatar">👤</div>
-                <strong>Researcher</strong>
-                <span>Name Here</span>
+                <strong></strong>
+                <span>Jariz Maria T. Gose</span>
+            </div>
+            <div class="researcher">
+                <div class="avatar">👤</div>
+                <strong></strong>
+                <span>Rhiane Chastine Lei V. Perida</span>
             </div>
         </div>
     </div>
@@ -785,11 +790,11 @@ input:checked + .slider:before {
         </div>
         <div class="help-item">
             <strong>Does it auto-save?</strong>
-            <p>The test remains active as long as the tab is open. If you refresh, your progress may reset.</p>
+            <p>The test remains active as long as the tab is open. If you refresh, your progress may reset, so dont dorget to take a screenshot.</p>
         </div>
         <div class="help-item">
             <strong>Contact Support</strong>
-            <p>For technical issues, please email: <em>Jariz Gose</em></p>
+            <p>For technical issues, please email: <em>johnchestercanoza200721@gmail.com</em></p>
         </div>
     </div>
 </div>
@@ -839,7 +844,7 @@ input:checked + .slider:before {
 
 <nav class="navbar">
     <div class="nav-container">
-        <a href="/" class="nav-logo">NCAE<span> Portal</span></a>
+        <a href="/" class="nav-logo">Website<span> Name</span></a>
 
         <div class="nav-status" id="progress-status">0% Complete</div>
 
@@ -854,8 +859,8 @@ input:checked + .slider:before {
 </nav>
 
 <div class="content-wrapper">
-    <h1>Career Assessment Platform</h1>
-    <p style="text-align: center; margin-bottom: 20px;">Choose your own interests ayon:</p>
+    <h1>Free College Course Assessment</h1>
+    <p style="text-align: center; margin-bottom: 20px;">Answer the selection based on your interest from strongly disliked to strongly enjoyed.</p>
 
 <div class="settings-container">
         <div class="setting-item">
