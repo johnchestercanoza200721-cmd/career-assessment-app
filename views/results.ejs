@@ -5,6 +5,21 @@
     <title>NCAE Results</title>
     
     <style>
+:root {
+    /* 1. Inter (Your favorite)
+       2. -apple-system / BlinkMacSystemFont (Apple's ultra-clean San Francisco)
+       3. Segoe UI (Windows default)
+       4. Roboto (Android - placed last as requested)
+       5. sans-serif (The emergency backup) */
+    --main-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+    font-family: var(--main-font);
+    -webkit-font-smoothing: antialiased; /* Makes fonts look smoother on Mac and iPhone */
+    -moz-osx-font-smoothing: grayscale;
+}
+
         /* --- SECTION 1: GLOBAL RESET (Matches Index) --- */
         html, body {
             margin: 0;
@@ -38,7 +53,6 @@
             --nav-bg-rgb: 30, 30, 30;
             --nav-text: #e8eaed;
             --border-color: #3c4043;
-            --shadow: rgba(0,0,0,0.4);
             --bar-bg: #3c4043;
         }
 
@@ -50,27 +64,62 @@
         }
 
         body { 
-            font-family: 'Segoe UI', sans-serif; 
+            font-family: var(--main-font); 
             background-color: var(--bg-color); 
             color: var(--text-main);
             padding-top: 80px;
             transition: background-color 0.3s;
         }
 
-        /* Navbar (Matches Index Glassmorphism) */
-        .navbar {
-            background-color: rgba(var(--nav-bg-rgb), 0.25); 
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            height: 70px; width: 100%;
-            display: flex; justify-content: center; align-items: center;
-            position: fixed; top: 0; z-index: 2000;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .nav-container { width: 95%; max-width: 1200px; display: flex; justify-content: space-between; align-items: center; }
-        .nav-logo { font-size: 1.4rem; font-weight: bold; text-decoration: none; color: var(--nav-text); }
-        .nav-logo span { color: var(--accent-blue); }
+     /* --- NAVBAR (RESULTS PAGE SPATIAL ALIGNMENT) --- */
+.navbar {
+    /* 1. Subtle Glassmorphism */
+    background-color: rgba(var(--nav-bg-rgb), 0.05); 
+    backdrop-filter: blur(15px) saturate(120%);
+    -webkit-backdrop-filter: blur(15px) saturate(120%);
+    
+    height: 70px; 
+    width: 100%;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    position: fixed; 
+    top: 0; 
+    z-index: 2000;
+    
+    /* 2. Very thin, elegant border */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
 
+.nav-container { 
+    width: 95%; 
+    max-width: 1200px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+}
+
+/* 3. Logo with Electric Gradient matching the Index/Badge */
+.nav-logo { 
+    font-size: 1.4rem; 
+    font-weight: 800; 
+    text-decoration: none; 
+    color: var(--nav-text); 
+    letter-spacing: -0.5px;
+}
+
+.nav-logo span { 
+    background: linear-gradient(135deg, #1a73e8, #00d4ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 900;
+}
+
+/* Added a micro-hover for the logo on the results page */
+.nav-logo:hover {
+    opacity: 0.85;
+    transition: opacity 0.2s ease;
+}
         /* Results Layout (Mobile Optimized) */
         .container { 
             max-width: 800px; 
@@ -91,110 +140,326 @@
         }
 
         .holland-badge {
-            display: inline-block;
-            background: var(--accent-blue);
-            color: white;
-            padding: 10px 30px;
-            border-radius: 50px;
-            font-size: 2.2rem;
-            font-weight: bold;
-            letter-spacing: 5px;
-            margin: 20px 0;
-            box-shadow: 0 5px 15px rgba(26, 115, 232, 0.4);
-        }
+    display: inline-block;
+    /* 1. Added a subtle gradient for depth */
+    background: linear-gradient(135deg, #1a73e8 0%, #00d4ff 100%);
+    color: white;
+    padding: 12px 75px; /* Slightly more vertical breathing room */
+    border-radius: 100px; /* Perfect pill shape */
+    font-size: 2.2rem;
+    font-weight: 800; /* Extra bold for that premium look */
+    letter-spacing: 5px;
+    margin: 20px 0;
+    
+    /* 2. Tactile Shadow: Outer glow + Inner highlight */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 
+        0 8px 20px rgba(26, 115, 232, 0.3),
+        inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    
+    /* 3. Smooth transition for the hover flare */
+    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease;
+    cursor: default;
+}
 
+/* 4. The "Flare" - subtle lift on hover */
+.holland-badge:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 
+        0 12px 25px rgba(26, 115, 232, 0.4),
+        inset 0 1px 1px rgba(255, 255, 255, 0.4);
+}
         /* --- RIASEC DESCRIPTION CARDS --- */
         .profile-breakdown {
             margin: 25px 0;
             text-align: left;
         }
-        .desc-pill {
-            background: var(--bg-color);
-            padding: 15px;
-            border-radius: 15px;
-            margin-bottom: 12px;
-            border-left: 4px solid var(--accent-blue);
-        }
+       .desc-pill {
+    /* 1. Glassmorphism Core */
+    background: rgba(255, 255, 255, 0.05); /* Very transparent white */
+    backdrop-filter: blur(10px) saturate(120%); /* The "Glass" effect */
+    -webkit-backdrop-filter: blur(10px) saturate(120%);
+    
+    padding: 18px 20px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+    
+    /* 2. Subtle Lens Border (Light catches the edge) */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.1);
+    
+    /* 3. Smooth, subtle transition */
+    transition: 
+        transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), 
+        background 0.4s ease, 
+        box-shadow 0.4s ease;
+    
+    position: relative;
+    overflow: hidden;
+}
+
+/* 4. Subtle Hover State */
+.desc-pill:hover {
+    /* Scale is now very minimal */
+    transform: scale(1.015); 
+    
+    /* Becomes slightly more luminous/lively rather than changing color */
+    background: rgba(255, 255, 255, 0.08); 
+    
+    /* A very soft, wide shadow to lift it off the glass plane */
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.1),
+        inset 0 0 0 0.5px rgba(255, 255, 255, 0.2);
+}
+
+/* 5. Clean Typography adjustment for Glass */
+.desc-pill h4 {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--accent-blue); /* Keeps your branding */
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    opacity: 0.9;
+}
         .desc-pill h4 { margin: 0; font-size: 0.9rem; color: var(--accent-blue); text-transform: uppercase; }
         .desc-pill p { margin: 5px 0 0; font-size: 0.85rem; color: var(--text-main); line-height: 1.4; }
 
-        /* --- SCORE DASHBOARD --- */
-        .score-dashboard {
-            margin: 30px 0;
-            padding: 20px 10px;
-            background: var(--bg-color);
-            border-radius: 15px;
-            text-align: left;
-        }
-        .score-row { display: flex; align-items: center; margin-bottom: 15px; }
-        .trait-name { width: 100px; font-weight: bold; font-size: 0.8rem; margin-right: 8px; text-align: right; text-transform: uppercase; }
-        
-        .bar-wrapper { 
-            flex-grow: 1; 
-            height: 24px; 
-            background: var(--bar-bg); 
-            border-radius: 12px; 
-            position: relative; 
-            display: flex; 
-            overflow: hidden;
-        }
+      /* --- SCORE DASHBOARD (FIXED LOGIC + TACTILE HOVER) --- */
+.score-dashboard {
+    margin: 30px 0;
+    padding: 24px 16px;
+    background: rgba(255, 255, 255, 0.03); /* Subtle glass background */
+    backdrop-filter: blur(10px) saturate(120%);
+    -webkit-backdrop-filter: blur(10px) saturate(120%);
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    text-align: left;
+    
+    /* Subtle entrance for the whole dashboard */
+    transition: 
+        transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), 
+        background 0.4s ease, 
+        box-shadow 0.4s ease;
+}
 
-        .bar-wrapper::after {
-            content: ""; position: absolute; left: 50%; top: 0;
-            width: 2px; height: 100%; background: var(--border-color); z-index: 5;
-        }
+/* Updated Hover: Minimal scale + slightly more luminous background */
+.score-dashboard:hover {
+    transform: scale(1.01);
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
 
-        .side-container { width: 50%; height: 100%; display: flex; position: relative; }
-        .negative-side { justify-content: flex-end; }
-        .positive-side { justify-content: flex-start; }
+.score-row { 
+    display: flex; 
+    align-items: center; 
+    margin-bottom: 15px; 
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
 
-        .bar-fill { 
-            height: 100%; 
-            transition: width 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            display: flex; align-items: center; padding: 0 8px; 
-            font-size: 0.75rem; color: white; font-weight: bold; z-index: 4;
-        }
+/* Micro-interaction: row shifts slightly when targeted */
+.score-row:hover { 
+    transform: translateX(6px); 
+}
 
-        .positive-bar { background: var(--bar-positive); border-radius: 0 12px 12px 0; }
-        .negative-bar { background: var(--bar-negative); border-radius: 12px 0 0 12px; }
-        .zero-label { position: absolute; left: 50%; transform: translateX(-50%); font-size: 0.75rem; line-height: 24px; color: var(--text-muted); font-weight: bold; z-index: 6; }
+.trait-name { 
+    width: 100px; 
+    font-weight: bold; 
+    font-size: 0.75rem; 
+    margin-right: 12px; 
+    text-align: right; 
+    text-transform: uppercase; 
+    color: var(--text-muted);
+}
 
-        /* --- RECOMMENDATIONS --- */
-        .recommendation-group {
-            text-align: left;
-            padding: 20px;
-            margin-top: 20px;
-            border-radius: 12px;
-            background: var(--bg-color);
-            border-left: 6px solid var(--accent-blue);
-            width: 100%;
-            box-sizing: border-box;
-        }
-        .group-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; gap: 10px; }
-        .course-title { margin: 0; color: var(--accent-blue); font-size: 1.1rem; line-height: 1.3; }
-        
-        .provider-dropdown {
-            margin-top: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            background: var(--card-bg);
-            overflow: hidden;
-        }
-        .provider-dropdown summary { padding: 12px; cursor: pointer; font-weight: 600; font-size: 0.85rem; background: rgba(0,0,0,0.02); }
-        .provider-list { padding: 0 12px; max-height: 250px; overflow-y: auto; border-top: 1px solid var(--border-color); }
-        .provider-item { padding: 12px 0; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; }
-        
-        .btn {
-            display: block;
-            margin: 30px auto 0;
-            padding: 15px 25px;
-            background: var(--accent-blue);
-            color: white;
-            text-decoration: none;
-            border-radius: 10px;
-            font-weight: 600;
-            text-align: center;
-        }
+.bar-wrapper { 
+    flex-grow: 1; 
+    height: 18px; 
+    background: rgba(0, 0, 0, 0.2); 
+    border-radius: 20px; 
+    position: relative; 
+    display: flex; 
+    overflow: hidden;
+    box-shadow: inset 0 1px 4px rgba(0,0,0,0.3);
+}
+
+/* Center Divider Line */
+.bar-wrapper::after {
+    content: ""; 
+    position: absolute; 
+    left: 50%; 
+    top: 0;
+    width: 1px; 
+    height: 100%; 
+    background: rgba(255, 255, 255, 0.15); 
+    z-index: 5;
+}
+
+.side-container { width: 50%; height: 100%; display: flex; position: relative; }
+
+.negative-side { justify-content: flex-end; }
+.positive-side { justify-content: flex-start; }
+
+.bar-fill { 
+    height: 100%; 
+    transition: width 1.2s cubic-bezier(0.23, 1, 0.32, 1); 
+    display: flex; 
+    align-items: center; 
+    padding: 0 10px; 
+    font-size: 0.7rem; 
+    color: white; 
+    font-weight: bold; 
+    z-index: 4;
+    white-space: nowrap;
+}
+
+.positive-bar { 
+    background: linear-gradient(90deg, var(--bar-positive), #00d4ff); 
+    border-radius: 0 20px 20px 0; 
+    box-shadow: 0 0 12px rgba(26, 115, 232, 0.25);
+}
+
+.negative-bar { 
+    background: linear-gradient(90deg, #ffb347, var(--bar-negative)); 
+    border-radius: 20px 0 0 20px; 
+    box-shadow: 0 0 12px rgba(230, 126, 34, 0.2);
+    flex-direction: row-reverse; 
+}
+
+.zero-label { 
+    position: absolute; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    font-size: 0.6rem; 
+    line-height: 18px; 
+    color: var(--text-muted); 
+    font-weight: 900; 
+    z-index: 6; 
+    opacity: 0.5;
+}
+      /* --- RECOMMENDATIONS (GLASS & TACTILE UPDATE) --- */
+.recommendation-group {
+    text-align: left;
+    padding: 24px;
+    margin-top: 20px;
+    border-radius: 20px; /* Matching the score dashboard radius */
+    
+    /* 1. Glassmorphism: From solid to frosted */
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px) saturate(120%);
+    -webkit-backdrop-filter: blur(10px) saturate(120%);
+    
+    /* 2. Full subtle border instead of just left-side */
+    border: 1px solid var(--border-color);
+    width: 100%;
+    box-sizing: border-box;
+    
+    /* 3. Hover transition matching previous cards */
+    transition: 
+        transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+        background 0.4s ease, 
+        box-shadow 0.4s ease;
+}
+
+.recommendation-group:hover {
+    transform: scale(1.015);
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+
+.group-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-start; 
+    margin-bottom: 12px; 
+    gap: 10px; 
+}
+
+.course-title { 
+    margin: 0; 
+    color: var(--accent-blue); 
+    font-size: 1.15rem; 
+    line-height: 1.3; 
+    font-weight: 700; /* Bolder for contrast against dark bg */
+}
+
+/* 4. Refined Glass Dropdowns */
+.provider-dropdown {
+    margin-top: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: border-color 0.3s ease;
+}
+
+.provider-dropdown[open] {
+    border-color: rgba(26, 115, 232, 0.4);
+}
+
+.provider-dropdown summary { 
+    padding: 14px; 
+    cursor: pointer; 
+    font-weight: 600; 
+    font-size: 0.85rem; 
+    background: rgba(255, 255, 255, 0.02); 
+    color: var(--text-main);
+    list-style: none; /* Removes default arrow in some browsers */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Custom arrow indicator that rotates */
+.provider-dropdown summary::after {
+    content: '→';
+    transition: transform 0.3s ease;
+    opacity: 0.5;
+}
+
+.provider-dropdown[open] summary::after {
+    transform: rotate(90deg);
+}
+
+.provider-list { 
+    padding: 0 14px; 
+    /* Changed from 250px to none to prevent scrolling */
+    max-height: none; 
+    overflow-y: visible; 
+    border-top: 1px solid var(--border-color); 
+    /* Subtle entrance animation */
+    animation: slideDown 0.3s ease-out;
+}
+
+.provider-item { 
+    padding: 12px 0; 
+    border-bottom: 1px solid var(--border-color); 
+    font-size: 0.85rem; 
+    color: var(--text-muted);
+}
+
+.provider-item:last-child { border-bottom: none; }
+
+/* 5. Tactile Button with Gradient */
+.btn {
+    display: block;
+    margin: 40px auto 0;
+    padding: 16px 35px;
+    background: linear-gradient(135deg, #1a73e8 0%, #00d4ff 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 100px; /* Pill shape button */
+    font-weight: 700;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(26, 115, 232, 0.3);
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 12px 25px rgba(26, 115, 232, 0.4);
+}
 
         @media (max-width: 600px) {
             body { padding-top: 70px; }
@@ -206,6 +471,11 @@
         }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+    
     </style>
 </head>
 <body>

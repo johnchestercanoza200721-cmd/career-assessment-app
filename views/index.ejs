@@ -7,6 +7,20 @@
     <title>NCAE Assessment</title>
     
     <style>
+:root {
+    /* 1. Inter (Your favorite)
+       2. -apple-system / BlinkMacSystemFont (Apple's ultra-clean San Francisco)
+       3. Segoe UI (Windows default)
+       4. Roboto (Android - placed last as requested)
+       5. sans-serif (The emergency backup) */
+    --main-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+    font-family: var(--main-font);
+    -webkit-font-smoothing: antialiased; /* Makes fonts look smoother on Mac and iPhone */
+    -moz-osx-font-smoothing: grayscale;
+}
 
         html, body {
     max-width: 100%;
@@ -84,7 +98,7 @@ html, body {
 
     /* 4. GLOBAL RESET & LAYOUT */
     body { 
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        font-family: var(--main-font); 
         margin: 0; padding: 0; padding-top: 80px; 
         line-height: 1.6; 
         background-color: var(--bg-color); 
@@ -92,8 +106,37 @@ html, body {
         transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-    .content-wrapper { max-width: 800px; margin: 0 auto; padding: 20px; }
-    h1 { color: var(--accent-blue); text-align: center; font-size: 2.2em; margin-top: 10px; }
+/* --- CONTENT & GRADIENT HEADER --- */
+.content-wrapper { 
+    max-width: 800px; 
+    margin: 0 auto; 
+    padding: 20px; 
+}
+
+h1 { 
+    /* 1. The Gradient Logic (Matched to your tactile button) */
+    background: linear-gradient(135deg, #1a73e8 0%, #00d4ff 100%);
+    
+    /* 2. Clipping the background to the text shape */
+    -webkit-background-clip: text;
+    background-clip: text;
+    
+    /* 3. Make the text transparent so the gradient shows through */
+    color: transparent; 
+    
+    /* 4. Layout & Typography */
+    text-align: center; 
+    font-size: 2.5rem; /* Slightly bumped for better impact */
+    font-weight: 800; 
+    margin-top: 10px; 
+    letter-spacing: -0.5px;
+    
+    /* 5. Smooth appearance */
+    display: block;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
     
     /* 5. GLASSMORPHISM NAVBAR */
     .navbar {
@@ -125,20 +168,74 @@ html, body {
     margin: 0;
     padding: 0;
 }
+/* --- NAVIGATION (SPATIAL GLASS UPDATE) --- */
+.nav-container {
+    display: grid; 
+    grid-template-columns: 1fr auto 1fr; 
+    align-items: center;
+    width: 95%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
 
-    .nav-container {
-        display: grid; 
-        grid-template-columns: 1fr auto 1fr; 
-        align-items: center;
-        width: 95%;
-        max-width: 1200px;
-    }
+/* 1. Logo Refinement */
+.nav-logo { 
+    font-size: 1.4rem; 
+    font-weight: 800; 
+    text-decoration: none; 
+    color: var(--nav-text); 
+    letter-spacing: -0.5px;
+    transition: opacity 0.2s ease;
+}
 
-    .nav-logo { font-size: 1.4rem; font-weight: bold; text-decoration: none; color: var(--nav-text); }
-    .nav-logo span { color: var(--accent-blue); }
-    .nav-menu { display: flex; list-style: none; gap: 30px; margin: 0; padding: 0; justify-content: center; }
-    .nav-menu a { text-decoration: none; color: var(--text-muted); font-weight: 500; }
-    .nav-controls { justify-self: end; display: flex; align-items: center; gap: 8px; }
+.nav-logo:hover { opacity: 0.8; }
+
+.nav-logo span { 
+    background: linear-gradient(135deg, #1a73e8, #00d4ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 900;
+}
+
+/* 2. Floating Pill Menu */
+.nav-menu { 
+    display: flex; 
+    list-style: none; 
+    gap: 8px; /* Tighter gap for the pill look */
+    margin: 0; 
+    padding: 5px; 
+    justify-content: center; 
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border-radius: 100px; /* Outer pill shape */
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.nav-menu a { 
+    text-decoration: none; 
+    color: var(--text-muted); 
+    font-weight: 600; 
+    font-size: 0.85rem;
+    padding: 8px 18px;
+    border-radius: 100px;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* 3. Hover Flare: The "Active" Glow */
+.nav-menu a:hover { 
+    color: var(--text-main); 
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 4. Controls Alignment */
+.nav-controls { 
+    justify-self: end; 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+}
 
    /* Specific targeting to prevent affecting cards */
 .nav-status#progress-status {
@@ -187,10 +284,6 @@ body.dark-mode .nav-status#progress-status {
     transition: transform 0.8s cubic-bezier(1, -10, 0.265, 10), background 0.3s ease;
 }
 
-/* Green state for 100% */
-.nav-status#progress-status.is-complete::before {
-    background: #27ae60;
-}
 
 @keyframes bop {
     0% { transform: scale(1); }
@@ -214,73 +307,223 @@ body.dark-mode .nav-status#progress-status {
     .card.active { opacity: 1; filter: grayscale(0%); transform: scale(1); cursor: default; box-shadow: 0 15px 30px var(--shadow); }
     .card.completed { opacity: 0.6; filter: grayscale(100%); transform: scale(0.98); }
 
-    /* 7. LIKERT SCALES */
-    .likert-container { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px; padding: 15px; background: var(--likert-bg); border-radius: 100px; }
-    input[type="radio"] { -webkit-appearance: none; appearance: none; background-color: var(--card-bg); margin: 0; border: 2px solid var(--border-color); border-radius: 50%; cursor: pointer; transition: 0.2s; flex-shrink: 0; }
-    input[value="1"], input[value="5"] { width: 52px; height: 52px; }
-    input[value="2"], input[value="4"] { width: 44px; height: 44px; }
-    input[value="3"] { width: 40px; height: 40px; }
-    input[value="1"], input[value="2"] { border: 3px solid #ed891e; }
-    input[value="3"] { border: 3px solid var(--border-color); }
-    input[value="4"], input[value="5"] { border: 3px solid var(--accent-blue); }
+    /* 7. LIKERT SCALES (SPATIAL GLASS CONTAINER) */
+.likert-container { 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    gap: 15px; 
+    margin-top: 20px; 
+    padding: 15px; 
     
-    input[value="1"]:checked, input[value="2"]:checked { background-color: #ed891e; box-shadow: inset 0 0 0 4px var(--inner-ring), 0 0 12px rgba(237, 137, 30, 0.6); }
-    input[value="3"]:checked { background-color: #9aa0a6; box-shadow: inset 0 0 0 4px var(--inner-ring), 0 0 10px rgba(154, 160, 166, 0.4); }
-    input[value="4"]:checked, input[value="5"]:checked { background-color: var(--accent-blue); box-shadow: inset 0 0 0 4px var(--inner-ring), 0 0 12px rgba(26, 115, 232, 0.6); }
-
-    .label-text { font-family: 'Segoe UI', sans-serif; font-weight: 600; color: var(--text-muted); font-size: 0.85em; width: 100px; text-align: center; text-transform: uppercase; }
-    .theme-toggle, .warm-toggle { background: var(--likert-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: 600; transition: 0.2s; }
-    .warm-toggle.active { border-color: #ed891e; background: rgba(237, 137, 30, 0.1); }
+    /* Subtle Glassmorphism for the track */
+    background: rgba(255, 255, 255, 0.03); 
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     
-    button[type="submit"] { width: 100%; padding: 15px; background: var(--accent-blue); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1.2em; font-weight: bold; margin-top: 40px; margin-bottom: 100px; }
-    html { scroll-behavior: smooth; }
-
-    /* Add a nice "Press" effect */
-button[type="submit"]:active {
-    transform: scale(0.98);
-    box-shadow: 0 2px 8px rgba(26, 115, 232, 0.2);
+    border-radius: 100px; 
+    border: 1px solid var(--border-color);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
 }
 
-/* THE TOGGLE SWITCH CONTAINER */
+/* --- RADIO BUTTONS (Untouched styling, keeping your logic) --- */
+input[type="radio"] { 
+    -webkit-appearance: none; 
+    appearance: none; 
+    background-color: var(--card-bg); 
+    margin: 0; 
+    border: 2px solid var(--border-color); 
+    border-radius: 50%; 
+    cursor: pointer; 
+    transition: 0.2s; 
+    flex-shrink: 0; 
+}
+
+input[value="1"], input[value="5"] { width: 52px; height: 52px; }
+input[value="2"], input[value="4"] { width: 44px; height: 44px; }
+input[value="3"] { width: 40px; height: 40px; }
+
+input[value="1"], input[value="2"] { border: 3px solid #ed891e; }
+input[value="3"] { border: 3px solid var(--border-color); }
+input[value="4"], input[value="5"] { border: 3px solid var(--accent-blue); }
+
+input[value="1"]:checked, input[value="2"]:checked { 
+    background-color: #ed891e; 
+    box-shadow: inset 0 0 0 4px var(--inner-ring), 0 0 12px rgba(237, 137, 30, 0.6); 
+}
+input[value="3"]:checked { 
+    background-color: #9aa0a6; 
+    box-shadow: inset 0 0 0 4px var(--inner-ring), 0 0 10px rgba(154, 160, 166, 0.4); 
+}
+input[value="4"]:checked, input[value="5"]:checked { 
+    background-color: var(--accent-blue); 
+    box-shadow: inset 0 0 0 4px var(--inner-ring), 0 0 12px rgba(26, 115, 232, 0.6); 
+}
+
+/* --- LABELS (Keeping your original styling) --- */
+.label-text { 
+    font-family: var(--main-font); 
+    font-weight: 600; 
+    color: var(--text-muted); 
+    font-size: 0.85em; 
+    width: 100px; 
+    text-align: center; 
+    text-transform: uppercase; 
+}
+
+/* --- TOGGLES (Keeping your original styling) --- */
+.theme-toggle, .warm-toggle { 
+    background: var(--likert-bg); 
+    border: 1px solid var(--border-color); 
+    color: var(--text-main); 
+    padding: 5px 10px; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    font-size: 0.75rem; 
+    font-weight: 600; 
+    transition: 0.2s; 
+}
+.warm-toggle.active { 
+    border-color: #ed891e; 
+    background: rgba(237, 137, 30, 0.1); 
+}
+
+/* --- SPATIAL TACTILE SUBMIT (MATCHED TO YOUR STYLE) --- */
+button[type="submit"] {
+    display: block;
+    width: 100%; /* Keeps it full width for the form, or use 'max-width' if preferred */
+    margin: 40px auto 100px;
+    padding: 16px 35px;
+    
+    /* 1. Your Gradient Logic */
+    background: linear-gradient(135deg, #1a73e8 0%, #00d4ff 100%);
+    color: white;
+    text-decoration: none;
+    
+    /* 2. Pill Shape */
+    border-radius: 100px; 
+    
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    
+    /* 3. Deep Tactile Shadow */
+    box-shadow: 0 8px 25px rgba(26, 115, 232, 0.3);
+    
+    /* 4. High-Performance Transition */
+    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    
+    /* Required for the shimmer effect */
+    position: relative;
+    overflow: hidden;
+}
+
+/* --- HOVER: SHIMMER & LIFT --- */
+button[type="submit"]:hover {
+    transform: translateY(-4px); /* Lift off the page */
+    box-shadow: 0 15px 35px rgba(26, 115, 232, 0.5); /* Glow expands */
+    filter: brightness(1.1); /* Slight highlight */
+}
+
+/* --- THE SHIMMER ANIMATION --- */
+button[type="submit"]::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    );
+    transition: all 0.6s ease;
+}
+
+button[type="submit"]:hover::before {
+    left: 100%; /* Shimmer slides across on hover */
+}
+
+/* --- ACTIVE: PRESSED STATE --- */
+button[type="submit"]:active {
+    transform: translateY(1px);
+    box-shadow: 0 5px 10px rgba(26, 115, 232, 0.3);
+}
+
+
+    
+   /* --- THE TOGGLE SWITCH CONTAINER --- */
 .switch {
   position: relative;
   display: inline-block;
-  width: 40px;
-  height: 22px;
+  width: 44px; /* Slightly wider for a better spatial feel */
+  height: 24px;
 }
 
 /* HIDE THE ACTUAL CHECKBOX */
 .switch input { opacity: 0; width: 0; height: 0; }
 
-/* THE SLIDER BACKGROUND */
+/* THE SLIDER BACKGROUND (Glass Track) */
 .slider {
   position: absolute;
   cursor: pointer;
   top: 0; left: 0; right: 0; bottom: 0;
-  background-color: #ccc;
+  
+  /* Glass look for the track */
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  
+  /* Using your exact springy transition logic */
   transition: .4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  border-radius: 15px;
+  border-radius: 20px;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
 }
 
-/* THE WHITE CIRCLE (KNOB) */
+/* THE KNOB (Soft Glowing Orb) */
 .slider:before {
   position: absolute;
   content: "";
-  height: 16px; width: 16px;
-  left: 3px; bottom: 3px;
-  background-color: rgb(255, 255, 255);
+  height: 16px; 
+  width: 16px;
+  left: 3px; 
+  bottom: 3px;
+  
+  background-color: white;
+  /* Glow makes it feel "powered on" */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  
+  /* Using your exact springy transition logic */
   transition: .4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   border-radius: 50%;
+  z-index: 2;
 }
 
 /* COLORS WHEN ACTIVE */
-input:checked + .slider.dark { background-color: #1a73e8; }
-input:checked + .slider.warm { background-color: #ed891e; }
+/* We keep your blue and orange branding */
+input:checked + .slider.dark { 
+    background-color: #1a73e8; 
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1), 0 0 10px rgba(26, 115, 232, 0.4);
+}
+
+input:checked + .slider.warm { 
+    background-color: #ed891e; 
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1), 0 0 10px rgba(237, 137, 30, 0.4);
+}
 
 /* MOVING THE KNOB */
+/* Adjusted slightly for the wider track */
 input:checked + .slider:before {
-  transform: translateX(18px);
+  transform: translateX(20px);
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.4);
 }
+
 
 /* MODAL STYLES */
 .modal-overlay {
@@ -321,199 +564,449 @@ input:checked + .slider:before {
     overflow-y: auto;
 }
 
-/* Adjust the overlay background so it's not too dark */
+/* --- MODAL SYSTEM (SPATIAL GLASS) --- */
+
 .modal-overlay {
-    background: rgba(0, 0, 0, 0.25); /* Lighter dimming */
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.25); 
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: none; 
+    justify-content: center;
+    align-items: center;
+    z-index: 3000; 
+    animation: fadeIn 0.4s ease;
 }
 
+.modal-content {
+    background: rgba(var(--nav-bg-rgb), 0.4) !important; 
+    backdrop-filter: blur(25px) saturate(150%);
+    -webkit-backdrop-filter: blur(25px) saturate(150%); 
+    position: relative;
+    width: 85%;
+    max-width: 500px;
+    margin: 100px auto 40px; 
+    padding: 40px;
+    border-radius: 24px;
+    z-index: 10001;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    max-height: calc(100vh - 160px); 
+    overflow-y: auto;
+    animation: modalRise 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* --- PERFECTLY CENTERED CLOSE BUTTON (GEOMETRIC FIX) --- */
 .modal-close {
     position: absolute;
-    top: 25px; right: 25px;
-    background: none; border: none;
-    font-size: 30px; color: var(--text-muted);
+    top: 20px; 
+    right: 20px;
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.05); 
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     cursor: pointer;
+    
+    /* Center the pseudo-elements mathematically */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    padding: 0;
+    margin: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10;
 }
 
-.help-item { margin-bottom: 20px; }
-.help-item strong { color: var(--accent-blue); display: block; margin-bottom: 5px; }
+/* Drawing the X lines */
+.modal-close::before,
+.modal-close::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 2px;
+    background-color: var(--text-muted);
+    border-radius: 2px;
+    transition: background-color 0.3s ease;
+}
 
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+/* Cross them */
+.modal-close::before { transform: rotate(45deg); }
+.modal-close::after { transform: rotate(-45deg); }
 
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.15);
+    /* Rotate the entire container to keep lines perfectly synced */
+    transform: rotate(135deg); 
+}
+
+.modal-close:hover::before,
+.modal-close:hover::after {
+    background-color: var(--text-main);
+}
+
+/* --- HELP CONTENT --- */
+.help-item { margin-bottom: 25px; }
+.help-item strong { 
+    color: var(--accent-blue); 
+    display: block; 
+    margin-bottom: 8px; 
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.help-item p { font-size: 0.95rem; line-height: 1.5; color: var(--text-muted); }
+
+/* --- RESEARCHERS GRID (2x2) --- */
 .researchers-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 15px;
-    margin-top: 20px;
+    margin-top: 25px;
     text-align: center;
 }
 
 .researcher {
-    padding: 10px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 15px;
-    transition: transform 0.3s ease;
+    padding: 20px 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .researcher:hover {
-    transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-8px);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--accent-blue);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
 }
 
 .avatar {
-    font-size: 24px;
-    margin-bottom: 8px;
+    font-size: 32px;
+    margin-bottom: 12px;
 }
 
 .researcher strong {
     display: block;
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     text-transform: uppercase;
     color: var(--accent-blue);
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
+    margin-bottom: 5px;
+    font-weight: 800;
 }
 
 .researcher span {
-    font-size: 0.9rem;
-    font-weight: 500;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-main);
+    line-height: 1.2;
 }
 
-/* 1. Navbar & Hamburger */
+/* --- ANIMATIONS --- */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+@keyframes modalRise {
+    from { opacity: 0; transform: translateY(40px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 450px) {
+    .researchers-grid { grid-template-columns: 1fr; }
+    .modal-content { padding: 30px 20px; width: 90%; }
+}
+/* --- 1. MINIMALIST HAMBURGER --- */
 .hamburger {
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    background: none;
+    gap: 6px;
+    background: none; /* Fully transparent */
     border: none;
     cursor: pointer;
-    padding: 10px;
+    padding: 8px;
+    transition: opacity 0.2s ease;
 }
 
-.hamburger span { width: 25px; height: 3px; background: var(--text-main); border-radius: 3px; }
+.hamburger span { 
+    width: 24px; 
+    height: 3px; 
+    background: var(--text-main); 
+    border-radius: 2px; 
+}
 
-/* 2. Unified Settings Bar (In Content) */
+.hamburger:hover {
+    opacity: 0.7; /* Simple visual feedback */
+}
+
+/* Light Mode Inversion */
+.light-mode .hamburger span {
+    background: #000;
+}
+
+/* --- 2. SLIM SETTINGS BAR --- */
 .settings-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 30px;
+    gap: 25px;
     margin: 0 auto 40px auto;
-    padding: 15px 25px;
+    padding: 10px 20px;
+    
+    /* Simple, clean container */
     background: var(--card-bg);
-    border-radius: 20px;
-    box-shadow: 0 4px 15px var(--shadow);
+    border-radius: 12px; 
     border: 1px solid var(--border-color);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    
     max-width: fit-content;
 }
 
-.setting-item { display: flex; align-items: center; gap: 12px; }
-.setting-item span { font-size: 0.75rem; font-weight: 800; color: var(--text-muted); letter-spacing: 1px; }
+.setting-item { 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+}
 
+.setting-item span { 
+    font-size: 0.7rem; 
+    font-weight: 700; 
+    color: var(--text-muted); 
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Light Mode Adjustments */
+.light-mode .settings-container {
+    background: #fff;
+    border-color: #eee;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.light-mode .setting-item span {
+    color: #666;
+}
 /* 3. The Sidebar Menu */
 /* FIX: Completely hide the drawer when inactive */
 /* Sidebar Drawer Styling */
 /* Sidebar Drawer Styling - Adaptive Version */
+/* --- SPATIAL GLASS MOBILE DRAWER (FINAL CONSOLIDATED BLOCK) --- */
+
 .mobile-drawer {
     position: fixed;
-    top: 0;
-    /* 1. Push it further than 100% to account for shadows */
+    top: 15px;
+    bottom: 15px;
     right: -110%; 
-    width: 300px;
-    height: 100vh;
-    background: var(--card-bg);
+    width: 290px;
+    
+    /* Deep Spatial Glass - Slightly more opaque than standard modals */
+    background: rgba(var(--nav-bg-rgb), 0.50) !important; 
+    backdrop-filter: blur(15px) saturate(160%);
+    -webkit-backdrop-filter: blur(25px) saturate(160%);
+    
     z-index: 3000;
-    padding: 40px 20px;
+    padding: 70px 25px 40px; 
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
     
-    /* 2. Hide it from the "eyes" of the browser when closed */
     visibility: hidden; 
-    
-    /* 3. Prevent any accidental horizontal overflow on the body */
     pointer-events: none; 
+    
+    /* Smooth Power Entrance */
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .mobile-drawer.active {
-    right: 0;
+    right: 15px;
     visibility: visible;
     pointer-events: auto;
-    /* Only show the shadow when the menu is actually on screen */
-    box-shadow: -10px 0 30px rgba(0,0,0,0.3);
+    box-shadow: -15px 15px 50px rgba(0,0,0,0.1);
 }
 
+/* --- WEBSITE NAME (NAVBAR MATCHED DESIGN) --- */
 .mobile-drawer h3 {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--accent-blue);
-    margin-bottom: 25px;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 10px;
+    /* Match your Navbar Brand styling here */
+    font-size: 1.2rem; 
+    font-weight: 800;
+    color: var(--text-main); 
+    margin-bottom: 35px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: left;
+    letter-spacing: -0.5px;
 }
 
-/* Removes bullets and extra spacing */
+/* Accent part of the name (e.g., the "AI" or ".com" part) */
+.mobile-drawer h3 span {
+    color: var(--accent-blue);
+}
+
+/* --- DRAWER LINKS (GLASS TILES) --- */
 .drawer-links {
-    list-style: none !important; /* Forces bullets to disappear */
-    padding: 0 !important;      /* Removes the left indent */
+    list-style: none !important;
+    padding: 0 !important;
     margin: 0;
 }
 
 .drawer-links li {
-    list-style: none;            /* Double-check for list items */
+    list-style: none !important;
     margin-bottom: 12px;
 }
 
 .drawer-links a {
     text-decoration: none;
     color: var(--text-main);
-    font-size: 1.1rem;
-    font-weight: 500;
+    font-size: 1rem;
+    font-weight: 600;
     display: block;
-    padding: 12px 15px;
-    border-radius: 10px;
-    background: var(--likert-bg);
-    transition: all 0.3s ease;
+    padding: 14px 20px;
+    border-radius: 18px; 
+    
+    /* Glass Button Base */
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Hover Effect */
 .drawer-links a:hover {
     background: var(--accent-blue);
-    color: white;
-    transform: translateX(8px);
+    color: white !important;
+    transform: translateX(8px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(26, 115, 232, 0.3);
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
-/* Close Button Styling */
-/* Ensure the close button is always on top */
+/* --- EXACT GEOMETRIC X (MATCHED TO MODAL) --- */
 .close-drawer {
     position: absolute;
-    /* This ensures it moves down on iPhones with notches */
-    top: calc(15px + env(safe-area-inset-top)); 
+    top: 20px; 
     right: 20px;
-    z-index: 4000; /* Higher than the drawer itself */
-    background: var(--likert-bg);
-    border: 1px solid var(--border-color);
-    color: var(--text-main);
-    width: 45px; /* Larger tap area for fingers */
-    height: 45px;
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.05); 
     border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.8rem;
-    line-height: 1;
+    padding: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10;
+}
+
+.close-drawer::before,
+.close-drawer::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 2px;
+    background-color: var(--text-muted);
+    border-radius: 2px;
+    transition: background-color 0.3s ease;
+}
+
+.close-drawer::before { transform: rotate(45deg); }
+.close-drawer::after { transform: rotate(-45deg); }
+
+.close-drawer:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: rotate(135deg); 
+}
+
+.close-drawer:hover::before,
+.close-drawer:hover::after {
+    background-color: var(--text-main);
+}
+
+/* --- LIGHT MODE INVERSION --- */
+.light-mode .mobile-drawer {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+.light-mode .mobile-drawer h3 {
+    color: #000;
+    border-bottom-color: rgba(0, 0, 0, 0.05);
+}
+
+.light-mode .drawer-links a {
+    /* Defined Button Look for Light Mode */
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    color: #222;
+}
+
+.light-mode .drawer-links a:hover {
+    background: var(--accent-blue);
+    color: white !important;
+}
+
+.light-mode .close-drawer {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
 }
 
 
+
+/* --- MOBILE FIX FOR LIKERT SCALE --- */
+@media (max-width: 400px) {
+    .likert-container {
+        /* This scales down the entire container so it fits 
+           without changing individual widths/margins manually */
+        transform: scale(0.9); 
+        transform-origin: center;
+        margin-left: -5%; /* Offsets the scale to keep it centered if needed */
+        width: 110%;      /* Compensates for the scale reduction */
+    }
+
+
+    /* Shrink the labels so they don't push out */
+    .label-text {
+        width: 70px; /* Reduced from 100px */
+        font-size: 0.7em; /* Smaller text for mobile */
+        line-height: 1.2;
+    }
+
+    /* Shrink the radio buttons specifically for mobile screens */
+    input[value="1"], input[value="5"] { width: 42px; height: 42px; }
+    input[value="2"], input[value="4"] { width: 34px; height: 34px; }
+    input[value="3"] { width: 30px; height: 30px; }
+}
+
+.likert-container { 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    gap: 15px; 
+    margin-top: 20px; 
+    padding: 15px; 
+    background: var(--likert-bg); 
+    border-radius: 100px; 
+    box-sizing: border-box; /* Add this */
+    width: 100%;           /* Add this */
+}
+
 /* --- THE DESKTOP FIX --- */
+/* --- DESKTOP ADJUSTMENTS (1024px+) --- */
 @media (min-width: 1024px) {
     .nav-status#progress-status {
-        position: absolute; /* Lock it to the center on large screens */
+        position: absolute;
         left: 50%;
         top: 50%;
+        /* Combined transform: Essential to keep it centered AND allow bop */
         transform: translate(-50%, -50%);
         margin: 0;
     }
-}
 
-@media (min-width: 1024px) {
+    /* Fixed Animation: You must include the translate(-50%, -50%) 
+       in every keyframe or it will fly to the top-left corner! */
     @keyframes bop {
         0% { transform: translate(-50%, -50%) scale(1); }
         50% { transform: translate(-50%, -50%) scale(1.05); }
@@ -521,69 +1014,144 @@ input:checked + .slider:before {
     }
 }
 
-/* Mobile-specific adjustment */
+/* --- MOBILE ADJUSTMENTS (600px-) --- */
 @media (max-width: 600px) {
+    /* Combined Modal styles for cleanliness */
     .modal-content {
-        width: 88%;        /* Slight increase for mobile but still has a margin */
-        padding: 30px 20px; /* Less side padding gives text more room */
-        border-radius: 30px; /* 50px is too round for small screens */
-        margin-top: 85px;  /* Specifically cleared for the 70px navbar */
-    }
-}
-
-@media (max-width: 600px) {
-    /* Adjust the vertical spacing between cards */
-    .question-card {
-        margin-bottom: 15px !important; /* Reduces the gap from likely 30px-40px down to 15px */
+        width: 88%;
+        padding: 30px 20px;
+        border-radius: 30px;
+        margin-top: 85px;
     }
 
-    /* Reduce the padding inside the content wrapper if needed */
+    /* IMPORTANT: Ensure this matches your HTML class (card vs question-card) */
+    .card { 
+        margin-bottom: 15px !important; 
+        padding: 15px !important; 
+    }
+
     .content-wrapper {
-        padding: 10px; /* Brings cards closer to the edges of the screen */
-        gap: 15px;      /* If you are using flexbox/grid for the wrapper */
+        padding: 10px;
+        gap: 15px;
     }
-    
-    /* Optional: Shrink the padding inside the cards to make them look tighter */
-    .question-card {
-        padding: 15px; 
-    }
-}
 
-@media (max-width: 600px) 
-
-{
+    /* Close Button & Drawer Logic */
     .close-drawer {
-        top: 15px;    /* Slightly tighter for mobile */
+        top: 15px;
         right: 15px;
-        background: var(--card-bg); /* Ensure it's opaque */
-        box-shadow: 0 2px 10px rgba(0,0,0,0.2); /* Make it pop */
+        background: var(--card-bg);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        z-index: 1001; /* Ensure it stays above content */
     }
     
-    /* Ensure the drawer content doesn't overlap the X */
     .drawer-content {
-        padding-top: 40px; 
+        padding-top: 50px; /* Increased slightly to fully clear the X button */
     }
 }
 
 .close-drawer:hover {
-    color: white;
-    background: #ff0000;
-    border-color: #ff0000;
+    color: rgb(123, 123, 123);
+    background: #ffffff61;
+    border-color: #ffffff;
 }
 
-.mobile-drawer.active { right: 0; }
+/* This makes the drawer slide in with a gap from the edge to look like a "Floating Island" */
+.mobile-drawer.active { 
+    right: 15px; 
+}
+
+/* The "Curtain" behind the drawer */
 .drawer-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.4); backdrop-filter: blur(3px);
-    display: none; z-index: 2500;
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    
+    /* Subtle dark tint */
+    background: rgba(0, 0, 0, 0.25); 
+    
+    /* Deep blur to match the spatial feel */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    
+    display: none; 
+    z-index: 2500; /* Sits below the drawer (3000) but above the page */
+    
+    /* Fades in smoothly */
+    animation: fadeIn 0.3s ease;
 }
-.drawer-overlay.active { display: block; }
 
-@media (max-width: 600px) {
-    .settings-container { width: 90%; gap: 15px; }
-    .nav-status#progress-status { min-width: 90px; font-size: 0.65rem; }
+/* Shows the overlay when active */
+.drawer-overlay.active { 
+    display: block; 
 }
 
+/* Simple fade animation for the overlay */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@media (min-width: 1024px) {
+    .nav-status#progress-status {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        /* Merged Transform: Essential to keep it centered AND allow bop */
+        transform: translate(-50%, -50%);
+        margin: 0;
+        z-index: 10;
+        
+        /* Matching the Theme */
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        /* Base color stays readable on both light/dark backgrounds */
+        color: var(--text-main);
+        
+        /* Glass Pill for the status text itself */
+        /* Increased opacity slightly to help contrast against the blue bar */
+        background: hsla(0, 0%, 0%, 0.2); 
+        backdrop-filter: blur(4px);
+        padding: 6px 16px;
+        border-radius: 100px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        
+        /* Subtle Float Animation */
+        animation: spatialFloat 4s ease-in-out infinite;
+        
+        /* Forces the text to stay on one line to prevent clipping */
+        white-space: nowrap; 
+    }
+
+    /* --- LIGHT MODE SPECIFIC BORDER --- */
+    .light-mode .nav-status#progress-status {
+        background: rgba(255, 255, 255, 0.6); /* Brighter for light mode */
+        border: 1px solid rgba(0, 0, 0, 0.1); 
+        color: #333;
+    }
+
+    /* Refined Animation: Now pulses WHITE to stay visible against the blue bar */
+    @keyframes spatialFloat {
+        0% { 
+            transform: translate(-50%, -50%) scale(1); 
+            text-shadow: 0 0 0px rgba(255, 255, 255, 0);
+        }
+        50% { 
+            /* Moves up 2px and scales slightly for a "breathing" effect */
+            transform: translate(-50%, calc(-50% - 2px)) scale(1.03); 
+            
+            /* CHANGE: Instead of blue, we pulse to white with a glow */
+            /* This "cuts through" the blue bar when it's full */
+            color: #ffffff !important; 
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.9), 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+        100% { 
+            transform: translate(-50%, -50%) scale(1); 
+            text-shadow: 0 0 0px rgba(255, 255, 255, 0);
+            /* Returns to theme default */
+        }
+    }
+}
 /* --- CLEAN CONSOLIDATED MOBILE STYLES --- */
 @media (max-width: 600px) {
     
@@ -625,15 +1193,7 @@ input:checked + .slider:before {
     cursor: pointer;
 }
 
-    /* 2. Progress Bar & Toggles */
-    .nav-status#progress-status {
-        min-width: 90px;
-        font-size: 0.65rem;
-        padding: 0 8px;
-        height: 28px;
-        line-height: 28px;
-    }
-
+ 
     /* 3. Main Content & Cards */
     .content-wrapper {
     max-width: 700px; /* Slightly narrower for better readability */
@@ -747,7 +1307,7 @@ input:checked + .slider:before {
 
 <div id="about-modal" class="modal-overlay">
     <div class="modal-content">
-        <button class="modal-close" onclick="closeModal('about-modal')">&times;</button>
+        <button class="modal-close" onclick="closeModal('about-modal')"></button>
         
         <h2>About the Study</h2>
         <p>This Career Assessment Platform is a research initiative based on the <strong>Holland Codes (RIASEC)</strong> theory, designed to help students align their interests with future career paths.</p>
@@ -782,7 +1342,7 @@ input:checked + .slider:before {
 
 <div id="help-modal" class="modal-overlay">
     <div class="modal-content">
-        <button class="modal-close" onclick="closeModal('help-modal')">&times;</button>
+        <button class="modal-close" onclick="closeModal('help-modal')"></button>
         <h2>Need Help?</h2>
         <div class="help-item">
             <strong>How do I answer?</strong>
@@ -826,7 +1386,7 @@ input:checked + .slider:before {
 </div>
 
 <div class="mobile-drawer" id="mobile-drawer">
-    <button class="close-drawer" id="close-drawer">&times;</button>
+    <button class="close-drawer" id="close-drawer"></button>
     
     <div class="drawer-content">
         <h3>Menu</h3>
