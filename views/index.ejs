@@ -351,20 +351,59 @@ body.dark-mode .nav-status#progress-status {
     /* 7. LIKERT SCALES (SPATIAL GLASS CONTAINER) */
 .likert-container { 
     display: flex; 
-    justify-content: center; 
+    /* Allows items to squeeze or stack if they absolutely have to */
+    flex-wrap: nowrap; 
+    justify-content: space-between; 
     align-items: center; 
-    gap: 15px; 
-    margin-top: 20px; 
-    padding: 15px; 
     
-    /* Subtle Glassmorphism for the track */
-    background: rgba(255, 255, 255, 0.03); 
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    /* Using a very small gap on mobile that grows on desktop */
+    gap: clamp(4px, 2vw, 15px); 
     
+    margin: 20px auto; 
+    padding: 12px 15px; 
+    
+    background: var(--likert-bg); 
     border-radius: 100px; 
-    border: 1px solid var(--border-color);
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+    box-sizing: border-box; 
+    width: 100%;           
+    max-width: 500px;      
+    
+    /* Helps with the scrolling issue we fixed earlier */
+    touch-action: pan-y;   
+}
+
+/* Specific Label Styling to prevent clipping */
+.likert-label {
+    font-size: 0.75rem; /* Base size */
+    white-space: nowrap;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+@media (max-width: 480px) {
+    .likert-container {
+        /* Remove the scale(0.95) as it often causes blur and clipping issues */
+        transform: none; 
+        padding: 8px 12px;
+        gap: 5px;
+    }
+
+    .likert-label {
+        /* Make the text small enough to fit the screen */
+        font-size: 0.6rem; 
+        /* Allow "Strongly Dislike" to break into two lines if needed */
+        white-space: normal;
+        text-align: center;
+        max-width: 50px; 
+        line-height: 1;
+    }
+    
+    /* Make the circles slightly smaller so the text has more room */
+    .likert-circle {
+        width: 24px;
+        height: 24px;
+    }
 }
 
 /* --- RADIO BUTTONS (Untouched styling, keeping your logic) --- */
@@ -1035,52 +1074,84 @@ input:checked + .slider:before {
 
 
 
-/* --- MOBILE FIX FOR LIKERT SCALE --- */
-@media (max-width: 400px) {
-.likert-container { 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    /* Gap will automatically shrink on smaller screens if you use a flexible unit */
-    gap: clamp(8px, 3vw, 15px); 
-    
-    margin: 25px auto; 
-    padding: 15px 20px; 
-    
-    background: var(--likert-bg); 
-    border-radius: 100px; 
-    
-    /* CRITICAL FOR MOBILE SCROLLING */
-    box-sizing: border-box; 
-    width: 100%;           /* Stay within the parent container */
-    max-width: 500px;      /* Prevents it from getting too wide on desktop */
-    
-    /* Force vertical touch priority */
-    touch-action: pan-y;   
-    overflow: hidden;      /* Clips any accidental internal overflow */
+/* --- CLEAN MOBILE LIKERT FIX --- */
+@media (max-width: 600px) {
+    .likert-container { 
+        display: flex; 
+        justify-content: space-between; /* Spreads content to edges */
+        align-items: center; 
+        gap: 2px; /* Minimal gap to maximize space */
+        
+        margin: 20px auto; 
+        padding: 10px 8px; /* Tight padding */
+        
+        background: var(--likert-bg); 
+        border-radius: 100px; 
+        box-sizing: border-box; 
+        width: 100%; 
+        
+        touch-action: pan-y;   
+        overflow: visible; /* Changed from hidden so labels aren't clipped */
+    }
+
+    /* Target the label text specifically */
+    .likert-label, .label-text {
+        /* Fluid font size: scales with screen width */
+        font-size: clamp(8px, 2.5vw, 11px) !important;
+        width: auto !important; /* Remove fixed 70px */
+        max-width: 55px;
+        white-space: normal; /* Allow wrapping to 2 lines */
+        line-height: 1.1;
+        text-align: center;
+        flex: 1; /* Allows text to take up available space */
+    }
+
+    /* Shrink the radio buttons dynamically using vw (viewport width) */
+    /* This ensures they never "push" the labels off screen */
+    input[type="radio"], .likert-circle { 
+        width: clamp(18px, 7vw, 36px) !important; 
+        height: clamp(18px, 7vw, 36px) !important; 
+        margin: 0 !important;
+        flex-shrink: 0; /* Keep them circular */
+    }
 }
 
-/* Mobile specific tweaks for the Likert */
-@media (max-width: 480px) {
+@media (max-width: 600px) {
+    /* Stretch the main wrapper to the screen edges */
+    .container, .content-wrapper, .main-content {
+        width: 100% !important;
+        padding: 10px 5px !important; /* Tiny side padding for the screen edge */
+        margin: 0 auto !important;
+    }
+
+    /* 2. THE CARD WIDTH FIX */
+    .card, .question-card {
+        width: 96% !important; /* This makes the card maximize the screen width */
+        max-width: none !important;
+        margin: 15px auto !important; /* Centers it with top/bottom spacing */
+        
+        /* Reduce internal padding so the Likert scale has more room to breathe */
+        padding: 20px 12px !important; 
+        
+        box-sizing: border-box;
+        border-radius: 24px; /* Matches your pop-up aesthetic */
+    }
+}
+
+@media (max-width: 600px) {
     .likert-container {
-        padding: 10px 15px;
-        /* If it's still tight, we scale slightly here WITHOUT breaking width */
-        transform: scale(0.95);
-        margin-top: 15px;
+        width: 100% !important; /* Uses 100% of the newly widened card */
+        padding: 10px 8px;
+        justify-content: space-between;
     }
-}
-
-    /* Shrink the labels so they don't push out */
-    .label-text {
-        width: 70px; /* Reduced from 100px */
-        font-size: 0.7em; /* Smaller text for mobile */
-        line-height: 1.2;
+    
+    /* Ensure the question text above the circles also uses the full width */
+    .card h3, .question-text {
+        font-size: 1.1rem;
+        line-height: 1.4;
+        margin-bottom: 20px;
+        padding: 0 5px;
     }
-
-    /* Shrink the radio buttons specifically for mobile screens */
-    input[value="1"], input[value="5"] { width: 42px; height: 42px; }
-    input[value="2"], input[value="4"] { width: 34px; height: 34px; }
-    input[value="3"] { width: 30px; height: 30px; }
 }
 
 /* --- MOBILE MODAL SPACING FIX --- */
