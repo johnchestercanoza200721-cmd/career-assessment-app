@@ -4,9 +4,26 @@
     
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>NCAE Assessment</title>
+    <title>Career Assessment</title>
     
     <style>
+/* --- DISABLE MOBILE TAP HIGHLIGHT --- */
+* {
+    /* Prevents the blue/grey box when clicking buttons/links on mobile */
+    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+/* Also disable the gray semi-transparent overlay on some browsers */
+.theme-toggle, 
+.hamburger, 
+button, 
+.likert-circle {
+    outline: none;
+    -webkit-touch-callout: none; /* Prevents long-press "copy" menu on icons */
+    user-select: none;           /* Prevents text selection on these elements */
+}
+
 :root {
     /* 1. Inter (Your favorite)
        2. -apple-system / BlinkMacSystemFont (Apple's ultra-clean San Francisco)
@@ -77,6 +94,21 @@ html, body {
         z-index: 9999;
         mix-blend-mode: multiply;
     }
+
+    /* --- GLOBAL SCROLL LOCK FIX --- */
+html, body {
+    width: 100%;
+    overflow-x: hidden; /* Prevent horizontal wobbling */
+    position: relative;
+}
+
+/* Specifically for the question container in index.ejs */
+.content-wrapper {
+    overflow-x: hidden;
+    width: 100%;
+    box-sizing: border-box; /* Ensures padding doesn't add to width */
+    touch-action: pan-y; /* FORCES the browser to only allow vertical scrolling */
+}
 
     /* 3. DEV TOOLS STYLING */
     #dev-panel {
@@ -248,7 +280,7 @@ h1 {
     font-size: 0.75rem;
     font-weight: 600;
     color: white;
-    background: hsla(0, 0%, 0%, 0.25);
+    background: hsla(0, 0%, 0%, 0.12);
     overflow: hidden;
     text-align: center;
     z-index: 1;
@@ -262,26 +294,35 @@ body.dark-mode .nav-status#progress-status {
     background: hsla(0, 0%, 100%, 0.050);
 }
 
-/* THE SPRINGY FILLER */
+/* --- THE SPATIAL SPRINGY FILLER --- */
 .nav-status#progress-status::before {
     content: "";
     position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: var(--accent-blue);
+    top: 0; 
+    left: 0;
+    width: 100%; 
+    height: 100%;
+    
+    /* 1. Updated to your Brand Gradient */
+    background: linear-gradient(90deg, #1a73e8, #00d4ff);
+    
+    /* 2. Added a leading-edge glow */
+    box-shadow: 5px 0 15px rgba(0, 212, 255, 0.4);
+    
     z-index: -1;
     transform-origin: left;
     
-    /* The Scale Variable */
+    /* The Scale Variable from your JS */
     transform: scaleX(var(--p-scale, 0));
     
-    /* THE PHYSICS:
-       0.68: Start fast
-       -0.55: Slight wind-up (anticipation)
-       0.265: Mid-speed
-       1.55: LARGE overshoot (this creates the spring)
+    /* 3. YOUR ORIGINAL PHYSICS (Preserved)
+       The high overshoot creates that 'bouncy' spring effect 
     */
-    transition: transform 0.8s cubic-bezier(1, -10, 0.265, 10), background 0.3s ease;
+    transition: transform 0.8s cubic-bezier(1, -10, 0.265, 10), 
+                background 0.3s ease;
+    
+    /* 4. Rounded edges to match the pill shape */
+    border-radius: 100px;
 }
 
 
@@ -529,7 +570,7 @@ input:checked + .slider:before {
 .modal-overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(5px);
     display: none; /* Hidden by default */
     justify-content: center;
@@ -569,7 +610,7 @@ input:checked + .slider:before {
 .modal-overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.25); 
+    background: rgba(0, 0, 0, 0.149); 
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     display: none; 
@@ -580,7 +621,7 @@ input:checked + .slider:before {
 }
 
 .modal-content {
-    background: rgba(var(--nav-bg-rgb), 0.4) !important; 
+    background: rgba(var(--nav-bg-rgb), 0.75) !important; 
     backdrop-filter: blur(25px) saturate(150%);
     -webkit-backdrop-filter: blur(25px) saturate(150%); 
     position: relative;
@@ -620,9 +661,31 @@ input:checked + .slider:before {
     z-index: 10;
 }
 
-/* Drawing the X lines */
-.modal-close::before,
-.modal-close::after {
+/* --- CLEAN GEOMETRIC X (MODAL & SIDEBAR) --- */
+.close-drawer, .modal-close {
+    position: absolute;
+    top: 20px; 
+    right: 20px;
+    width: 36px;
+    height: 36px;
+    background: #66666680; 
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10;
+    
+    /* Removed box-shadow for a flat geometric look */
+    box-shadow: none; 
+    -webkit-tap-highlight-color: transparent;
+}
+
+.close-drawer::before, .close-drawer::after,
+.modal-close::before, .modal-close::after {
     content: '';
     position: absolute;
     width: 16px;
@@ -632,21 +695,39 @@ input:checked + .slider:before {
     transition: background-color 0.3s ease;
 }
 
-/* Cross them */
-.modal-close::before { transform: rotate(45deg); }
-.modal-close::after { transform: rotate(-45deg); }
+.close-drawer::before, .modal-close::before { transform: rotate(45deg); }
+.close-drawer::after, .modal-close::after { transform: rotate(-45deg); }
 
-.modal-close:hover {
-    background: rgba(255, 255, 255, 0.15);
-    /* Rotate the entire container to keep lines perfectly synced */
+/* --- HOVER ACTION: LIGHT & CRISP --- */
+.close-drawer:hover, .modal-close:hover {
+    /* Increased brightness/opacity to make it look "light" on hover */
+    background: hsla(0, 0%, 40%, 0.5); 
     transform: rotate(135deg); 
+    
+    /* Ensure no shadow appears on hover either */
+    box-shadow: none;
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
-.modal-close:hover::before,
-.modal-close:hover::after {
-    background-color: var(--text-main);
+.close-drawer:hover::before, .close-drawer:hover::after,
+.modal-close:hover::before, .modal-close:hover::after {
+    /* Pure white for that "lit up" look */
+    background-color: #ffffff; 
 }
 
+/* --- LIGHT MODE INVERSION --- */
+.light-mode .modal-close, .light-mode .close-drawer {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: none;
+}
+
+.light-mode .modal-close::before, 
+.light-mode .modal-close::after,
+.light-mode .close-drawer::before,
+.light-mode .close-drawer::after {
+    background-color: #333; /* Dark X for light mode */
+}
 /* --- HELP CONTENT --- */
 .help-item { margin-bottom: 25px; }
 .help-item strong { 
@@ -805,7 +886,7 @@ input:checked + .slider:before {
     width: 290px;
     
     /* Deep Spatial Glass - Slightly more opaque than standard modals */
-    background: rgba(var(--nav-bg-rgb), 0.50) !important; 
+    background: rgba(var(--nav-bg-rgb), 0.5) !important; 
     backdrop-filter: blur(15px) saturate(160%);
     -webkit-backdrop-filter: blur(25px) saturate(160%);
     
@@ -831,12 +912,11 @@ input:checked + .slider:before {
 /* --- WEBSITE NAME (NAVBAR MATCHED DESIGN) --- */
 .mobile-drawer h3 {
     /* Match your Navbar Brand styling here */
-    font-size: 1.2rem; 
+    font-size: 2rem; 
     font-weight: 800;
     color: var(--text-main); 
     margin-bottom: 35px;
     padding-bottom: 15px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     text-align: left;
     letter-spacing: -0.5px;
 }
@@ -868,8 +948,8 @@ input:checked + .slider:before {
     border-radius: 18px; 
     
     /* Glass Button Base */
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: hsla(0, 0%, 40%, 0.05);
+    border: 1px solid hsla(0, 0%, 40%, 0.5);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -888,7 +968,7 @@ input:checked + .slider:before {
     right: 20px;
     width: 36px;
     height: 36px;
-    background: rgba(255, 255, 255, 0.05); 
+    background: #66666680; 
     border-radius: 50%;
     border: 1px solid rgba(255, 255, 255, 0.1);
     cursor: pointer;
@@ -957,15 +1037,38 @@ input:checked + .slider:before {
 
 /* --- MOBILE FIX FOR LIKERT SCALE --- */
 @media (max-width: 400px) {
-    .likert-container {
-        /* This scales down the entire container so it fits 
-           without changing individual widths/margins manually */
-        transform: scale(0.9); 
-        transform-origin: center;
-        margin-left: -5%; /* Offsets the scale to keep it centered if needed */
-        width: 110%;      /* Compensates for the scale reduction */
-    }
+.likert-container { 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    /* Gap will automatically shrink on smaller screens if you use a flexible unit */
+    gap: clamp(8px, 3vw, 15px); 
+    
+    margin: 25px auto; 
+    padding: 15px 20px; 
+    
+    background: var(--likert-bg); 
+    border-radius: 100px; 
+    
+    /* CRITICAL FOR MOBILE SCROLLING */
+    box-sizing: border-box; 
+    width: 100%;           /* Stay within the parent container */
+    max-width: 500px;      /* Prevents it from getting too wide on desktop */
+    
+    /* Force vertical touch priority */
+    touch-action: pan-y;   
+    overflow: hidden;      /* Clips any accidental internal overflow */
+}
 
+/* Mobile specific tweaks for the Likert */
+@media (max-width: 480px) {
+    .likert-container {
+        padding: 10px 15px;
+        /* If it's still tight, we scale slightly here WITHOUT breaking width */
+        transform: scale(0.95);
+        margin-top: 15px;
+    }
+}
 
     /* Shrink the labels so they don't push out */
     .label-text {
@@ -980,30 +1083,34 @@ input:checked + .slider:before {
     input[value="3"] { width: 30px; height: 30px; }
 }
 
-.likert-container { 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    gap: 15px; 
-    margin-top: 20px; 
-    padding: 15px; 
-    background: var(--likert-bg); 
-    border-radius: 100px; 
-    box-sizing: border-box; /* Add this */
-    width: 100%;           /* Add this */
+/* --- MOBILE MODAL SPACING FIX --- */
+@media (max-width: 600px) {
+    /* Target your main card or modal container */
+    .card, .modal-content, .container { 
+        width: 92% !important; /* Forces breathing room on the sides */
+        margin: 20px auto !important; /* Equal top/bottom and centered sides */
+        padding: 25px 20px !important; /* Internal breathing room */
+        
+        border-radius: 24px; /* Keep it rounded to maintain the 'pop-up' look */
+        box-sizing: border-box;
+        
+        /* Ensure it doesn't look flat against the background */
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); 
+    }
+
+    /* Fix for the clipping Progress Status inside the header */
+    .nav-status#progress-status {
+        font-size: 0.8rem; /* Scale down text slightly for small screens */
+        padding: 4px 12px;
+        /* Ensure the parent doesn't squash it */
+        min-width: fit-content; 
+    }
 }
 
 /* --- THE DESKTOP FIX --- */
 /* --- DESKTOP ADJUSTMENTS (1024px+) --- */
 @media (min-width: 1024px) {
-    .nav-status#progress-status {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        /* Combined transform: Essential to keep it centered AND allow bop */
-        transform: translate(-50%, -50%);
-        margin: 0;
-    }
+    
 
     /* Fixed Animation: You must include the translate(-50%, -50%) 
        in every keyframe or it will fly to the top-left corner! */
@@ -1106,11 +1213,11 @@ input:checked + .slider:before {
         font-weight: 700;
         letter-spacing: 0.5px;
         /* Base color stays readable on both light/dark backgrounds */
-        color: var(--text-main);
+        color: white;
         
         /* Glass Pill for the status text itself */
         /* Increased opacity slightly to help contrast against the blue bar */
-        background: hsla(0, 0%, 0%, 0.2); 
+        background: hsla(0, 0%, 0%, 0.12); 
         backdrop-filter: blur(4px);
         padding: 6px 16px;
         border-radius: 100px;
@@ -1396,7 +1503,7 @@ input:checked + .slider:before {
         </ul>
         
         <div style="position: absolute; bottom: 30px; font-size: 0.7rem; color: #555;">
-            NCAE Career Portal v1.0
+            Career Assessment Version 1.0
         </div>
     </div>
 </div>
