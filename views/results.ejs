@@ -475,14 +475,59 @@ body {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
 }
-    
+/* --- TOP 3 RECOMMENDATIONS STYLING --- */
+.top-three-section {
+    margin: 35px 0;
+    padding: 25px;
+    background: rgba(26, 115, 232, 0.05); /* Soft blue tint */
+    border: 1px solid rgba(26, 115, 232, 0.2);
+    border-radius: 24px;
+    text-align: left;
+}
+
+.top-three-grid { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px; 
+}
+
+.top-match-card {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.top-match-card:hover {
+    transform: translateX(10px);
+    border-color: var(--accent-blue);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.rank-badge {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; margin-right: 15px; flex-shrink: 0;
+}
+
+/* Podium Colors */
+.rank-1 .rank-badge { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; }
+.rank-2 .rank-badge { background: linear-gradient(135deg, #C0C0C0, #808080); color: #fff; }
+.rank-3 .rank-badge { background: linear-gradient(135deg, #CD7F32, #8B4513); color: #fff; }
+
+.match-info { flex-grow: 1; }
+.match-title { margin: 0; font-size: 1rem; color: var(--text-main); font-weight: 700; }
+.match-score { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
     </style>
 </head>
 <body>
 
 <nav class="navbar">
     <div class="nav-container">
-        <a href="/" class="nav-logo">Website <span>Name</span></a>
+        <a href="/" class="nav-logo"><span>T.A.H.A.K.</span></a>
         <div style="font-size: 0.8rem; opacity: 0.7; font-weight: bold;">COMPLETE</div>
     </div>
 </nav>
@@ -495,6 +540,23 @@ body {
         
         <h1 style="margin:0; font-size: 1.5rem;">Your Holland Code:</h1>
         <div class="holland-badge"><%= hollandCode %></div>
+    <div class="top-three-section">
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+        <span style="font-size: 1.2rem;">🏆</span>
+        <h3 style="margin:0; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-blue);">Top 3 Recommended Courses</h3>
+    </div>
+
+    <div class="top-three-grid">
+        <% topMatches.slice(0, 3).forEach((group, index) => { %>
+            <div class="top-match-card rank-<%= index + 1 %>">
+                <div class="rank-badge"><%= index + 1 %></div>
+                <div class="match-info">
+                    <h4 class="match-title"><%= group.courseName %></h4>
+                    <span class="match-score">Holland Match: <%= group.riasec %></span>
+                </div>
+            </div>
+        <% }) %>
+    </div>
 
         <div class="profile-breakdown">
             <h3 style="font-size: 0.9rem; text-align: center; color: var(--text-muted); margin-bottom: 15px;">PROFILE BREAKDOWN</h3>
@@ -556,10 +618,8 @@ body {
             <% }) %>
         </div>
 
-        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">
-            We found <strong><%= topMatches.length %></strong> unique career paths.
-        </p>
-
+     
+<h3 style="margin-top: 40px; font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; text-align: center;">All Matched Career Paths</h3>
         <% topMatches.forEach(group => { %>
             <div class="recommendation-group">
                 <div class="group-header">

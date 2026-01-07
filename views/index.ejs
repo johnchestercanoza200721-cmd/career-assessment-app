@@ -127,7 +127,26 @@ html, body {
     .dev-input-group label { font-size: 0.8rem; font-weight: bold; }
     .dev-input-group input { width: 60px; padding: 4px; border-radius: 4px; border: 1px solid var(--border-color); background: var(--likert-bg); color: var(--text-main); }
     .dev-btn { width: 100%; padding: 10px; background: var(--accent-blue); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; }
-
+/* --- RESPONSIVE DEV PANEL --- */
+@media (max-width: 600px) {
+    #dev-panel {
+        top: auto !important;
+        bottom: 20px !important;
+        right: 5% !important;
+        left: 5% !important;
+        width: 90% !important;
+        max-height: 80vh;
+        overflow-y: auto;
+        border: 2px solid var(--accent-blue);
+        box-shadow: 0 -10px 40px rgba(0,0,0,0.4);
+        padding: 20px;
+    }
+    
+    .dev-btn {
+        padding: 15px; /* Larger hit area for fingers */
+        font-size: 1rem;
+    }
+}
     /* 4. GLOBAL RESET & LAYOUT */
     body { 
         font-family: var(--main-font); 
@@ -1116,6 +1135,8 @@ input:checked + .slider:before {
     }
 }
 
+
+
 @media (max-width: 600px) {
     /* Stretch the main wrapper to the screen edges */
     .container, .content-wrapper, .main-content {
@@ -1318,10 +1339,8 @@ input:checked + .slider:before {
             /* Moves up 2px and scales slightly for a "breathing" effect */
             transform: translate(-50%, calc(-50% - 2px)) scale(1.03); 
             
-            /* CHANGE: Instead of blue, we pulse to white with a glow */
-            /* This "cuts through" the blue bar when it's full */
-            color: #ffffff !important; 
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.9), 0 0 5px rgba(255, 255, 255, 0.5);
+
+           
         }
         100% { 
             transform: translate(-50%, -50%) scale(1); 
@@ -1404,12 +1423,7 @@ input:checked + .slider:before {
         font-size: 0.65rem;
         width: 60px; /* Much smaller width */
         line-height: 1.1;
-    }
-
-    /* 5. Modals & Researchers */
-    .researchers-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
+    
     }
 
    .modal-content h2 {
@@ -1480,6 +1494,60 @@ input:checked + .slider:before {
     }
 }
 
+/* --- RESEARCHERS LIST STYLING --- */
+.researchers-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    text-align: left; /* Better for formal lists */
+}
+
+.researchers-list li {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+/* Hover effect to make it interactive/gamified */
+.researchers-list li:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateX(5px);
+    border-color: var(--accent-blue);
+}
+
+.mini-avatar {
+    width: 32px;
+    height: 32px;
+    background: var(--accent-blue);
+    border-radius: 50%;
+    margin-right: 15px;
+    flex-shrink: 0;
+    opacity: 0.8;
+    /* Optional: Add a subtle glow to the avatar */
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
+}
+
+.researchers-list span {
+    font-size: 0.95rem;
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+/* Light Mode Support */
+.light-mode .researchers-list li {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.05);
+}
+
+.light-mode .researchers-list span {
+    color: #333;
+}
+
     </style>
 </head>
 
@@ -1487,53 +1555,63 @@ input:checked + .slider:before {
     <div class="modal-content">
         <button class="modal-close" onclick="closeModal('about-modal')"></button>
         
-        <h2>About the Study</h2>
-        <p>This Career Assessment Platform is a research initiative based on the <strong>Holland Codes (RIASEC)</strong> theory, designed to help students align their interests with future career paths.</p>
-        
-        <hr style="margin: 25px 0; border: 0; border-top: 1px solid rgba(255,255,255,0.1);">
+       <h2>About T.A.H.A.K.</h2>
+    <p><strong>T.A.H.A.K.</strong> is a web-based career assessment system designed specifically for Senior High School students in <strong>Nueva Ecija</strong>.</p>
+    
+    <p>Based on the <strong>RIASEC Model</strong> and the <strong>NCAE Occupational Interest Inventory</strong>, this tool helps bridge the gap between student interests and local academic opportunities. Our research focuses on reducing career undecidability caused by financial and geographic constraints.</p>
+    
+    <div class="research-goals">
+        <h4>Research Objectives:</h4>
+        <ul>
+            <li>Evaluate system efficiency and interface concept.</li>
+            <li>Compare web-based accessibility vs. traditional testing.</li>
+            <li>Connect student profiles to local universities in Nueva Ecija.</li>
+        </ul>
+    </div>
+    
+    <p><small>Study Period: School Year 2025-2026</small></p>
         
         <h3>The Researchers</h3>
-        <div class="researchers-grid">
-            <div class="researcher">
-                <div class="avatar">👤</div>
-                <strong></strong>
-                <span>Marcus Lord Isiah R. Basanes</span>
-            </div>
-            <div class="researcher">
-                <div class="avatar">👤</div>
-                <strong></strong>
-                <span>John Chester C. Canoza</span>
-            </div>
-            <div class="researcher">
-                <div class="avatar">👤</div>
-                <strong></strong>
-                <span>Jariz Maria T. Gose</span>
-            </div>
-            <div class="researcher">
-                <div class="avatar">👤</div>
-                <strong></strong>
-                <span>Rhiane Chastine Lei V. Perida</span>
-            </div>
-        </div>
+<ul class="researchers-list">
+    <li>
+        <div class="mini-avatar"></div>
+        <span>Marcus Lord Isiah R. Basanes</span>
+    </li>
+    <li>
+        <div class="mini-avatar"></div>
+        <span>John Chester C. Canoza</span>
+    </li>
+    <li>
+        <div class="mini-avatar"></div>
+        <span>Jariz Maria T. Gose</span>
+    </li>
+    <li>
+        <div class="mini-avatar"></div>
+        <span>Rhiane Chastine Lei V. Perida</span>
+    </li>
+</ul>
     </div>
 </div>
 
 <div id="help-modal" class="modal-overlay">
     <div class="modal-content">
         <button class="modal-close" onclick="closeModal('help-modal')"></button>
-        <h2>Need Help?</h2>
-        <div class="help-item">
-            <strong>How do I answer?</strong>
-            <p>Select the circle that best describes your interest in the activity. "Disagree" means you have little to no interest, while "Agree" means you would enjoy it.</p>
+        <h2>How to Take the Assessment</h2>
+    <p>This assessment evaluates your <strong>Occupational Interests</strong>. There are no right or wrong answers.</p>
+    
+    <div class="help-steps">
+        <div class="step">
+            <strong>1. Be Honest:</strong> Select the level of enjoyment you feel for each activity, from "Strongly Dislike" to "Strongly Enjoy."
         </div>
-        <div class="help-item">
-            <strong>Does it auto-save?</strong>
-            <p>The test remains active as long as the tab is open. If you refresh, your progress may reset, so dont dorget to take a screenshot.</p>
+        <div class="step">
+            <strong>2. RIASEC Scoring:</strong> Your responses calculate your profile across six themes: Realistic, Investigative, Artistic, Social, Enterprising, and Conventional.
         </div>
-        <div class="help-item">
-            <strong>Contact Support</strong>
-            <p>For technical issues, please email: <em>johnchestercanoza200721@gmail.com</em></p>
+        <div class="step">
+            <strong>3. Local Results:</strong> Upon completion, you will receive your Top 3 Career categories and a list of universities in <strong>Nueva Ecija</strong> that offer related programs.
         </div>
+    </div>
+    
+    <p><em>Your data is used solely for this research study on career decision-making.</em></p>
     </div>
 </div>
 
@@ -1561,6 +1639,8 @@ input:checked + .slider:before {
     
     <button class="dev-btn" onclick="devSubmit()">Jump with Manual Scores</button>
     <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 8px; text-align: center;">Shift + D to Toggle</div>
+
+    <button class="dev-btn" style="background: transparent; color: var(--text-muted); border: 1px solid var(--border-color);" onclick="document.getElementById('dev-panel').style.display='none'">Close Menu</button>
 </div>
 
 <div class="mobile-drawer" id="mobile-drawer">
@@ -1574,7 +1654,7 @@ input:checked + .slider:before {
         </ul>
         
         <div style="position: absolute; bottom: 30px; font-size: 0.7rem; color: #555;">
-            Career Assessment Version 1.0
+            Talents, Abilities, Hobbies & Knowledge
         </div>
     </div>
 </div>
@@ -1582,7 +1662,7 @@ input:checked + .slider:before {
 
 <nav class="navbar">
     <div class="nav-container">
-        <a href="/" class="nav-logo">Website<span> Name</span></a>
+        <a href="/" class="nav-logo"><span>T.A.H.A.K.</span></a>
 
         <div class="nav-status" id="progress-status">0% Complete</div>
 
@@ -1639,6 +1719,7 @@ input:checked + .slider:before {
 </div>
 
 <script>
+    
     const cards = document.querySelectorAll('.card');
     const themeToggle = document.getElementById('theme-toggle');
     const warmToggle = document.getElementById('warm-toggle');
@@ -1816,7 +1897,32 @@ function handleMenuClick(modalId) {
     toggleDrawer(); // Close drawer first
     openModal(modalId); // Then open modal
 }
+// --- MOBILE SECRET GESTURE FOR INDEX.EJS ---
+let secretTapCount = 0;
+let secretTapTimer;
 
+// Targets the main H1 heading
+document.querySelector('h1').addEventListener('click', function() {
+    // Only trigger on mobile/tablets
+    if (window.innerWidth <= 1024) {
+        secretTapCount++;
+        clearTimeout(secretTapTimer);
+
+        // Reset if they stop tapping
+        secretTapTimer = setTimeout(() => { secretTapCount = 0; }, 500);
+
+        // Triple tap detected
+        if (secretTapCount === 3) {
+            const panel = document.getElementById('dev-panel');
+            panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
+            
+            // Haptic feedback
+            if (navigator.vibrate) navigator.vibrate(50);
+            
+            secretTapCount = 0;
+        }
+    }
+});
 </script>
 
 </body>
