@@ -2,37 +2,14 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NCAE Results</title>
+    <title>T.A.H.A.K. | Results</title>
     
     <style>
-:root {
-    /* 1. Inter (Your favorite)
-       2. -apple-system / BlinkMacSystemFont (Apple's ultra-clean San Francisco)
-       3. Segoe UI (Windows default)
-       4. Roboto (Android - placed last as requested)
-       5. sans-serif (The emergency backup) */
-    --main-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
-
-body {
-    font-family: var(--main-font);
-    -webkit-font-smoothing: antialiased; /* Makes fonts look smoother on Mac and iPhone */
-    -moz-osx-font-smoothing: grayscale;
-}
-
-        /* --- SECTION 1: GLOBAL RESET (Matches Index) --- */
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        /* 1. THEME VARIABLES */
         :root {
+            --main-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             --bg-color: #f0f2f5;
             --card-bg: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.7);
             --text-main: #2c3e50;
             --text-muted: #5f6368;
             --nav-bg-rgb: 255, 255, 255;
@@ -42,485 +19,139 @@ body {
             --shadow: rgba(0,0,0,0.1);
             --bar-positive: #1a73e8;
             --bar-negative: #e67e22;
-            --bar-bg: #e8eaed;
         }
 
         body.dark-mode {
             --bg-color: #121212;
             --card-bg: #1e1e1e;
+            --glass-bg: rgba(30, 30, 30, 0.4);
             --text-main: #e8eaed;
             --text-muted: #9aa0a6;
             --nav-bg-rgb: 30, 30, 30;
             --nav-text: #e8eaed;
             --border-color: #3c4043;
-            --bar-bg: #3c4043;
         }
 
-        /* Jariz Mode (Warm) */
         body.warm-mode::after {
             content: ""; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(255, 145, 0, 0.12); pointer-events: none; z-index: 9999;
             mix-blend-mode: multiply;
         }
 
-        body { 
-            font-family: var(--main-font); 
-            background-color: var(--bg-color); 
-            color: var(--text-main);
-            padding-top: 80px;
-            transition: background-color 0.3s;
+        html, body {
+            margin: 0; padding: 0; width: 100%; overflow-x: hidden;
+            font-family: var(--main-font); background-color: var(--bg-color);
+            color: var(--text-main); -webkit-font-smoothing: antialiased;
         }
 
-     /* --- NAVBAR (RESULTS PAGE SPATIAL ALIGNMENT) --- */
-.navbar {
-    /* 1. Subtle Glassmorphism */
-    background-color: rgba(var(--nav-bg-rgb), 0.05); 
-    backdrop-filter: blur(15px) saturate(120%);
-    -webkit-backdrop-filter: blur(15px) saturate(120%);
-    
-    height: 70px; 
-    width: 100%;
-    display: flex; 
-    justify-content: center; 
-    align-items: center;
-    position: fixed; 
-    top: 0; 
-    z-index: 2000;
-    
-    /* 2. Very thin, elegant border */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
+        body { padding-top: 90px; padding-bottom: 50px; }
 
-.nav-container { 
-    width: 95%; 
-    max-width: 1200px; 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-}
-
-/* 3. Logo with Electric Gradient matching the Index/Badge */
-.nav-logo { 
-    font-size: 1.4rem; 
-    font-weight: 800; 
-    text-decoration: none; 
-    color: var(--nav-text); 
-    letter-spacing: -0.5px;
-}
-
-.nav-logo span { 
-    background: linear-gradient(135deg, #1a73e8, #00d4ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-weight: 900;
-}
-
-/* Added a micro-hover for the logo on the results page */
-.nav-logo:hover {
-    opacity: 0.85;
-    transition: opacity 0.2s ease;
-}
-        /* Results Layout (Mobile Optimized) */
-        .container { 
-            max-width: 800px; 
-            width: 95%; 
-            margin: 0 auto; 
-            padding: 10px 0; 
+        /* --- NAVBAR --- */
+        .navbar {
+            background-color: rgba(var(--nav-bg-rgb), 0.05); 
+            backdrop-filter: blur(15px) saturate(120%);
+            -webkit-backdrop-filter: blur(15px) saturate(120%);
+            height: 70px; width: 100%; display: flex; justify-content: center; 
+            align-items: center; position: fixed; top: 0; z-index: 2000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
-        
-        .result-card {
+
+        .nav-container { width: 95%; max-width: 1200px; display: flex; justify-content: space-between; align-items: center; }
+        .nav-logo { font-size: 1.4rem; font-weight: 800; text-decoration: none; color: var(--nav-text); }
+        .nav-logo span { background: linear-gradient(135deg, #1a73e8, #00d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
+
+        /* --- FLOATING LAYOUT --- */
+        .content-wrapper {
+            max-width: 800px;
+            width: 95%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .glass-section {
             background: var(--card-bg);
-            padding: 40px 25px;
             border-radius: 20px;
+            padding: 25px;
+            border: 1px solid var(--border-color);
             box-shadow: 0 10px 30px var(--shadow);
-            text-align: center;
             animation: fadeIn 0.8s ease;
-            width: 100%;
-            box-sizing: border-box;
         }
 
+        /* --- HOLLAND BADGE --- */
+        .header-box { text-align: center; padding: 10px 0; }
         .holland-badge {
-    display: inline-block;
-    /* 1. Added a subtle gradient for depth */
-    background: linear-gradient(135deg, #1a73e8 0%, #00d4ff 100%);
-    color: white;
-    padding: 12px 75px; /* Slightly more vertical breathing room */
-    border-radius: 100px; /* Perfect pill shape */
-    font-size: 2.2rem;
-    font-weight: 800; /* Extra bold for that premium look */
-    letter-spacing: 5px;
-    margin: 20px 0;
-    
-    /* 2. Tactile Shadow: Outer glow + Inner highlight */
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 
-        0 8px 20px rgba(26, 115, 232, 0.3),
-        inset 0 1px 1px rgba(255, 255, 255, 0.3);
-    
-    /* 3. Smooth transition for the hover flare */
-    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease;
-    cursor: default;
-}
-
-/* 4. The "Flare" - subtle lift on hover */
-.holland-badge:hover {
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 
-        0 12px 25px rgba(26, 115, 232, 0.4),
-        inset 0 1px 1px rgba(255, 255, 255, 0.4);
-}
-        /* --- RIASEC DESCRIPTION CARDS --- */
-        .profile-breakdown {
-            margin: 25px 0;
-            text-align: left;
+            display: inline-block;
+            background: linear-gradient(135deg, #1a73e8 0%, #00d4ff 100%);
+            color: white; padding: 12px 75px; border-radius: 100px;
+            font-size: 2.2rem; font-weight: 800; letter-spacing: 5px;
+            margin: 15px 0; border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 20px rgba(26, 115, 232, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.3);
         }
-       .desc-pill {
-    /* 1. Glassmorphism Core */
-    background: rgba(255, 255, 255, 0.05); /* Very transparent white */
-    backdrop-filter: blur(10px) saturate(120%); /* The "Glass" effect */
-    -webkit-backdrop-filter: blur(10px) saturate(120%);
-    
-    padding: 18px 20px;
-    border-radius: 20px;
-    margin-bottom: 14px;
-    
-    /* 2. Subtle Lens Border (Light catches the edge) */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.1);
-    
-    /* 3. Smooth, subtle transition */
-    transition: 
-        transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), 
-        background 0.4s ease, 
-        box-shadow 0.4s ease;
-    
-    position: relative;
-    overflow: hidden;
-}
 
-/* 4. Subtle Hover State */
-.desc-pill:hover {
-    /* Scale is now very minimal */
-    transform: scale(1.015); 
-    
-    /* Becomes slightly more luminous/lively rather than changing color */
-    background: rgba(255, 255, 255, 0.08); 
-    
-    /* A very soft, wide shadow to lift it off the glass plane */
-    box-shadow: 
-        0 10px 30px rgba(0, 0, 0, 0.1),
-        inset 0 0 0 0.5px rgba(255, 255, 255, 0.2);
-}
+        /* --- TOP 3 (PRESERVING CIRCLES) --- */
+        .top-three-section { background: rgba(26, 115, 232, 0.05); border: 1px solid rgba(26, 115, 232, 0.2); border-radius: 24px; padding: 25px; }
+        .top-match-card {
+            display: flex; align-items: center; padding: 15px 20px;
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 16px; margin-bottom: 12px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .top-match-card:hover { transform: translateX(10px); border-color: var(--accent-blue); }
+        
+        /* Fixed Circle Logic */
+        .rank-badge {
+            width: 44px; height: 44px; min-width: 44px; min-height: 44px; /* Fixes ovaling on mobile */
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: 900; margin-right: 15px; flex-shrink: 0; font-size: 1.1rem;
+        }
+        .rank-1 .rank-badge { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; }
+        .rank-2 .rank-badge { background: linear-gradient(135deg, #C0C0C0, #808080); color: #fff; }
+        .rank-3 .rank-badge { background: linear-gradient(135deg, #CD7F32, #8B4513); color: #fff; }
 
-/* 5. Clean Typography adjustment for Glass */
-.desc-pill h4 {
-    margin: 0;
-    font-size: 0.85rem;
-    color: var(--accent-blue); /* Keeps your branding */
-    text-transform: uppercase;
-    font-weight: 700;
-    letter-spacing: 0.8px;
-    opacity: 0.9;
-}
-        .desc-pill h4 { margin: 0; font-size: 0.9rem; color: var(--accent-blue); text-transform: uppercase; }
-        .desc-pill p { margin: 5px 0 0; font-size: 0.85rem; color: var(--text-main); line-height: 1.4; }
+        /* --- SCORE CHART (MATCHES SCREENSHOT) --- */
+        .score-row { display: flex; align-items: center; margin-bottom: 15px; }
+        .trait-name { width: 100px; font-weight: bold; font-size: 0.75rem; margin-right: 12px; text-align: right; text-transform: uppercase; color: var(--text-muted); }
+        .bar-wrapper { flex-grow: 1; height: 18px; background: rgba(0, 0, 0, 0.2); border-radius: 20px; position: relative; display: flex; overflow: hidden; box-shadow: inset 0 1px 4px rgba(0,0,0,0.3); }
+        .side-container { width: 50%; height: 100%; display: flex; position: relative; }
+        .negative-side { justify-content: flex-end; }
+        .bar-fill { height: 100%; transition: width 1.2s cubic-bezier(0.23, 1, 0.32, 1); display: flex; align-items: center; padding: 0 10px; font-size: 0.7rem; color: white; font-weight: bold; z-index: 4; white-space: nowrap; }
+        .positive-bar { background: linear-gradient(90deg, var(--bar-positive), #00d4ff); border-radius: 0 20px 20px 0; }
+        .negative-bar { background: linear-gradient(90deg, #ffb347, var(--bar-negative)); border-radius: 20px 0 0 20px; flex-direction: row-reverse; }
 
-      /* --- SCORE DASHBOARD (FIXED LOGIC + TACTILE HOVER) --- */
-.score-dashboard {
-    margin: 30px 0;
-    padding: 24px 16px;
-    background: rgba(255, 255, 255, 0.03); /* Subtle glass background */
-    backdrop-filter: blur(10px) saturate(120%);
-    -webkit-backdrop-filter: blur(10px) saturate(120%);
-    border-radius: 20px;
-    border: 1px solid var(--border-color);
-    text-align: left;
-    
-    /* Subtle entrance for the whole dashboard */
-    transition: 
-        transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), 
-        background 0.4s ease, 
-        box-shadow 0.4s ease;
-}
+        /* --- RECOMMENDATION CARDS --- */
+        .recommendation-group {
+            background: var(--card-bg); padding: 24px; border-radius: 20px; 
+            border: 1px solid var(--border-color); box-shadow: 0 10px 25px var(--shadow);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .recommendation-group:hover { transform: scale(1.015); box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
+        .course-title { margin: 0; color: var(--accent-blue); font-size: 1.15rem; font-weight: 700; }
+        
+        .provider-dropdown { margin-top: 15px; border: 1px solid var(--border-color); border-radius: 12px; background: rgba(0, 0, 0, 0.1); overflow: hidden; }
+        .provider-dropdown summary { padding: 14px; cursor: pointer; font-weight: 600; font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; list-style: none; }
+        .provider-dropdown summary::after { content: '→'; opacity: 0.5; transition: transform 0.3s; }
+        .provider-dropdown[open] summary::after { transform: rotate(90deg); }
+        .provider-list { padding: 0 14px; border-top: 1px solid var(--border-color); animation: slideDown 0.3s ease-out; }
+        .provider-item { padding: 12px 0; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; color: var(--text-muted); }
 
-/* Updated Hover: Minimal scale + slightly more luminous background */
-.score-dashboard:hover {
-    transform: scale(1.01);
-    background: rgba(255, 255, 255, 0.06);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-}
-
-.score-row { 
-    display: flex; 
-    align-items: center; 
-    margin-bottom: 15px; 
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-/* Micro-interaction: row shifts slightly when targeted */
-.score-row:hover { 
-    transform: translateX(6px); 
-}
-
-.trait-name { 
-    width: 100px; 
-    font-weight: bold; 
-    font-size: 0.75rem; 
-    margin-right: 12px; 
-    text-align: right; 
-    text-transform: uppercase; 
-    color: var(--text-muted);
-}
-
-.bar-wrapper { 
-    flex-grow: 1; 
-    height: 18px; 
-    background: rgba(0, 0, 0, 0.2); 
-    border-radius: 20px; 
-    position: relative; 
-    display: flex; 
-    overflow: hidden;
-    box-shadow: inset 0 1px 4px rgba(0,0,0,0.3);
-}
-
-/* Center Divider Line */
-.bar-wrapper::after {
-    content: ""; 
-    position: absolute; 
-    left: 50%; 
-    top: 0;
-    width: 1px; 
-    height: 100%; 
-    background: rgba(255, 255, 255, 0.15); 
-    z-index: 5;
-}
-
-.side-container { width: 50%; height: 100%; display: flex; position: relative; }
-
-.negative-side { justify-content: flex-end; }
-.positive-side { justify-content: flex-start; }
-
-.bar-fill { 
-    height: 100%; 
-    transition: width 1.2s cubic-bezier(0.23, 1, 0.32, 1); 
-    display: flex; 
-    align-items: center; 
-    padding: 0 10px; 
-    font-size: 0.7rem; 
-    color: white; 
-    font-weight: bold; 
-    z-index: 4;
-    white-space: nowrap;
-}
-
-.positive-bar { 
-    background: linear-gradient(90deg, var(--bar-positive), #00d4ff); 
-    border-radius: 0 20px 20px 0; 
-    box-shadow: 0 0 12px rgba(26, 115, 232, 0.25);
-}
-
-.negative-bar { 
-    background: linear-gradient(90deg, #ffb347, var(--bar-negative)); 
-    border-radius: 20px 0 0 20px; 
-    box-shadow: 0 0 12px rgba(230, 126, 34, 0.2);
-    flex-direction: row-reverse; 
-}
-
-.zero-label { 
-    position: absolute; 
-    left: 50%; 
-    transform: translateX(-50%); 
-    font-size: 0.6rem; 
-    line-height: 18px; 
-    color: var(--text-muted); 
-    font-weight: 900; 
-    z-index: 6; 
-    opacity: 0.5;
-}
-      /* --- RECOMMENDATIONS (GLASS & TACTILE UPDATE) --- */
-.recommendation-group {
-    text-align: left;
-    padding: 24px;
-    margin-top: 20px;
-    border-radius: 20px; /* Matching the score dashboard radius */
-    
-    /* 1. Glassmorphism: From solid to frosted */
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(10px) saturate(120%);
-    -webkit-backdrop-filter: blur(10px) saturate(120%);
-    
-    /* 2. Full subtle border instead of just left-side */
-    border: 1px solid var(--border-color);
-    width: 100%;
-    box-sizing: border-box;
-    
-    /* 3. Hover transition matching previous cards */
-    transition: 
-        transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
-        background 0.4s ease, 
-        box-shadow 0.4s ease;
-}
-
-.recommendation-group:hover {
-    transform: scale(1.015);
-    background: rgba(255, 255, 255, 0.06);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-}
-
-.group-header { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: flex-start; 
-    margin-bottom: 12px; 
-    gap: 10px; 
-}
-
-.course-title { 
-    margin: 0; 
-    color: var(--accent-blue); 
-    font-size: 1.15rem; 
-    line-height: 1.3; 
-    font-weight: 700; /* Bolder for contrast against dark bg */
-}
-
-/* 4. Refined Glass Dropdowns */
-.provider-dropdown {
-    margin-top: 15px;
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    background: rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    transition: border-color 0.3s ease;
-}
-
-.provider-dropdown[open] {
-    border-color: rgba(26, 115, 232, 0.4);
-}
-
-.provider-dropdown summary { 
-    padding: 14px; 
-    cursor: pointer; 
-    font-weight: 600; 
-    font-size: 0.85rem; 
-    background: rgba(255, 255, 255, 0.02); 
-    color: var(--text-main);
-    list-style: none; /* Removes default arrow in some browsers */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-/* Custom arrow indicator that rotates */
-.provider-dropdown summary::after {
-    content: '→';
-    transition: transform 0.3s ease;
-    opacity: 0.5;
-}
-
-.provider-dropdown[open] summary::after {
-    transform: rotate(90deg);
-}
-
-.provider-list { 
-    padding: 0 14px; 
-    /* Changed from 250px to none to prevent scrolling */
-    max-height: none; 
-    overflow-y: visible; 
-    border-top: 1px solid var(--border-color); 
-    /* Subtle entrance animation */
-    animation: slideDown 0.3s ease-out;
-}
-
-.provider-item { 
-    padding: 12px 0; 
-    border-bottom: 1px solid var(--border-color); 
-    font-size: 0.85rem; 
-    color: var(--text-muted);
-}
-
-.provider-item:last-child { border-bottom: none; }
-
-/* 5. Tactile Button with Gradient */
-.btn {
-    display: block;
-    margin: 40px auto 0;
-    padding: 16px 35px;
-    background: linear-gradient(135deg, #1a73e8 0%, #00d4ff 100%);
-    color: white;
-    text-decoration: none;
-    border-radius: 100px; /* Pill shape button */
-    font-weight: 700;
-    text-align: center;
-    box-shadow: 0 8px 20px rgba(26, 115, 232, 0.3);
-    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.btn:hover {
-    transform: translateY(-3px) scale(1.03);
-    box-shadow: 0 12px 25px rgba(26, 115, 232, 0.4);
-}
-
-        @media (max-width: 600px) {
-            body { padding-top: 70px; }
-            .result-card { padding: 30px 15px; border-radius: 0; box-shadow: none; }
-            .holland-badge { font-size: 1.8rem; padding: 8px 25px; }
-            .trait-name { width: 85px; font-size: 0.7rem; }
-            .course-title { font-size: 1rem; }
-            .score-dashboard { padding: 15px 5px; }
+        .btn {
+            display: block; width: 100%; max-width: 320px; margin: 20px auto; 
+            padding: 16px; background: linear-gradient(135deg, #1a73e8, #00d4ff);
+            color: white; text-decoration: none; border-radius: 100px; font-weight: 700;
+            text-align: center; box-shadow: 0 8px 20px rgba(26, 115, 232, 0.3);
         }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideDown {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-/* --- TOP 3 RECOMMENDATIONS STYLING --- */
-.top-three-section {
-    margin: 35px 0;
-    padding: 25px;
-    background: rgba(26, 115, 232, 0.05); /* Soft blue tint */
-    border: 1px solid rgba(26, 115, 232, 0.2);
-    border-radius: 24px;
-    text-align: left;
-}
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-.top-three-grid { 
-    display: flex; 
-    flex-direction: column; 
-    gap: 12px; 
-}
-
-.top-match-card {
-    display: flex;
-    align-items: center;
-    padding: 15px 20px;
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 16px;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.top-match-card:hover {
-    transform: translateX(10px);
-    border-color: var(--accent-blue);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-}
-
-.rank-badge {
-    width: 40px; height: 40px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 900; margin-right: 15px; flex-shrink: 0;
-}
-
-/* Podium Colors */
-.rank-1 .rank-badge { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; }
-.rank-2 .rank-badge { background: linear-gradient(135deg, #C0C0C0, #808080); color: #fff; }
-.rank-3 .rank-badge { background: linear-gradient(135deg, #CD7F32, #8B4513); color: #fff; }
-
-.match-info { flex-grow: 1; }
-.match-title { margin: 0; font-size: 1rem; color: var(--text-main); font-weight: 700; }
-.match-score { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
+        @media (max-width: 600px) {
+            .holland-badge { font-size: 1.8rem; padding: 10px 40px; }
+            .rank-badge { width: 40px; height: 40px; min-width: 40px; font-size: 1rem; }
+            .trait-name { width: 85px; font-size: 0.7rem; }
+            .course-title { font-size: 1.05rem; }
+        }
     </style>
 </head>
 <body>
@@ -532,129 +163,82 @@ body {
     </div>
 </nav>
 
-<div class="container">
-    <div class="result-card">
+<div class="content-wrapper">
+    
+    <div class="header-box">
         <% if (locals.isDev) { %>
-            <div style="color: #e67e22; font-weight: bold; margin-bottom: 15px; border: 1px dashed #e67e22; padding: 5px; display:inline-block; border-radius: 4px; font-size: 0.7rem;">🛠 DEV MODE</div>
+            <div style="color: #e67e22; font-weight: bold; margin-bottom: 10px; border: 1px dashed #e67e22; padding: 4px 10px; display:inline-block; border-radius: 6px; font-size: 0.7rem;">🛠 DEV MODE</div>
         <% } %>
-        
-        <h1 style="margin:0; font-size: 1.5rem;">Your Holland Code:</h1>
+        <h1 style="margin:0; font-size: 1.4rem;">Your Holland Code:</h1>
         <div class="holland-badge"><%= hollandCode %></div>
-    <div class="top-three-section">
-    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
-        <span style="font-size: 1.2rem;">🏆</span>
-        <h3 style="margin:0; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-blue);">Top 3 Recommended Courses</h3>
     </div>
 
-    <div class="top-three-grid">
+    <div class="top-three-section">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px;">
+            <span style="font-size: 1.2rem;">🏆</span>
+            <h3 style="margin:0; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-blue);">Top 3 Recommended Courses</h3>
+        </div>
         <% topMatches.slice(0, 3).forEach((group, index) => { %>
             <div class="top-match-card rank-<%= index + 1 %>">
                 <div class="rank-badge"><%= index + 1 %></div>
                 <div class="match-info">
-                    <h4 class="match-title"><%= group.courseName %></h4>
-                    <span class="match-score">Holland Match: <%= group.riasec %></span>
+                    <h4 style="margin:0; font-size: 1rem; color: var(--text-main);"><%= group.courseName %></h4>
+                    <span style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Holland Match: <%= group.riasec %></span>
                 </div>
             </div>
         <% }) %>
     </div>
 
-        <div class="profile-breakdown">
-            <h3 style="font-size: 0.9rem; text-align: center; color: var(--text-muted); margin-bottom: 15px;">PROFILE BREAKDOWN</h3>
-            <% 
-                const riasecInfo = {
-                    'R': { name: 'Realistic', desc: 'You prefer physical activities that require skill, strength, and coordination. You likely enjoy working with your hands, tools, machinery, or animals. You value practical solutions over abstract theories and prefer a work environment that produces tangible, visible results—often outdoors or in technical settings. You tend to be down-to-earth, reliable, and persistent in solving mechanical or physical challenges.' },
-                    'I': { name: 'Investigative', desc: 'You are naturally curious and enjoy observing, learning, and evaluating data. You prefer tasks that involve complex problem-solving, research, and independent thinking. You value intellectual challenges and often prefer working in scientific, medical, or academic environments where you can uncover how things work. You tend to be introspective, analytical, and precise, preferring to understand a problem thoroughly before taking action.' },
-                    'A': { name: 'Artistic', desc: 'You value self-expression, original ideas, and aesthetics. You prefer unstructured environments that allow for creativity and innovation. Whether it is through language, art, music, or design, you enjoy tasks that allow you to communicate ideas in unique ways and often shy away from highly repetitive or rule-bound work. You tend to be imaginative, sensitive, and independent, viewing the world through a lens of possibilities and emotions.' },
-                    'S': { name: 'Social', desc: 'You are dedicated to the well-being of others and enjoy teaching, counseling, or providing service. You have strong communication skills and value cooperation over competition. You thrive in environments where you can lead people toward growth, help them solve personal problems, or contribute to the betterment of society. You tend to be empathetic, friendly, and persuasive, finding your greatest fulfillment in human connection and service.' },
-                    'E': { name: 'Enterprising', desc: 'You are energetic, ambitious, and enjoy leading or influencing others. You are comfortable taking risks and making decisions to achieve organizational or financial goals. You value status, power, and competition, and you thrive in fast-paced environments like business, politics, or management where leadership is key. You tend to be self-confident, talkative, and assertive, with a natural ability to motivate others toward a common vision.' },
-                    'C': { name: 'Conventional', desc: 'You enjoy working with data, numbers, and structured systems. You value order, accuracy, and efficiency above all else. You are detail-oriented and excel at following through on instructions, managing records, and organizing information. You prefer stable, predictable environments where expectations and rules are clearly defined. You tend to be methodical, efficient, and thorough, ensuring that complex systems run smoothly and without error.' }
-                };
-
-                // Split the hollandCode string (e.g., "RIC") into individual letters and loop
-                hollandCode.split('').forEach(letter => {
-                    const info = riasecInfo[letter];
-                    if (info) {
-            %>
-                <div class="desc-pill">
-                    <h4><%= info.name %></h4>
-                    <p><%= info.desc %></p>
-                </div>
-            <% 
-                    }
-                }); 
-            %>
-        </div>
-
-        <div class="score-dashboard">
-            <h3 style="margin-top: 0; font-size: 0.9rem; text-align: center; margin-bottom: 20px; color: var(--text-muted);">INTEREST INTENSITY PROFILE</h3>
-            
-            <% 
-            const traitNames = {
-                R: "Realistic", I: "Investigative", A: "Artistic", 
-                S: "Social", E: "Enterprising", C: "Conventional"
-            };
-            
+    <div class="glass-section">
+        <h3 style="margin: 0 0 20px 0; font-size: 0.9rem; text-align: center; color: var(--text-muted); text-transform: uppercase;">Interest Intensity Profile</h3>
+        <% 
+            const traitNames = { R: "Realistic", I: "Investigative", A: "Artistic", S: "Social", E: "Enterprising", C: "Conventional" };
             Object.entries(scores).forEach(([key, score]) => { 
                 let percentage = Math.min(Math.abs((score / 24) * 100), 100);
-            %>
-                <div class="score-row">
-                    <div class="trait-name"><%= traitNames[key] %></div>
-                    <div class="bar-wrapper">
-                        <div class="side-container negative-side">
-                            <% if (score < 0) { %>
-                                <div class="bar-fill negative-bar" style="width: <%= percentage %>%;"><%= score %></div>
-                            <% } %>
-                        </div>
-                        <div class="side-container positive-side">
-                            <% if (score > 0) { %>
-                                <div class="bar-fill positive-bar" style="width: <%= percentage %>%;">+<%= score %></div>
-                            <% } %>
-                        </div>
-                        <% if (score === 0) { %>
-                            <span class="zero-label">0</span>
-                        <% } %>
+        %>
+            <div class="score-row">
+                <div class="trait-name"><%= traitNames[key] %></div>
+                <div class="bar-wrapper">
+                    <div class="side-container negative-side">
+                        <% if (score < 0) { %><div class="bar-fill negative-bar" style="width: <%= percentage %>%;"><%= score %></div><% } %>
                     </div>
+                    <div class="side-container positive-side">
+                        <% if (score > 0) { %><div class="bar-fill positive-bar" style="width: <%= percentage %>%;">+<%= score %></div><% } %>
+                    </div>
+                    <% if (score === 0) { %><span style="position: absolute; left: 50%; transform: translateX(-50%); font-size: 0.6rem; line-height: 18px; color: var(--text-muted); opacity: 0.5; font-weight: 900;">0</span><% } %>
                 </div>
-            <% }) %>
-        </div>
-
-     
-<h3 style="margin-top: 40px; font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; text-align: center;">All Matched Career Paths</h3>
-        <% topMatches.forEach(group => { %>
-            <div class="recommendation-group">
-                <div class="group-header">
-                    <div style="flex: 1;">
-                        <h3 class="course-title"><%= group.courseName %></h3>
-                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">
-                            Holland Match: <strong><%= group.riasec %></strong>
-                        </div>
-                    </div>
-                    <div style="background: var(--accent-blue); color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; height: fit-content; white-space: nowrap;">
-                        Score: <%= group.score %>
-                    </div>
-                </div>
-
-                <details class="provider-dropdown">
-                    <summary>View Schools & Majors</summary>
-                    <div class="provider-list">
-                        <% group.providers.forEach(prov => { %>
-                            <div class="provider-item">
-                                <strong><%= prov.university %></strong>
-                                <% if (prov.major && prov.major.trim() !== "") { %>
-                                    <br><span style="color: var(--accent-blue);">Major in <%= prov.major %></span>
-                                <% } %>
-                                <% if (prov.campus && prov.campus.trim() !== "") { %>
-                                    <br><small style="opacity: 0.7;">Campus: <%= prov.campus %></small>
-                                <% } %>
-                            </div>
-                        <% }) %>
-                    </div>
-                </details>
             </div>
         <% }) %>
-
-        <a href="/" class="btn">Retake Assessment</a>
     </div>
+
+    <h3 style="text-align: center; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; margin: 10px 0;">All Matched Career Paths</h3>
+
+    <% topMatches.forEach(group => { %>
+        <div class="recommendation-group">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
+                <div style="flex: 1;">
+                    <h3 class="course-title"><%= group.courseName %></h3>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Holland Match: <strong><%= group.riasec %></strong></div>
+                </div>
+                <div style="background: var(--accent-blue); color: white; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: bold; white-space: nowrap;">Score: <%= group.score %></div>
+            </div>
+
+            <details class="provider-dropdown">
+                <summary>View Schools & Majors</summary>
+                <div class="provider-list">
+                    <% group.providers.forEach(prov => { %>
+                        <div class="provider-item">
+                            <strong><%= prov.university %></strong>
+                            <% if (prov.major) { %><br><span style="color: var(--accent-blue);">Major in <%= prov.major %></span><% } %>
+                            <% if (prov.campus) { %><br><small style="opacity: 0.7;">Campus: <%= prov.campus %></small><% } %>
+                        </div>
+                    <% }) %>
+                </div>
+            </details>
+        </div>
+    <% }) %>
+
+    <a href="/" class="btn">Retake Assessment</a>
 </div>
 
 <script>

@@ -1923,6 +1923,37 @@ document.querySelector('h1').addEventListener('click', function() {
         }
     }
 });
+
+document.querySelector('form[action="/submit"]').addEventListener('submit', function(e) {
+    const totalQuestions = <%= quizQuestions.length %>;
+    const selectedRadios = document.querySelectorAll('input[type="radio"]:checked');
+    
+    if (selectedRadios.length < totalQuestions) return;
+
+    const counts = {};
+    selectedRadios.forEach(radio => {
+        counts[radio.value] = (counts[radio.value] || 0) + 1;
+    });
+
+    const uniqueAnswers = Object.keys(counts).length;
+    const maxFrequency = Math.max(...Object.values(counts));
+    const maxPercentage = (maxFrequency / totalQuestions) * 100;
+
+    // TRIGGER: If they used only 1 or 2 types of answers, 
+    // OR if one answer type is used more than 90% of the time (e.g. 38/42 questions)
+    if (uniqueAnswers <= 2 || maxPercentage >= 90) {
+        e.preventDefault();
+        
+        alert(
+            "Oh no!\n\n" +
+            "Your answers show very little variety. This usually happens when a person " +
+            "is 'straight-lining' (picking the same or similar answers for everything).\n\n" +
+            "To get an accurate Career Match, please review your answers and ensure they " +
+            "honestly reflect your unique interests."
+        );
+    }
+});
+
 </script>
 
 </body>
