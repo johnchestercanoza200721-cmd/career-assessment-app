@@ -48,17 +48,260 @@
 
         /* --- NAVBAR --- */
         .navbar {
-            background-color: rgba(var(--nav-bg-rgb), 0.05); 
-            backdrop-filter: blur(15px) saturate(120%);
-            -webkit-backdrop-filter: blur(15px) saturate(120%);
-            height: 70px; width: 100%; display: flex; justify-content: center; 
-            align-items: center; position: fixed; top: 0; z-index: 2000;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 70px;
+            
+            background-color: rgba(var(--nav-bg-rgb), 0.25);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            z-index: 2000;
+            box-shadow: 0 2px 10px var(--shadow);
+            border-bottom: 1px solid var(--border-color);
+            
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            margin: 0;
+            padding: 0;
         }
 
-        .nav-container { width: 95%; max-width: 1200px; display: flex; justify-content: space-between; align-items: center; }
-        .nav-logo { font-size: 1.4rem; font-weight: 800; text-decoration: none; color: var(--nav-text); }
-        .nav-logo span { background: linear-gradient(135deg, #1a73e8, #00d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
+        .nav-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            width: 95%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            text-decoration: none;
+            color: var(--nav-text);
+            letter-spacing: -0.5px;
+            transition: opacity 0.2s ease;
+        }
+
+        .nav-logo:hover { opacity: 0.8; }
+
+        .nav-logo span {
+            background: linear-gradient(135deg, #1a73e8, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+        }
+
+        /* --- HAMBURGER --- */
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            transition: opacity 0.2s ease;
+        }
+
+        .hamburger span {
+            width: 24px;
+            height: 3px;
+            background: var(--text-main);
+            border-radius: 2px;
+        }
+
+        .hamburger:hover {
+            opacity: 0.7;
+        }
+
+        /* --- MOBILE DRAWER --- */
+        .mobile-drawer {
+            position: fixed;
+            top: 15px;
+            bottom: 15px;
+            right: -110%;
+            width: 290px;
+            
+            background: rgba(var(--nav-bg-rgb), 0.5) !important;
+            backdrop-filter: blur(15px) saturate(160%);
+            -webkit-backdrop-filter: blur(25px) saturate(160%);
+            
+            z-index: 3000;
+            padding: 70px 25px 40px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            
+            visibility: hidden;
+            pointer-events: none;
+            
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .mobile-drawer.active {
+            right: 15px;
+            visibility: visible;
+            pointer-events: auto;
+            box-shadow: -15px 15px 50px rgba(0,0,0,0.1);
+        }
+
+        .mobile-drawer h3 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 35px;
+            padding-bottom: 15px;
+            text-align: left;
+            letter-spacing: -0.5px;
+        }
+
+        .mobile-drawer h3 span {
+            color: var(--accent-blue);
+        }
+
+        .drawer-links {
+            list-style: none !important;
+            padding: 0 !important;
+            margin: 0;
+        }
+
+        .drawer-links li {
+            list-style: none !important;
+            margin-bottom: 12px;
+        }
+
+        .drawer-links a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 1rem;
+            font-weight: 600;
+            display: block;
+            padding: 14px 20px;
+            border-radius: 18px;
+            
+            background: hsla(0, 0%, 40%, 0.05);
+            border: 1px solid hsla(0, 0%, 40%, 0.5);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .drawer-links a:hover {
+            background: var(--accent-blue);
+            color: white !important;
+            transform: translateX(8px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(26, 115, 232, 0.3);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .close-drawer {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 36px;
+            height: 36px;
+            background: #66666680;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10;
+        }
+
+        .close-drawer::before,
+        .close-drawer::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 2px;
+            background-color: var(--text-muted);
+            border-radius: 2px;
+            transition: background-color 0.3s ease;
+        }
+
+        .close-drawer::before { transform: rotate(45deg); }
+        .close-drawer::after { transform: rotate(-45deg); }
+
+        .close-drawer:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: rotate(135deg);
+        }
+
+        .close-drawer:hover::before,
+        .close-drawer:hover::after {
+            background-color: var(--text-main);
+        }
+
+        .light-mode .mobile-drawer {
+            background: rgba(255, 255, 255, 0.95) !important;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .light-mode .mobile-drawer h3 {
+            color: #000;
+            border-bottom-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .light-mode .drawer-links a {
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            color: #222;
+        }
+
+        .light-mode .drawer-links a:hover {
+            background: var(--accent-blue);
+            color: white !important;
+        }
+
+        .light-mode .close-drawer {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            
+            background: rgba(0, 0, 0, 0.25);
+            
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            
+            display: none;
+            z-index: 2500;
+            
+            animation: fadeIn 0.3s ease;
+        }
+
+        .drawer-overlay.active {
+            display: block;
+        }
+
+        .drawer-content {
+            position: relative;
+        }
+
+        .nav-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            justify-content: flex-end;
+            grid-column: 3;
+        }
 
         /* --- FLOATING LAYOUT --- */
         .content-wrapper {
@@ -67,13 +310,13 @@
             margin: 0 auto;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 24px;
         }
 
         .glass-section {
             background: var(--card-bg);
             border-radius: 20px;
-            padding: 25px;
+            padding: 28px;
             border: 1px solid var(--border-color);
             box-shadow: 0 10px 30px var(--shadow);
             animation: fadeIn 0.8s ease;
@@ -91,7 +334,7 @@
         }
 
         /* --- TOP 3 (PRESERVING CIRCLES) --- */
-        .top-three-section { background: rgba(26, 115, 232, 0.05); border: 1px solid rgba(26, 115, 232, 0.2); border-radius: 24px; padding: 25px; }
+        .top-three-section { background: rgba(26, 115, 232, 0.05); border: 1px solid rgba(26, 115, 232, 0.2); border-radius: 24px; padding: 28px; }
         .top-match-card {
             display: flex; align-items: center; padding: 15px 20px;
             background: var(--card-bg); border: 1px solid var(--border-color);
@@ -110,31 +353,28 @@
         .rank-2 .rank-badge { background: linear-gradient(135deg, #C0C0C0, #808080); color: #fff; }
         .rank-3 .rank-badge { background: linear-gradient(135deg, #CD7F32, #8B4513); color: #fff; }
 
-        /* --- SCORE CHART (MATCHES SCREENSHOT) --- */
-        .score-row { display: flex; align-items: center; margin-bottom: 15px; }
-        .trait-name { width: 100px; font-weight: bold; font-size: 0.75rem; margin-right: 12px; text-align: right; text-transform: uppercase; color: var(--text-muted); }
-        .bar-wrapper { flex-grow: 1; height: 18px; background: rgba(0, 0, 0, 0.2); border-radius: 20px; position: relative; display: flex; overflow: hidden; box-shadow: inset 0 1px 4px rgba(0,0,0,0.3); }
-        .side-container { width: 50%; height: 100%; display: flex; position: relative; }
-        .negative-side { justify-content: flex-end; }
-        .bar-fill { height: 100%; transition: width 1.2s cubic-bezier(0.23, 1, 0.32, 1); display: flex; align-items: center; padding: 0 10px; font-size: 0.7rem; color: white; font-weight: bold; z-index: 4; white-space: nowrap; }
-        .positive-bar { background: linear-gradient(90deg, var(--bar-positive), #00d4ff); border-radius: 0 20px 20px 0; }
-        .negative-bar { background: linear-gradient(90deg, #ffb347, var(--bar-negative)); border-radius: 20px 0 0 20px; flex-direction: row-reverse; }
+        /* --- SCORE CHART (POSITIVE SCORING) --- */
+        .score-row { display: flex; align-items: center; margin-bottom: 18px; gap: 12px; }
+        .trait-name { width: 110px; font-weight: 700; font-size: 0.7rem; text-align: right; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.3px; }
+        .bar-wrapper { flex-grow: 1; height: 22px; background: rgba(0, 0, 0, 0.12); border-radius: 20px; position: relative; display: flex; align-items: center; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.15); }
+        .bar-fill { height: 100%; transition: width 1.2s cubic-bezier(0.23, 1, 0.32, 1); display: flex; align-items: center; padding: 0 12px; font-size: 0.75rem; color: white; font-weight: 700; z-index: 4; white-space: nowrap; background: linear-gradient(90deg, var(--bar-positive), #00d4ff); border-radius: 20px; }
 
         /* --- RECOMMENDATION CARDS --- */
         .recommendation-group {
-            background: var(--card-bg); padding: 24px; border-radius: 20px; 
+            background: var(--card-bg); padding: 28px; border-radius: 20px; 
             border: 1px solid var(--border-color); box-shadow: 0 10px 25px var(--shadow);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .recommendation-group:hover { transform: scale(1.015); box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
-        .course-title { margin: 0; color: var(--accent-blue); font-size: 1.15rem; font-weight: 700; }
+        .recommendation-group:hover { transform: translateY(-4px); box-shadow: 0 15px 35px var(--shadow); border-color: var(--accent-blue); }
+        .course-title { margin: 0 0 8px 0; color: var(--accent-blue); font-size: 1.15rem; font-weight: 700; line-height: 1.3; }
         
-        .provider-dropdown { margin-top: 15px; border: 1px solid var(--border-color); border-radius: 12px; background: rgba(0, 0, 0, 0.1); overflow: hidden; }
-        .provider-dropdown summary { padding: 14px; cursor: pointer; font-weight: 600; font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; list-style: none; }
-        .provider-dropdown summary::after { content: '→'; opacity: 0.5; transition: transform 0.3s; }
+        .provider-dropdown { margin-top: 18px; border: 1px solid var(--border-color); border-radius: 12px; background: var(--bg-color); overflow: hidden; transition: all 0.2s ease; }
+        .provider-dropdown:hover { border-color: var(--accent-blue); }
+        .provider-dropdown summary { padding: 14px 16px; cursor: pointer; font-weight: 600; font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; list-style: none; color: var(--text-main); }
+        .provider-dropdown summary::after { content: '→'; opacity: 0.6; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); font-weight: 700; }
         .provider-dropdown[open] summary::after { transform: rotate(90deg); }
-        .provider-list { padding: 0 14px; border-top: 1px solid var(--border-color); animation: slideDown 0.3s ease-out; }
-        .provider-item { padding: 12px 0; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; color: var(--text-muted); }
+        .provider-list { padding: 0 16px 12px 16px; border-top: 1px solid var(--border-color); animation: slideDown 0.3s ease-out; }
+        .provider-item { padding: 12px 0; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; color: var(--text-main); }
 
         .btn {
             display: block; width: 100%; max-width: 320px; margin: 20px auto; 
@@ -152,14 +392,271 @@
             .trait-name { width: 85px; font-size: 0.7rem; }
             .course-title { font-size: 1.05rem; }
         }
+
+        /* --- MODALS --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.149);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .modal-content {
+            background: rgba(var(--nav-bg-rgb), 0.75) !important;
+            backdrop-filter: blur(25px) saturate(150%);
+            -webkit-backdrop-filter: blur(25px) saturate(150%);
+            position: relative;
+            width: 85%;
+            max-width: 500px;
+            margin: 100px auto 40px;
+            padding: 40px;
+            border-radius: 24px;
+            z-index: 10001;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            max-height: calc(100vh - 160px);
+            overflow-y: auto;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 36px;
+            height: 36px;
+            background: #66666680;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10;
+        }
+
+        .modal-close::before, .modal-close::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 2px;
+            background-color: var(--text-muted);
+            border-radius: 2px;
+            transition: background-color 0.3s ease;
+        }
+
+        .modal-close::before { transform: rotate(45deg); }
+        .modal-close::after { transform: rotate(-45deg); }
+
+        .modal-close:hover {
+            background: hsla(0, 0%, 40%, 0.5);
+            transform: rotate(135deg);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .modal-close:hover::before, .modal-close:hover::after {
+            background-color: #ffffff;
+        }
+
+        .light-mode .modal-close {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .light-mode .modal-close::before,
+        .light-mode .modal-close::after {
+            background-color: #333;
+        }
+
+        .modal-content h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-main);
+        }
+
+        .modal-content p {
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+        }
+
+        .modal-content h3 {
+            font-size: 1.1rem;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            color: var(--text-main);
+        }
+
+        .modal-content h4 {
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+            color: var(--accent-blue);
+        }
+
+        .modal-content ul {
+            margin-left: 20px;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+
+        .modal-content li {
+            margin-bottom: 8px;
+        }
+
+        .research-goals {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+        }
+
+        .help-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .step {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 12px;
+            line-height: 1.6;
+            color: var(--text-muted);
+        }
+
+        .step strong {
+            color: var(--accent-blue);
+        }
+
+        .researchers-list {
+            list-style: none;
+            padding: 0 !important;
+            margin: 15px 0 !important;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .researchers-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .mini-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-blue), #00d4ff);
+            flex-shrink: 0;
+        }
     </style>
 </head>
 <body>
+
+<div id="about-modal" class="modal-overlay">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal('about-modal')"></button>
+        
+       <h2>About T.A.H.A.K.</h2>
+    <p><strong>T.A.H.A.K.</strong> is a web-based career assessment system designed specifically for Senior High School students in <strong>Nueva Ecija</strong>.</p>
+    
+    <p>Based on the <strong>RIASEC Model</strong> and the <strong>NCAE Occupational Interest Inventory</strong>, this tool helps bridge the gap between student interests and local academic opportunities. Our research focuses on reducing career undecidability caused by financial and geographic constraints.</p>
+    
+    <div class="research-goals">
+        <h4>Research Objectives:</h4>
+        <ul>
+            <li>Evaluate system efficiency and interface concept.</li>
+            <li>Compare web-based accessibility vs. traditional testing.</li>
+            <li>Connect student profiles to local universities in Nueva Ecija.</li>
+        </ul>
+    </div>
+    
+    <p><small>Study Period: School Year 2025-2026</small></p>
+        
+        <h3>The Researchers</h3>
+<ul class="researchers-list">
+    <li>
+        <div class="mini-avatar"></div>
+        <span>Marcus Lord Isiah R. Basanes</span>
+    </li>
+    <li>
+        <div class="mini-avatar"></div>
+        <span>John Chester C. Canoza</span>
+    </li>
+    <li>
+        <div class="mini-avatar"></div>
+        <span>Jariz Maria T. Gose</span>
+    </li>
+    <li>
+        <div class="mini-avatar"></div>
+        <span>Rhiane Chastine Lei V. Perida</span>
+    </li>
+</ul>
+    </div>
+</div>
+
+<div id="help-modal" class="modal-overlay">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal('help-modal')"></button>
+        <h2>How to Take the Assessment</h2>
+    <p>This assessment evaluates your <strong>Occupational Interests</strong>. There are no right or wrong answers.</p>
+    
+    <div class="help-steps">
+        <div class="step">
+            <strong>1. Be Honest:</strong> Select the level of enjoyment you feel for each activity, from "Strongly Dislike" to "Strongly Enjoy."
+        </div>
+        <div class="step">
+            <strong>2. RIASEC Scoring:</strong> Your responses calculate your profile across six themes: Realistic, Investigative, Artistic, Social, Enterprising, and Conventional.
+        </div>
+        <div class="step">
+            <strong>3. Local Results:</strong> Upon completion, you will receive your Top 3 Career categories and a list of universities in <strong>Nueva Ecija</strong> that offer related programs.
+        </div>
+    </div>
+    
+    <p><em>Your data is used solely for this research study on career decision-making.</em></p>
+    </div>
+</div>
+
+<div class="mobile-drawer" id="mobile-drawer">
+    <button class="close-drawer" id="close-drawer"></button>
+    
+    <div class="drawer-content">
+        <h3>Menu</h3>
+        <ul class="drawer-links">
+            <li><a href="/" onclick="toggleDrawer()">← Back to Test</a></li>
+            <li><a href="javascript:void(0)" onclick="handleMenuClick('about-modal')">About the Study</a></li>
+            <li><a href="javascript:void(0)" onclick="handleMenuClick('help-modal')">Need Help?</a></li>
+        </ul>
+    </div>
+</div>
+<div class="drawer-overlay" id="drawer-overlay"></div>
 
 <nav class="navbar">
     <div class="nav-container">
         <a href="/" class="nav-logo"><span>T.A.H.A.K.</span></a>
         <div style="font-size: 0.8rem; opacity: 0.7; font-weight: bold;">COMPLETE</div>
+        <div class="nav-controls">
+            <button class="hamburger" id="hamburger-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
     </div>
 </nav>
 
@@ -194,19 +691,59 @@
         <% 
             const traitNames = { R: "Realistic", I: "Investigative", A: "Artistic", S: "Social", E: "Enterprising", C: "Conventional" };
             Object.entries(scores).forEach(([key, score]) => { 
-                let percentage = Math.min(Math.abs((score / 24) * 100), 100);
+                let percentage = Math.min((score / 40) * 100, 100);
         %>
             <div class="score-row">
                 <div class="trait-name"><%= traitNames[key] %></div>
                 <div class="bar-wrapper">
-                    <div class="side-container negative-side">
-                        <% if (score < 0) { %><div class="bar-fill negative-bar" style="width: <%= percentage %>%;"><%= score %></div><% } %>
-                    </div>
-                    <div class="side-container positive-side">
-                        <% if (score > 0) { %><div class="bar-fill positive-bar" style="width: <%= percentage %>%;">+<%= score %></div><% } %>
-                    </div>
-                    <% if (score === 0) { %><span style="position: absolute; left: 50%; transform: translateX(-50%); font-size: 0.6rem; line-height: 18px; color: var(--text-muted); opacity: 0.5; font-weight: 900;">0</span><% } %>
+                    <% if (score > 0) { %><div class="bar-fill" style="width: <%= percentage %>%;">+<%= score %></div><% } else { %><span style="position: absolute; left: 8px; font-size: 0.7rem; color: var(--text-muted); font-weight: 700;">0</span><% } %>
                 </div>
+            </div>
+        <% }) %>
+    </div>
+
+    <div class="glass-section">
+        <h3 style="margin: 0 0 20px 0; font-size: 0.9rem; text-align: center; color: var(--text-muted); text-transform: uppercase;">Subcategory Breakdown</h3>
+        <% 
+            const subCategoryGroups = [
+                { main: "R", subs: ["R-Mechanical", "R-Natural"] },
+                { main: "I", subs: ["I-Health", "I-Physical"] },
+                { main: "A", subs: ["A-Digital", "A-Literary"] },
+                { main: "S", subs: ["S-Educational", "S-Service"] },
+                { main: "E", subs: ["E-Management", "E-Hospitality"] },
+                { main: "C", subs: ["C-Financial", "C-Logistical"] }
+            ];
+            
+            const subCategoryNames = {
+                "R-Mechanical": "Mechanical",
+                "R-Natural": "Natural",
+                "I-Health": "Health",
+                "I-Physical": "Physical",
+                "A-Digital": "Digital",
+                "A-Literary": "Literary",
+                "S-Educational": "Educational",
+                "S-Service": "Service",
+                "E-Management": "Management",
+                "E-Hospitality": "Hospitality",
+                "C-Financial": "Financial",
+                "C-Logistical": "Logistical"
+            };
+            
+            subCategoryGroups.forEach(group => {
+        %>
+            <div style="margin-bottom: 16px;">
+                <div style="font-size: 0.8rem; color: var(--accent-blue); font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;"><%= traitNames[group.main] %></div>
+                <% group.subs.forEach(sub => {
+                    const subScore = subScores[sub] || 0;
+                    const subPercentage = Math.min((subScore / 20) * 100, 100);
+                %>
+                    <div class="score-row" style="margin-bottom: 8px;">
+                        <div class="trait-name" style="font-size: 0.75rem;"><%= subCategoryNames[sub] %></div>
+                        <div class="bar-wrapper" style="height: 20px;">
+                            <% if (subScore > 0) { %><div class="bar-fill" style="width: <%= subPercentage %>%; font-size: 0.65rem;">+<%= subScore %></div><% } else { %><span style="position: absolute; left: 8px; font-size: 0.65rem; color: var(--text-muted); font-weight: 700;">0</span><% } %>
+                        </div>
+                    </div>
+                <% }) %>
             </div>
         <% }) %>
     </div>
@@ -218,6 +755,11 @@
             <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
                 <div style="flex: 1;">
                     <h3 class="course-title"><%= group.courseName %></h3>
+                    <% if (group.subcategoryName) { %>
+                        <div style="font-size: 0.65rem; color: var(--accent-blue); opacity: 0.85; margin-bottom: 6px; font-weight: 600;">
+                            ✨ Strongest match for your interest in <strong><%= group.subcategoryName %></strong>
+                        </div>
+                    <% } %>
                     <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Holland Match: <strong><%= group.riasec %></strong></div>
                 </div>
                 <div style="background: var(--accent-blue); color: white; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: bold; white-space: nowrap;">Score: <%= group.score %></div>
@@ -244,6 +786,45 @@
 <script>
     if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
     if (localStorage.getItem('warm') === 'true') document.body.classList.add('warm-mode');
+
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+    const closeBtn = document.getElementById('close-drawer');
+    const drawer = document.getElementById('mobile-drawer');
+    const overlay = document.getElementById('drawer-overlay');
+
+    function toggleDrawer() {
+        drawer.classList.toggle('active');
+        overlay.classList.toggle('active');
+    }
+
+    hamburgerBtn.addEventListener('click', toggleDrawer);
+    closeBtn.addEventListener('click', toggleDrawer);
+    overlay.addEventListener('click', toggleDrawer);
+
+    // Modal functions
+    function openModal(id) {
+        const modal = document.getElementById(id);
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(id) {
+        const modal = document.getElementById(id);
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    window.addEventListener('click', (event) => {
+        if (event.target.classList.contains('modal-overlay')) {
+            event.target.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    });
+
+    function handleMenuClick(modalId) {
+        toggleDrawer();
+        openModal(modalId);
+    }
 </script>
 </body>
 </html>

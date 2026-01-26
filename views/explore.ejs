@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Courses</title>
+    
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+
+        :root {
+            --main-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-main: #2c3e50;
+            --text-muted: #5f6368;
+            --nav-bg-rgb: 255, 255, 255;
+            --nav-text: #2c3e50;
+            --border-color: #dadce0;
+            --shadow: rgba(0,0,0,0.1);
+            --accent-blue: #1a73e8;
+        }
+
+        body.dark-mode {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #e8eaed;
+            --text-muted: #9aa0a6;
+            --nav-bg-rgb: 30, 30, 30;
+            --nav-text: #e8eaed;
+            --border-color: #3c4043;
+            --shadow: rgba(0,0,0,0.4);
+        }
+
+        body.warm-mode::after {
+            content: "";
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(255, 145, 0, 0.15);
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: multiply;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            overflow-x: hidden;
+            font-family: var(--main-font);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body {
+            padding-top: 90px;
+            padding-bottom: 50px;
+        }
+
+        /* --- NAVBAR --- */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 70px;
+            
+            background-color: rgba(var(--nav-bg-rgb), 0.25);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            z-index: 2000;
+            box-shadow: 0 2px 10px var(--shadow);
+            border-bottom: 1px solid var(--border-color);
+            
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            width: 95%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            text-decoration: none;
+            color: var(--nav-text);
+            letter-spacing: -0.5px;
+            transition: opacity 0.2s ease;
+        }
+
+        .nav-logo:hover { opacity: 0.8; }
+
+        .nav-logo span {
+            background: linear-gradient(135deg, #1a73e8, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-blue);
+        }
+
+        /* --- HAMBURGER --- */
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            transition: opacity 0.2s ease;
+        }
+
+        .hamburger span {
+            width: 24px;
+            height: 3px;
+            background: var(--text-main);
+            border-radius: 2px;
+        }
+
+        .hamburger:hover {
+            opacity: 0.7;
+        }
+
+        /* --- MOBILE DRAWER --- */
+        .mobile-drawer {
+            position: fixed;
+            top: 15px;
+            bottom: 15px;
+            right: -110%;
+            width: 290px;
+            
+            background: rgba(var(--nav-bg-rgb), 0.5) !important;
+            backdrop-filter: blur(15px) saturate(160%);
+            -webkit-backdrop-filter: blur(25px) saturate(160%);
+            
+            z-index: 3000;
+            padding: 70px 25px 40px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            
+            visibility: hidden;
+            pointer-events: none;
+            
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .mobile-drawer.active {
+            right: 15px;
+            visibility: visible;
+            pointer-events: auto;
+            box-shadow: -15px 15px 50px rgba(0,0,0,0.1);
+        }
+
+        .mobile-drawer h3 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 35px;
+            padding-bottom: 15px;
+            text-align: left;
+            letter-spacing: -0.5px;
+        }
+
+        .mobile-drawer h3 span {
+            color: var(--accent-blue);
+        }
+
+        .drawer-links {
+            list-style: none !important;
+            padding: 0 !important;
+            margin: 0;
+        }
+
+        .drawer-links li {
+            list-style: none !important;
+            margin-bottom: 12px;
+        }
+
+        .drawer-links a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 1rem;
+            font-weight: 600;
+            display: block;
+            padding: 14px 20px;
+            border-radius: 18px;
+            
+            background: hsla(0, 0%, 40%, 0.05);
+            border: 1px solid hsla(0, 0%, 40%, 0.5);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .drawer-links a:hover {
+            background: var(--accent-blue);
+            color: white !important;
+            transform: translateX(8px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(26, 115, 232, 0.3);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .close-drawer {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 36px;
+            height: 36px;
+            background: #66666680;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10;
+        }
+
+        .close-drawer::before,
+        .close-drawer::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 2px;
+            background-color: var(--text-muted);
+            border-radius: 2px;
+            transition: background-color 0.3s ease;
+        }
+
+        .close-drawer::before { transform: rotate(45deg); }
+        .close-drawer::after { transform: rotate(-45deg); }
+
+        .close-drawer:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: rotate(135deg);
+        }
+
+        .close-drawer:hover::before,
+        .close-drawer:hover::after {
+            background-color: var(--text-main);
+        }
+
+        .light-mode .mobile-drawer {
+            background: rgba(255, 255, 255, 0.95) !important;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .light-mode .mobile-drawer h3 {
+            color: #000;
+            border-bottom-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .light-mode .drawer-links a {
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            color: #222;
+        }
+
+        .light-mode .drawer-links a:hover {
+            background: var(--accent-blue);
+            color: white !important;
+        }
+
+        .light-mode .close-drawer {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            
+            background: rgba(0, 0, 0, 0.25);
+            
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            
+            display: none;
+            z-index: 2500;
+            
+            animation: fadeIn 0.3s ease;
+        }
+
+        .drawer-overlay.active {
+            display: block;
+        }
+
+        .drawer-content {
+            position: relative;
+        }
+
+        .nav-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            justify-content: flex-end;
+            grid-column: 3;
+        }
+
+        /* --- CONTENT WRAPPER --- */
+        .content-wrapper {
+            max-width: 1400px;
+            width: 95%;
+            margin: 0 auto;
+            margin-bottom: 50px;
+            padding: 0;
+        }
+
+        /* --- FIXED SEARCH BAR --- */
+        .search-bar-container {
+            background: transparent;
+            padding: 20px 0;
+            margin-top: 20px;
+        }
+
+        .search-bar-content {
+            max-width: 1400px;
+            width: 95%;
+            margin: 0 auto;
+            display: flex;
+            gap: 12px;
+        }
+
+        #searchInput {
+            flex: 1;
+            padding: 12px 18px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: rgba(var(--card-bg-rgb), 0.6);
+            backdrop-filter: blur(10px);
+            color: var(--text-main);
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        #searchInput:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+            background: rgba(var(--card-bg-rgb), 0.9);
+        }
+
+        #searchInput::placeholder {
+            color: var(--text-muted);
+        }
+
+        .explorer-container {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .filters-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .courses-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .glass-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 28px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px var(--shadow);
+            animation: fadeIn 0.8s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- SECTION LABEL --- */
+        .section-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin: 20px 0 12px 0;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            order: 1;
+        }
+
+        .section-label:first-of-type {
+            margin-top: 0;
+        }
+
+        /* --- BUTTON STYLES --- */
+        .uni-btn,
+        .campus-btn {
+            padding: 12px 18px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-main);
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-family: var(--main-font);
+            white-space: nowrap;
+        }
+
+        .uni-btn:hover,
+        .campus-btn:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.15);
+        }
+
+        .uni-btn.active,
+        .campus-btn.active {
+            background: linear-gradient(135deg, #1a73e8, #00d4ff);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 8px 20px rgba(26, 115, 232, 0.3);
+        }
+
+        .uni-btn.hidden {
+            display: none;
+        }
+
+        /* --- BUTTON CONTAINERS --- */
+        .universities-buttons,
+        .campus-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+            order: 1;
+            transition: order 0.3s ease;
+        }
+
+        .glass-section.search-active .universities-buttons {
+            order: 3;
+        }
+
+        .glass-section.search-active .courses-section {
+            order: -1;
+            margin-top: 0;
+        }
+
+        .glass-section.search-active .campus-section {
+            order: 2;
+        }
+
+        .unis-loading {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* --- CAMPUS SECTION --- */
+        .campus-section {
+            display: none;
+            order: -1;
+            padding-top: 20px;
+            border-top: 2px solid var(--border-color);
+            margin-top: 20px;
+        }
+
+        .campus-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* --- COURSE CARDS --- */
+        .courses-section {
+            margin-top: 20px;
+            order: 2;
+            transition: order 0.3s ease;
+        }
+
+        .courses-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .course-card {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 18px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .course-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px var(--shadow);
+            border-color: var(--accent-blue);
+        }
+
+        .course-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .course-name {
+            margin: 0;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-main);
+            flex: 1;
+        }
+
+        .riasec-badge {
+            background: linear-gradient(135deg, #1a73e8, #00d4ff);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .course-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .meta-item {
+            display: flex;
+            gap: 8px;
+            align-items: baseline;
+        }
+
+        .meta-label {
+            font-weight: 600;
+            color: var(--text-main);
+            min-width: 70px;
+            font-size: 0.8rem;
+        }
+
+        /* --- EMPTY STATE --- */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state h3 {
+            font-size: 1.1rem;
+            margin: 0 0 8px 0;
+            color: var(--text-main);
+            font-weight: 700;
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            body { padding-top: 80px; }
+            
+            .navbar { height: 60px; }
+            
+            .nav-logo { font-size: 1.1rem; }
+            
+            .glass-section {
+                padding: 20px;
+                border-radius: 16px;
+            }
+
+            .uni-btn,
+            .campus-btn {
+                padding: 10px 14px;
+                font-size: 0.85rem;
+            }
+
+            .course-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .riasec-badge {
+                align-self: flex-start;
+            }
+
+            .section-label {
+                font-size: 0.75rem;
+            }
+
+            .course-name {
+                font-size: 1rem;
+            }
+
+            .explorer-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* --- HAMBURGER & DRAWER (MOBILE MENU) --- */
+        .nav-controls { display: flex; gap: 15px; align-items: center; }
+        
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 28px;
+            height: 28px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .hamburger span { 
+            width: 100%;
+            height: 2px;
+            background-color: var(--text-main);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* --- MODALS --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.149);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .modal-content {
+            background: rgba(var(--nav-bg-rgb), 0.75) !important;
+            backdrop-filter: blur(25px) saturate(150%);
+            -webkit-backdrop-filter: blur(25px) saturate(150%);
+            position: relative;
+            width: 85%;
+            max-width: 500px;
+            margin: 100px auto 40px;
+            padding: 40px;
+            border-radius: 24px;
+            z-index: 10001;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            max-height: calc(100vh - 160px);
+            overflow-y: auto;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 36px;
+            height: 36px;
+            background: #66666680;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10;
+        }
+
+        .modal-close::before, .modal-close::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 2px;
+            background-color: var(--text-muted);
+            border-radius: 2px;
+            transition: background-color 0.3s ease;
+        }
+
+        .modal-close::before { transform: rotate(45deg); }
+        .modal-close::after { transform: rotate(-45deg); }
+
+        .modal-close:hover {
+            background: hsla(0, 0%, 40%, 0.5);
+            transform: rotate(135deg);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .modal-close:hover::before, .modal-close:hover::after {
+            background-color: #ffffff;
+        }
+
+        .light-mode .modal-close {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .light-mode .modal-close::before,
+        .light-mode .modal-close::after {
+            background-color: #333;
+        }
+
+        .modal-content h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-main);
+        }
+
+        .modal-content p {
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+        }
+
+        .modal-content h3 {
+            font-size: 1.1rem;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            color: var(--text-main);
+        }
+
+        .modal-content h4 {
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+            color: var(--accent-blue);
+        }
+
+        .modal-content ul {
+            margin-left: 20px;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+
+        .modal-content li {
+            margin-bottom: 8px;
+        }
+
+        .research-goals {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+        }
+
+        .help-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .step {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 12px;
+            line-height: 1.6;
+            color: var(--text-muted);
+        }
+
+        .step strong {
+            color: var(--accent-blue);
+        }
+
+        .researchers-list {
+            list-style: none;
+            padding: 0 !important;
+            margin: 15px 0 !important;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .researchers-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .mini-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-blue), #00d4ff);
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div id="about-modal" class="modal-overlay">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal('about-modal')"></button>
+        
+       <h2>About T.A.H.A.K.</h2>
+    <p><strong>T.A.H.A.K.</strong> is a web-based career assessment system designed specifically for Senior High School students in <strong>Nueva Ecija</strong>.</p>
+    
+    <p>Based on the <strong>RIASEC Model</strong> and the <strong>NCAE Occupational Interest Inventory</strong>, this tool helps bridge the gap between student interests and local academic opportunities. Our research focuses on reducing career undecidability caused by financial and geographic constraints.</p>
+    
+    <div class="research-goals">
+        <h4>Research Objectives:</h4>
+        <ul>
+            <li>Evaluate system efficiency and interface concept.</li>
+            <li>Compare web-based accessibility vs. traditional testing.</li>
+            <li>Connect student profiles to local universities in Nueva Ecija.</li>
+        </ul>
+    </div>
+    
+    <p><small>Study Period: School Year 2025-2026</small></p>
+        
+        <h3>The Researchers</h3>
+<ul class="researchers-list">
+    <li>
+        <div class="mini-avatar"></div>
+        <span>Marcus Lord Isiah R. Basanes</span>
+    </li>
+    <li>
+        <div class="mini-avatar"></div>
+        <span>John Chester C. Canoza</span>
+    </li>
+    <li>
+        <div class="mini-avatar"></div>
+        <span>Jariz Maria T. Gose</span>
+    </li>
+    <li>
+        <div class="mini-avatar"></div>
+        <span>Rhiane Chastine Lei V. Perida</span>
+    </li>
+</ul>
+    </div>
+</div>
+
+<div id="help-modal" class="modal-overlay">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal('help-modal')"></button>
+        <h2>How to Take the Assessment</h2>
+    <p>This assessment evaluates your <strong>Occupational Interests</strong>. There are no right or wrong answers.</p>
+    
+    <div class="help-steps">
+        <div class="step">
+            <strong>1. Be Honest:</strong> Select the level of enjoyment you feel for each activity, from "Strongly Dislike" to "Strongly Enjoy."
+        </div>
+        <div class="step">
+            <strong>2. RIASEC Scoring:</strong> Your responses calculate your profile across six themes: Realistic, Investigative, Artistic, Social, Enterprising, and Conventional.
+        </div>
+        <div class="step">
+            <strong>3. Local Results:</strong> Upon completion, you will receive your Top 3 Career categories and a list of universities in <strong>Nueva Ecija</strong> that offer related programs.
+        </div>
+    </div>
+    
+    <p><em>Your data is used solely for this research study on career decision-making.</em></p>
+    </div>
+</div>
+
+<div class="mobile-drawer" id="drawer">
+    <button class="close-drawer" id="close-drawer"></button>
+    
+    <div class="drawer-content">
+        <h3>Menu</h3>
+        <ul class="drawer-links">
+            <li><a href="/" onclick="toggleDrawer()">← Back to Test</a></li>
+            <li><a href="javascript:void(0)" onclick="handleMenuClick('about-modal')">About the Study</a></li>
+            <li><a href="javascript:void(0)" onclick="handleMenuClick('help-modal')">Need Help?</a></li>
+        </ul>
+    </div>
+</div>
+<div class="drawer-overlay" id="overlay"></div>
+
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="nav-logo"><span>T.A.H.A.K.</span></a>
+        <div class="nav-controls">
+            <button class="hamburger" id="hamburger-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<div class="search-bar-container">
+    <div class="search-bar-content">
+        <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="🔍 Search by course name, major, or college..."
+            autocomplete="off"
+        >
+    </div>
+</div>
+
+<div class="content-wrapper">
+    
+    <div class="explorer-container">
+        <!-- Left Column: Filters -->
+        <div class="filters-column">
+            <div class="glass-section">
+                <div style="margin-bottom: 24px;">
+                    <h2 style="margin: 0 0 8px 0; font-size: 1.4rem; color: var(--text-main);">Explore around Nueva Ecija</h2>
+                    <p style="margin: 0 0 20px 0; color: var(--text-muted); font-size: 0.9rem;">Find the courses offered by the university of your choosing</p>
+                </div>
+
+                <div class="section-label">
+                    <span></span> Select a University
+                </div>
+                <div class="universities-buttons" id="universitiesContainer">
+                    <div class="unis-loading">Loading universities...</div>
+                </div>
+
+                <div class="campus-section" id="campusSection">
+                    <div class="section-label">
+                        <span></span> Filter by Campus (optional)
+                    </div>
+                    <div class="campus-buttons" id="campusContainer"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Courses -->
+        <div class="courses-column">
+            <div class="courses-section" id="coursesSection" style="display: none;">
+                <div class="glass-section">
+                    <div class="section-label">
+                        <span>📚</span> Available Courses
+                    </div>
+                    <div class="courses-list" id="coursesList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <script>
+        let currentUni = '';
+        let currentCampus = '';
+        let searchQuery = '';
+        let debounceTimer;
+
+        console.log('explore.ejs script loaded');
+
+        // Load theme from localStorage
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        if (savedTheme === 'dark') document.body.classList.add('dark-mode');
+        if (savedTheme === 'warm') document.body.classList.add('warm-mode');
+
+        // LOAD UNIVERSITIES ON PAGE LOAD
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('DOMContentLoaded event fired');
+            loadUniversities();
+        });
+
+        function loadUniversities() {
+            console.log('loadUniversities called');
+            fetch('/api/universities')
+                .then(res => {
+                    console.log('API response received:', res.status);
+                    return res.json();
+                })
+                .then(universities => {
+                    console.log('Universities data:', universities);
+                    const html = universities.map(uni => `
+                        <button class="uni-btn" onclick="selectUniversity('${escapeHtml(uni.name)}', event)">
+                            ${escapeHtml(uni.name)} <span style="opacity: 0.7; font-size: 0.85rem;">(${uni.courseCount})</span>
+                        </button>
+                    `).join('');
+                    document.getElementById('universitiesContainer').innerHTML = html;
+                    console.log('Universities rendered');
+                })
+                .catch(err => {
+                    console.error('Error loading universities:', err);
+                    document.getElementById('universitiesContainer').innerHTML = '<div class="unis-loading">Error loading universities</div>';
+                });
+        }
+
+        function selectUniversity(uniName, event) {
+            event.preventDefault();
+            
+            // If already selected, deselect
+            if (currentUni === uniName) {
+                deselectUniversity();
+                return;
+            }
+            
+            currentUni = uniName;
+            currentCampus = '';
+            searchQuery = '';
+            document.getElementById('searchInput').value = '';
+
+            // Update button states - hide non-selected universities
+            document.querySelectorAll('.uni-btn').forEach(btn => {
+                const isSelected = btn.textContent.includes(uniName);
+                btn.classList.toggle('active', isSelected);
+                btn.classList.toggle('hidden', !isSelected);
+            });
+
+            // Load campuses
+            fetch(`/api/universities/${encodeURIComponent(uniName)}/campuses`)
+                .then(res => res.json())
+                .then(campuses => {
+                    const html = campuses.map(campus => `
+                        <button class="campus-btn" onclick="selectCampus('${escapeHtml(uniName)}', '${escapeHtml(campus.name)}', event)">
+                            ${escapeHtml(campus.name)} <span style="opacity: 0.7; font-size: 0.85rem;">(${campus.courseCount})</span>
+                        </button>
+                    `).join('');
+                    document.getElementById('campusContainer').innerHTML = html;
+                    document.getElementById('campusSection').classList.add('active');
+                    
+                    // Load all courses for this university by default
+                    loadCoursesForUni(uniName);
+                })
+                .catch(err => console.error(err));
+        }
+
+        function deselectUniversity() {
+            currentUni = '';
+            currentCampus = '';
+            searchQuery = '';
+            document.getElementById('searchInput').value = '';
+
+            // Show all universities and remove active state
+            document.querySelectorAll('.uni-btn').forEach(btn => {
+                btn.classList.remove('active', 'hidden');
+            });
+
+            // Hide campus and courses sections
+            document.getElementById('campusSection').classList.remove('active');
+            document.getElementById('coursesSection').style.display = 'none';
+        }
+
+        function selectCampus(uniName, campusName, event) {
+            event.preventDefault();
+            
+            // If already selected, deselect
+            if (currentCampus === campusName) {
+                deselectCampus(uniName);
+                return;
+            }
+            
+            currentCampus = campusName;
+
+            // Update button states
+            document.querySelectorAll('.campus-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.closest('.campus-btn').classList.add('active');
+
+            // Load courses for this campus
+            fetch(`/api/universities/${encodeURIComponent(uniName)}/campuses/${encodeURIComponent(campusName)}/courses`)
+                .then(res => res.json())
+                .then(courses => displayCourses(courses))
+                .catch(err => console.error(err));
+        }
+
+        function deselectCampus(uniName) {
+            currentCampus = '';
+
+            // Remove active state from all campus buttons
+            document.querySelectorAll('.campus-btn').forEach(btn => btn.classList.remove('active'));
+
+            // Reload all courses for the university
+            loadCoursesForUni(uniName);
+        }
+
+        function loadCoursesForUni(uniName) {
+            // Load all campuses and aggregate their courses
+            fetch(`/api/universities/${encodeURIComponent(uniName)}/campuses`)
+                .then(res => res.json())
+                .then(campuses => {
+                    let allCourses = [];
+                    let loaded = 0;
+                    
+                    campuses.forEach(campus => {
+                        fetch(`/api/universities/${encodeURIComponent(uniName)}/campuses/${encodeURIComponent(campus.name)}/courses`)
+                            .then(res => res.json())
+                            .then(courses => {
+                                allCourses = allCourses.concat(courses);
+                                loaded++;
+                                if (loaded === campuses.length) {
+                                    // Deduplicate by course name
+                                    const unique = {};
+                                    allCourses.forEach(course => {
+                                        if (!unique[course.courseName]) {
+                                            unique[course.courseName] = course;
+                                        }
+                                    });
+                                    displayCourses(Object.values(unique));
+                                }
+                            })
+                            .catch(err => console.error(err));
+                    });
+                })
+                .catch(err => console.error(err));
+        }
+
+        function displayCourses(courses) {
+            if (courses.length === 0) {
+                document.getElementById('coursesList').innerHTML = '<div class="empty-state"><h3>No courses found</h3></div>';
+                document.getElementById('coursesSection').style.display = 'block';
+                return;
+            }
+
+            const html = courses.map(course => `
+                <div class="course-card">
+                    <div class="course-header">
+                        <h3 class="course-name">${escapeHtml(course.courseName || 'Course')}</h3>
+                        <span class="riasec-badge">${escapeHtml(course.riasec)}</span>
+                    </div>
+                    <div class="course-meta">
+                        ${course.major ? `<div class="meta-item"><span class="meta-label">Major:</span> <span>${escapeHtml(course.major)}</span></div>` : ''}
+                        ${course.college ? `<div class="meta-item"><span class="meta-label">College:</span> <span>${escapeHtml(course.college)}</span></div>` : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('coursesList').innerHTML = html;
+            document.getElementById('coursesSection').style.display = 'block';
+        }
+
+        // SEARCH FUNCTIONALITY
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchQuery = e.target.value.toLowerCase();
+            clearTimeout(debounceTimer);
+            
+            // Toggle search-active class on glass-section for reordering
+            const glassSection = document.querySelector('.glass-section');
+            if (searchQuery.length > 0) {
+                glassSection.classList.add('search-active');
+            } else {
+                glassSection.classList.remove('search-active');
+            }
+            
+            debounceTimer = setTimeout(performSearch, 300);
+        });
+
+        function performSearch() {
+            if (searchQuery.length === 0) {
+                if (currentUni) {
+                    loadCoursesForUni(currentUni);
+                } else {
+                    document.getElementById('coursesSection').style.display = 'none';
+                }
+                return;
+            }
+
+            // Search across all courses
+            fetch(`/api/search?q=${encodeURIComponent(searchQuery)}&riasec=`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.results.length === 0) {
+                        document.getElementById('coursesList').innerHTML = '<div class="empty-state"><h3>No courses found</h3></div>';
+                    } else {
+                        displaySearchResults(data.results);
+                    }
+                    document.getElementById('coursesSection').style.display = 'block';
+                })
+                .catch(err => console.error(err));
+        }
+
+        function displaySearchResults(results) {
+            const html = results.map(course => `
+                <div class="course-card">
+                    <div class="course-header">
+                        <h3 class="course-name">${escapeHtml(course.course)}</h3>
+                        <span class="riasec-badge">${escapeHtml(course.riasec)}</span>
+                    </div>
+                    <div class="course-meta">
+                        <div class="meta-item"><span class="meta-label">University:</span> <span>${escapeHtml(course.university)}</span></div>
+                        <div class="meta-item"><span class="meta-label">Campus:</span> <span>${escapeHtml(course.campus)}</span></div>
+                        ${course.major ? `<div class="meta-item"><span class="meta-label">Major:</span> <span>${escapeHtml(course.major)}</span></div>` : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('coursesList').innerHTML = html;
+        }
+
+        function escapeHtml(text) {
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // Hamburger & Drawer Toggle
+        const hamburgerBtn = document.getElementById('hamburger-btn');
+        const closeBtn = document.getElementById('close-drawer');
+        const drawer = document.getElementById('drawer');
+        const overlay = document.getElementById('overlay');
+
+        function toggleDrawer() {
+            drawer.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        hamburgerBtn.addEventListener('click', toggleDrawer);
+        closeBtn.addEventListener('click', toggleDrawer);
+        overlay.addEventListener('click', toggleDrawer);
+
+        // Modal functions
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        window.addEventListener('click', (event) => {
+            if (event.target.classList.contains('modal-overlay')) {
+                event.target.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        function handleMenuClick(modalId) {
+            toggleDrawer();
+            openModal(modalId);
+        }
+    </script>
+</body>
+</html>

@@ -114,19 +114,90 @@ html, body {
     #dev-panel {
         position: fixed;
         top: 80px; right: 20px;
-        width: 240px;
+        width: 280px;
         background: var(--card-bg);
-        border-radius: 15px;
-        padding: 15px;
+        border-radius: 20px;
+        padding: 24px;
         z-index: 2000;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        box-shadow: 0 10px 30px var(--shadow);
+        border: 1px solid var(--border-color);
         display: none; /* Hidden by default - Toggle with Shift+D */
+        animation: slideUp 0.3s cubic-bezier(0.23, 1, 0.32, 1);
     }
-    #dev-panel h3 { margin: 0 0 10px 0; font-size: 1rem; color: var(--accent-blue); }
-    .dev-input-group { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-    .dev-input-group label { font-size: 0.8rem; font-weight: bold; }
-    .dev-input-group input { width: 60px; padding: 4px; border-radius: 4px; border: 1px solid var(--border-color); background: var(--likert-bg); color: var(--text-main); }
-    .dev-btn { width: 100%; padding: 10px; background: var(--accent-blue); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+    #dev-panel h3 { 
+        margin: 0 0 16px 0; 
+        font-size: 0.95rem; 
+        color: var(--accent-blue); 
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 700;
+    }
+    .dev-input-group { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        margin-bottom: 12px;
+    }
+    .dev-input-group label { 
+        font-size: 0.75rem; 
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        letter-spacing: 0.3px;
+    }
+    .dev-input-group input { 
+        width: 60px; 
+        padding: 8px 10px; 
+        border-radius: 8px; 
+        border: 1px solid var(--border-color); 
+        background: var(--bg-color); 
+        color: var(--text-main);
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: all 0.2s ease;
+    }
+    .dev-input-group input:focus {
+        outline: none;
+        border-color: var(--accent-blue);
+        box-shadow: 0 0 8px rgba(26, 115, 232, 0.15);
+    }
+    #profile-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+    .dev-btn { 
+        width: 100%; 
+        padding: 12px; 
+        background: linear-gradient(135deg, #1a73e8, #00d4ff);
+        color: white; 
+        border: none; 
+        border-radius: 12px; 
+        cursor: pointer; 
+        font-weight: 700;
+        font-size: 0.85rem;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 4px 12px rgba(26, 115, 232, 0.2);
+    }
+    .dev-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(26, 115, 232, 0.3);
+    }
+    .dev-btn:active {
+        transform: translateY(0);
+    }
+    .dev-panel-divider {
+        height: 1px;
+        background: var(--border-color);
+        margin: 14px 0;
+    }
+    #dev-panel > div:last-child {
+        font-size: 0.65rem;
+        color: var(--text-muted);
+        text-align: center;
+        margin-top: 12px;
+    }
 /* --- RESPONSIVE DEV PANEL --- */
 @media (max-width: 600px) {
     #dev-panel {
@@ -137,14 +208,12 @@ html, body {
         width: 90% !important;
         max-height: 80vh;
         overflow-y: auto;
-        border: 2px solid var(--accent-blue);
-        box-shadow: 0 -10px 40px rgba(0,0,0,0.4);
-        padding: 20px;
+        padding: 24px;
     }
     
     .dev-btn {
-        padding: 15px; /* Larger hit area for fingers */
-        font-size: 1rem;
+        padding: 14px;
+        font-size: 0.9rem;
     }
 }
     /* 4. GLOBAL RESET & LAYOUT */
@@ -1649,13 +1718,10 @@ input:checked + .slider:before {
     <div class="drawer-content">
         <h3>Menu</h3>
         <ul class="drawer-links">
+            <li><a href="/explore">Search Courses</a></li>
             <li><a href="javascript:void(0)" onclick="handleMenuClick('about-modal')">About the Study</a></li>
             <li><a href="javascript:void(0)" onclick="handleMenuClick('help-modal')">Need Help?</a></li>
         </ul>
-        
-        <div style="position: absolute; bottom: 30px; font-size: 0.7rem; color: #555;">
-            Talents, Abilities, Hobbies & Knowledge
-        </div>
     </div>
 </div>
 <div class="drawer-overlay" id="drawer-overlay"></div>
@@ -1682,7 +1748,7 @@ input:checked + .slider:before {
 
 <div class="settings-container">
         <div class="setting-item">
-            <span>JARIZ MODE</span>
+            <span>WARM MODE</span>
             <label class="switch">
                 <input type="checkbox" id="warm-check">
                 <span class="slider warm"></span>
@@ -1727,13 +1793,14 @@ input:checked + .slider:before {
     const body = document.body;
 
     // --- DEV TOOLS (Shift + D) ---
-    // --- UPDATED DEV TOOLS LOGIC ---
+    // --- UPDATED DEV TOOLS LOGIC WITH NEW POSITIVE SCORING SYSTEM ---
+    // Max per category: 40 points (8 questions × 5 points)
 const profiles = {
-    MY_IA:     { r: -4, i: 11, a: 3,  s: -12, e: -16, c: 0 },
-    SCIENTIST: { r: 4,  i: 20, a: -2, s: -12, e: -18, c: 6 },
-    CREATIVE:  { r: -8, i: 2,  a: 18, s: 16,  e: 4,   c: -20 },
-    LEADER:    { r: 2,  i: -4, a: -15,s: 8,   e: 22,  c: 14 },
-    BUILDER:   { r: 24, i: 12, a: 0,  s: -22, e: -6,  c: 5 }
+    MY_IA:     { r: 12, i: 35, a: 18, s: 8,  e: 5,  c: 10 },
+    SCIENTIST: { r: 16, i: 40, a: 8,  s: 5,  e: 4,  c: 14 },
+    CREATIVE:  { r: 6,  i: 12, a: 40, s: 32, e: 16, c: 4 },
+    LEADER:    { r: 10, i: 8,  a: 6,  s: 24, e: 38, c: 28 },
+    BUILDER:   { r: 38, i: 30, a: 12, s: 4,  e: 8,  c: 18 }
 };
 
 window.addEventListener('keydown', (e) => {
