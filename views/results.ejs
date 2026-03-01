@@ -602,10 +602,32 @@
         .provider-item { padding: 12px 0; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; color: var(--text-main); }
 
         .btn {
-            display: block; width: 100%; max-width: 320px; margin: 20px auto; 
+            display: block; width: 100%; max-width: 320px; margin: 12px auto; 
             padding: 16px; background: linear-gradient(135deg, #1a73e8, #00d4ff);
             color: white; text-decoration: none; border-radius: 100px; font-weight: 700;
             text-align: center; box-shadow: 0 8px 20px rgba(26, 115, 232, 0.3);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(26, 115, 232, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--accent-blue);
+            border: 2px solid var(--accent-blue);
+            box-shadow: none;
+        }
+
+        .btn-ghost:hover {
+            background: rgba(26, 115, 232, 0.1);
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.2);
         }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -904,27 +926,27 @@
             };
         %>
         <% hollandCode.split('').forEach(code => { %>
-            <div style="margin-bottom: 18px;">
-                <div style="margin-bottom: 10px;">
-                    <h4 style="margin: 0; font-size: 1.2rem; color: var(--text-main); font-weight: 700;"><%= hollandDescriptions[code] %></h4>
-                </div>
-                <p style="margin: 0; color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
-                    <% if (code === 'R') { %>
-                        You are a practical, hands-on individual who finds the most satisfaction in working with your physical environment. You prefer dealing with real-world problems, specifically things you can see, touch, and fix, rather than abstract theories or office politics. Whether it is operating complex machinery, designing a physical structure, or working outdoors with nature, you value tangible results and technical proficiency. In a college environment, you will thrive in majors that offer labs, workshops, and fieldwork, as you are at your best when you are applying logic to solve concrete, physical challenges.
-                    <% } else if (code === 'I') { %>
-                        You are a naturally curious and analytical person driven by a need to understand the why behind the world. You prefer tasks that involve observing, learning, and evaluating data rather than leading people or performing manual labor. You are often described as an independent thinker who enjoys the challenge of a complex puzzle and the rigor of the scientific method. In your studies, you will be most at home in research-heavy environments where you can explore theoretical frameworks and dive deep into intellectual discovery without being rushed to a purely commercial conclusion.
-                    <% } else if (code === 'A') { %>
-                        You are an expressive and original soul who values intuition and independence above all else. You likely find rigid structures and repetitive routines stifling, preferring instead open-ended environments where you can use your imagination to create something new. You are often sensitive to aesthetics and non-conforming in your approach to problem-solving. In higher education, you will find your home in majors that prioritize storytelling, design, and creative expression, as you are less concerned with how things have always been done and more focused on how they could be reimagined.
-                    <% } else if (code === 'S') { %>
-                        You are a deeply empathetic and cooperative individual motivated by the desire to foster growth, healing, and well-being in others. You are a natural communicator who finds the most fulfillment in roles that involve teaching, counseling, or providing service to your community. While others may focus on data or machines, your focus is always on the human element. In a university setting, you will excel in collaborative environments and majors that require high emotional intelligence, as you are naturally wired to understand and support the needs of those around you.
-                    <% } else if (code === 'E') { %>
-                        You are an energetic and ambitious driver of progress, motivated by leadership, influence, and the achievement of big-picture goals. You are a natural risk-taker who feels comfortable in the spotlight, whether you are persuading others to follow your vision or managing a project to success. You are likely more interested in decision-making and the bottom line than in minute technical details. In college, you will thrive in fast-paced, competitive programs that value networking, public speaking, and the strategic ability to turn an idea into a reality.
-                    <% } else if (code === 'C') { %>
-                        You are a methodical and reliable individual who finds beauty in order, precision, and efficiency. You have a strong affinity for working with data, numbers, and established procedures to ensure that systems run exactly as they should. You are the person who catches the details that others miss, valuing accuracy and clear instructions above all else. In your academic career, you will prefer structured environments with clear expectations, excelling in majors that require the ability to organize complex information into clear, actionable, and orderly formats.
-                    <% } %>
-                </p>
-            </div>
-        <% }) %>
+    <div style="margin-bottom: 18px;">
+        <div style="margin-bottom: 10px;">
+            <h4 style="margin: 0; font-size: 1.2rem; color: var(--text-main); font-weight: 700;"><%= hollandDescriptions[code] %></h4>
+        </div>
+        <p style="margin: 0; color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
+            <% if (code === 'R') { %>
+                You're definitely someone who learns by doing. Psychologically, having a Realistic orientation just means you're hardwired to work with your hands, tools, or the physical world. Research on this type shows you find way more satisfaction in fixing a tangible problem than sitting through a theoretical lecture. You're practical, you value technical skill, and you're at your best when you can actually see the literal results of your hard work.
+            <% } else if (code === 'I') { %>
+                You're the type of person who needs to know how the world works. Vocational studies label this the Investigative type because you're driven by logic and a deep-seated curiosity. You'd rather spend hours solving a complex puzzle or analyzing data than leading a crowd or doing repetitive tasks. You're an independent thinker who trusts the scientific method, and you really thrive when you can dive into a research rabbit hole.
+            <% } else if (code === 'A') { %>
+                You have an Artistic personality, which in psychology means you're naturally drawn to things that are "unstructured." You probably hate following a rigid handbook and would much rather use your intuition to create something original. Research says you value aesthetics and independence way more than the average person. You aren't just being "rebellious"—you're actually at your most productive when you have the freedom to reimagine how things look and feel.
+            <% } else if (code === 'S') { %>
+                You have a Social profile, which is backed by a lot of research into empathy and emotional intelligence. Essentially, you're motivated by people, not machines or data. You're a natural at understanding what others need and helping them get there. Whether it's teaching or counseling, you find your biggest "wins" in the growth of the people around you. You're the glue in a collaborative team because you're wired to foster community and well-being.
+            <% } else if (code === 'E') { %>
+                You've got that Enterprising energy that vocational researchers link to leadership and ambition. You're a natural at persuading people and taking the lead on big projects. While some people shy away from the spotlight, you're comfortable taking risks and making the big calls to get a project across the finish line. You're less about the tiny technical details and more about the strategy it takes to turn a vision into a real success.
+            <% } else if (code === 'C') { %>
+                You're the Conventional type, which is actually the backbone of every successful system. Research shows you have a high aptitude for information processing—you see the patterns and details that everyone else misses. You find a genuine satisfaction in order, precision, and making sure things are done the right way. While others might thrive in chaos, you're the person who ensures the world actually stays on track and stays efficient.
+            <% } %>
+        </p>
+    </div>
+<% }) %>
     </div>
 
     <div class="glass-section">
@@ -1047,6 +1069,7 @@
         </div>
     </div>
 
+    <a href="/explore" class="btn btn-ghost">Explore Courses</a>
     <a href="#" class="btn" id="retake-btn" onclick="resetAssessment(); return false;">Retake Assessment</a>
 </div>
 

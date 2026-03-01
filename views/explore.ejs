@@ -129,27 +129,38 @@
             color: var(--accent-blue);
         }
 
-        /* --- HAMBURGER --- */
-        .hamburger {
+        /* --- HOME ICON --- */
+        .home-icon {
             display: flex;
-            flex-direction: column;
-            gap: 6px;
-            background: none;
-            border: none;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: var(--nav-text);
+            transition: all 0.3s ease;
             cursor: pointer;
-            padding: 8px;
-            transition: opacity 0.2s ease;
+            text-decoration: none;
+            border: none;
+            background: transparent;
+            padding: 0;
         }
 
-        .hamburger span {
-            width: 24px;
-            height: 3px;
-            background: var(--text-main);
-            border-radius: 2px;
+        .home-icon:hover {
+            background: rgba(0, 0, 0, 0.08);
+            transform: scale(1.1);
         }
 
-        .hamburger:hover {
-            opacity: 0.7;
+        .home-icon svg {
+            transition: all 0.3s ease;
+        }
+
+        .home-icon:hover svg {
+            stroke: var(--accent-blue);
+        }
+
+        .light-mode .home-icon:hover {
+            background: rgba(0, 0, 0, 0.08);
         }
 
         /* --- MOBILE DRAWER --- */
@@ -387,8 +398,9 @@
         }
 
         /* --- SECTION HEADER --- */
-        .explore-header { grid-row: 1;
-            margin-bottom: 24px;
+        .explore-header { 
+            margin-bottom: 20px;
+            padding: 0 20px;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             opacity: 1;
             max-height: 200px;
@@ -404,9 +416,15 @@
         }
 
         .explore-header h2 {
-            margin: 0 0 8px 0;
-            font-size: 1.4rem;
-            color: var(--text-main);
+            background: linear-gradient(135deg, #1a73e8 0%, #00d4ff 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 0 0 12px 0;
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            text-align: left;
         }
 
         .explore-header p {
@@ -479,6 +497,7 @@
         }
 
         .uni-btn.active {
+            display: none !important;
             background: linear-gradient(135deg, #1a73e8, #00d4ff);
             color: white;
             border-color: transparent;
@@ -490,15 +509,30 @@
         }
 
         /* Selected University Display */
-        .selected-university-display { grid-row: 5; display: none; margin-bottom: 15px; animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .selected-university-display { grid-row: 5; display: none !important; margin-bottom: 0 !important; animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            visibility: hidden !important;
+            height: 0 !important;
+            overflow: hidden !important;
         }
 
         .selected-university-display.visible {
-            display: block;
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            overflow: hidden !important;
+            max-height: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
         }
 
         .selected-uni-card {
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            width: 0 !important;
+            overflow: hidden !important;
             background: linear-gradient(135deg, #1a73e8, #00d4ff);
             color: white;
             padding: 14px 16px;
@@ -544,10 +578,32 @@
             display: inline-block;
         }
 
-        .change-uni-btn:hover {
+        .change-uni-btn.visible:hover {
             background: var(--accent-blue);
             color: white;
             transform: translateY(-1px);
+        }
+
+        /* Selected University Title */
+        .selected-uni-title {
+            display: none;
+            margin-bottom: 20px;
+            padding: 0 20px;
+            animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .selected-uni-title.visible {
+            display: block !important;
+        }
+
+        .selected-uni-title h2 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            word-break: break-word;
+            line-height: 1.4;
+            letter-spacing: -0.5px;
         }
 
         /* --- BUTTON CONTAINERS --- */
@@ -829,27 +885,12 @@
             }
         }
 
-        /* --- HAMBURGER & DRAWER (MOBILE MENU) --- */
+        /* --- HOME ICON (DRAWER) --- */
         .nav-controls { display: flex; gap: 15px; align-items: center; }
         
-        .hamburger {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            gap: 5px;
-            width: 28px;
-            height: 28px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-        }
-
-        .hamburger span { 
-            width: 100%;
-            height: 2px;
-            background-color: var(--text-main);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .home-icon {
+            margin: 0;
+            flex-shrink: 0;
         }
 
         /* --- MODALS --- */
@@ -1107,11 +1148,12 @@
     <div class="nav-container">
         <a href="/" class="nav-logo"><span>T.A.H.A.K.</span></a>
         <div class="nav-controls">
-            <button class="hamburger" id="hamburger-btn">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+            <a href="/" class="home-icon" title="Back to Home">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+            </a>
         </div>
     </div>
 </nav>
@@ -1121,33 +1163,29 @@
     <div class="explorer-container">
         <!-- Left Column: Filters -->
         <div class="filters-column">
-            <div class="glass-section">
-                <div id="exploreHeader" class="explore-header">
-                    <h2>Explore Universities in Nueva Ecija</h2>
-                    <p>Find the courses and programs that match your career interests</p>
-                </div>
+            <div id="exploreHeader" class="explore-header">
+                <h2>Explore Universities in Nueva Ecija</h2>
+                <p>Find the courses and programs that match your career interests</p>
+            </div>
 
-                <div class="section-label" id="selectUniLabel">
-                    <span>🎓</span> Select a University
-                </div>
-                <div class="universities-buttons" id="universitiesContainer">
-                    <div class="unis-loading">Loading universities...</div>
-                </div>
+            <div class="selected-uni-title" id="selectedUniTitle" style="display: none;">
+                <h2 id="selectedUniNameDisplay"></h2>
+            </div>
 
-                <button class="change-uni-btn" id="changeUniBtn" onclick="deselectUniversity()">← Back to Universities</button>
+            <div class="section-label" id="selectUniLabel">
+                <span>🎓</span> Select a University
+            </div>
+            <div class="universities-buttons" id="universitiesContainer">
+                <div class="unis-loading">Loading universities...</div>
+            </div>
 
-                <div class="selected-university-display" id="selectedUniversityDisplay" style="display: none;">
-                    <div class="selected-uni-card">
-                        <span id="selectedUniName"></span>
-                    </div>
-                </div>
+            <button class="change-uni-btn" id="changeUniBtn" onclick="deselectUniversity()">← Back to Universities</button>
 
-                <div class="campus-section" id="campusSection">
-                    <div class="section-label">
-                        Campuses:
-                    </div>
-                    <div class="campus-buttons" id="campusContainer"></div>
+            <div class="campus-section" id="campusSection">
+                <div class="section-label">
+                    Campuses:
                 </div>
+                <div class="campus-buttons" id="campusContainer"></div>
             </div>
         </div>
 
@@ -1195,7 +1233,7 @@
                     console.log('Universities data:', universities);
                     const html = universities.map(uni => `
                         <button class="uni-btn" onclick="selectUniversity('${escapeHtml(uni.name)}', event)" title="${escapeHtml(uni.name)}">
-                            ${escapeHtml(uni.name)}<br><span style="opacity: 0.7; font-size: 0.8rem;">(${uni.courseCount})</span>
+                            ${escapeHtml(uni.name)}
                         </button>
                     `).join('');
                     document.getElementById('universitiesContainer').innerHTML = html;
@@ -1225,9 +1263,9 @@
             document.getElementById('selectUniLabel').classList.add('hidden');
             document.getElementById('changeUniBtn').classList.add('visible');
 
-            // Show selected university card
-            document.getElementById('selectedUniName').textContent = uniName;
-            document.getElementById('selectedUniversityDisplay').classList.add('visible');
+            // Show selected university title
+            document.getElementById('selectedUniNameDisplay').textContent = uniName;
+            document.getElementById('selectedUniTitle').classList.add('visible');
 
             // Update button states - hide non-selected universities
             document.querySelectorAll('.uni-btn').forEach(btn => {
@@ -1241,9 +1279,9 @@
                 .then(res => res.json())
                 .then(campuses => {
                     const html = campuses.map(campus => `
-                        <button class="campus-btn" onclick="selectCampus('${escapeHtml(uniName)}', '${escapeHtml(campus.name)}', event)" title="${escapeHtml(campus.name)}">
-                            ${escapeHtml(campus.name)}<br><span style="opacity: 0.7; font-size: 0.8rem;">(${campus.courseCount})</span>
-                        </button>
+                      <button class="campus-btn" onclick="selectCampus('${escapeHtml(uniName)}', '${escapeHtml(campus.name)}', event)" title="${escapeHtml(campus.name)}">
+    ${escapeHtml(campus.name)}
+</button>
                     `).join('');
                     if (campuses.length > 1) { document.getElementById('campusContainer').innerHTML = html;
                     document.getElementById('campusSection').classList.add('active'); } else if (campuses.length === 1) {
@@ -1275,7 +1313,7 @@
             document.getElementById('exploreHeader').classList.remove('hidden');
             document.getElementById('selectUniLabel').classList.remove('hidden');
             document.getElementById('changeUniBtn').classList.remove('visible');
-            document.getElementById('selectedUniversityDisplay').classList.remove('visible');
+            document.getElementById('selectedUniTitle').classList.remove('visible');
 
             // Show all universities and remove active state
             document.querySelectorAll('.uni-btn').forEach(btn => {
@@ -1385,8 +1423,7 @@
             return text.replace(/[&<>"']/g, m => map[m]);
         }
 
-        // Hamburger & Drawer Toggle
-        const hamburgerBtn = document.getElementById('hamburger-btn');
+        // Drawer Toggle
         const closeBtn = document.getElementById('close-drawer');
         const drawer = document.getElementById('drawer');
         const overlay = document.getElementById('overlay');
@@ -1396,7 +1433,6 @@
             overlay.classList.toggle('active');
         }
 
-        hamburgerBtn.addEventListener('click', toggleDrawer);
         closeBtn.addEventListener('click', toggleDrawer);
         overlay.addEventListener('click', toggleDrawer);
 

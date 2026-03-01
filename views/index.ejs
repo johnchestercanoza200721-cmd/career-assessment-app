@@ -928,32 +928,38 @@ input:checked + .slider:before {
     .researchers-grid { grid-template-columns: 1fr; }
     .modal-content { padding: 30px 20px; width: 90%; }
 }
-/* --- 1. MINIMALIST HAMBURGER --- */
-.hamburger {
+/* --- 1. SEARCH ICON --- */
+.search-icon {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
-    background: none; /* Fully transparent */
-    border: none;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: var(--nav-text);
+    transition: all 0.3s ease;
     cursor: pointer;
-    padding: 8px;
-    transition: opacity 0.2s ease;
+    text-decoration: none;
+    border: none;
+    background: transparent;
+    padding: 0;
 }
 
-.hamburger span { 
-    width: 24px; 
-    height: 3px; 
-    background: var(--text-main); 
-    border-radius: 2px; 
+.search-icon:hover {
+    background: rgba(0, 0, 0, 0.08);
+    transform: scale(1.1);
 }
 
-.hamburger:hover {
-    opacity: 0.7; /* Simple visual feedback */
+.search-icon svg {
+    transition: all 0.3s ease;
 }
 
-/* Light Mode Inversion */
-.light-mode .hamburger span {
-    background: #000;
+.search-icon:hover svg {
+    stroke: var(--accent-blue);
+}
+
+.light-mode .search-icon:hover {
+    background: rgba(0, 0, 0, 0.08);
 }
 
 /* --- 2. SLIM SETTINGS BAR --- */
@@ -1446,16 +1452,10 @@ input:checked + .slider:before {
     justify-content: flex-end; /* Ensures they stick to the right edge */
 }
 
-/* Ensure the hamburger itself has no extra margins pushing it */
-.hamburger {
+/* Ensure the search icon has no extra margins pushing it */
+.search-icon {
     margin: 0;
-    padding: 10px 5px; /* Horizontal padding adjustment */
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    background: none;
-    border: none;
-    cursor: pointer;
+    flex-shrink: 0;
 }
 
  
@@ -1718,8 +1718,6 @@ input:checked + .slider:before {
         <h3>Menu</h3>
         <ul class="drawer-links">
             <li><a href="/explore">Search Courses</a></li>
-            <li><a href="javascript:void(0)" onclick="handleMenuClick('about-modal')">About the Study</a></li>
-            <li><a href="javascript:void(0)" onclick="handleMenuClick('help-modal')">Need Help?</a></li>
         </ul>
     </div>
 </div>
@@ -1732,11 +1730,12 @@ input:checked + .slider:before {
         <div class="nav-status" id="progress-status">0% Complete</div>
 
         <div class="nav-controls">
-            <button class="hamburger" id="hamburger-btn">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+            <a href="/explore" class="search-icon" title="Search Courses">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+            </a>
         </div>
     </div>
 </nav>
@@ -1987,7 +1986,6 @@ window.addEventListener('click', (event) => {
 // Call this once on load so the progress bar reflects any pre-filled browser data
 updateProgressBar();
 
-const hamburgerBtn = document.getElementById('hamburger-btn');
 const closeBtn = document.getElementById('close-drawer');
 const drawer = document.getElementById('mobile-drawer');
 const overlay = document.getElementById('drawer-overlay');
@@ -1997,7 +1995,6 @@ function toggleDrawer() {
     overlay.classList.toggle('active');
 }
 
-hamburgerBtn.addEventListener('click', toggleDrawer);
 closeBtn.addEventListener('click', toggleDrawer);
 overlay.addEventListener('click', toggleDrawer); // Close when clicking outside
 
