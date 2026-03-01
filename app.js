@@ -350,29 +350,66 @@ app.post('/submit', (req, res) => {
 
 // ROUTE: Dev Tool
 app.get('/results', (req, res) => {
-    const devScores = {
-        R: parseInt(req.query.r) || 0,
-        I: parseInt(req.query.i) || 0,
-        A: parseInt(req.query.a) || 0,
-        S: parseInt(req.query.s) || 0,
-        E: parseInt(req.query.e) || 0,
-        C: parseInt(req.query.c) || 0
-    };
+    // PRIORITY: Check if this is a score-based shared link or dev mode request
+    // Both include r, i, a, s, e, c parameters for full reconstruction
+    const hasScores = req.query.r !== undefined || req.query.i !== undefined || 
+                      req.query.a !== undefined || req.query.s !== undefined || 
+                      req.query.e !== undefined || req.query.c !== undefined;
     
-    // Calculate proportional subcategory scores from dev input
-    // Divide each main score evenly between its two subcategories
-    const subScores = {
-        "R-Mechanical": Math.round(devScores.R / 2), "R-Natural": Math.round(devScores.R / 2),
-        "I-Health": Math.round(devScores.I / 2), "I-Physical": Math.round(devScores.I / 2),
-        "A-Digital": Math.round(devScores.A / 2), "A-Literary": Math.round(devScores.A / 2),
-        "S-Educational": Math.round(devScores.S / 2), "S-Service": Math.round(devScores.S / 2),
-        "E-Management": Math.round(devScores.E / 2), "E-Hospitality": Math.round(devScores.E / 2),
-        "C-Financial": Math.round(devScores.C / 2), "C-Logistical": Math.round(devScores.C / 2)
-    };
-    
-    processRiasec(devScores, subScores, (results) => {
-        res.render('results', { ...results, isDev: true });
-    });
+    if (hasScores) {
+        // Handle score-based results (shared links OR dev mode)
+        // This path processes the scores through RIASEC to get full results
+        const devScores = {
+            R: parseInt(req.query.r) || 0,
+            I: parseInt(req.query.i) || 0,
+            A: parseInt(req.query.a) || 0,
+            S: parseInt(req.query.s) || 0,
+            E: parseInt(req.query.e) || 0,
+            C: parseInt(req.query.c) || 0
+        };
+        
+        // Calculate proportional subcategory scores
+        // Divide each main score evenly between its two subcategories
+        const subScores = {
+            "R-Mechanical": Math.round(devScores.R / 2), "R-Natural": Math.round(devScores.R / 2),
+            "I-Health": Math.round(devScores.I / 2), "I-Physical": Math.round(devScores.I / 2),
+            "A-Digital": Math.round(devScores.A / 2), "A-Literary": Math.round(devScores.A / 2),
+            "S-Educational": Math.round(devScores.S / 2), "S-Service": Math.round(devScores.S / 2),
+            "E-Management": Math.round(devScores.E / 2), "E-Hospitality": Math.round(devScores.E / 2),
+            "C-Financial": Math.round(devScores.C / 2), "C-Logistical": Math.round(devScores.C / 2)
+        };
+        
+        processRiasec(devScores, subScores, (results) => {
+            // Mark as shared if code parameter is present
+            const markedResults = { 
+                ...results, 
+                isDev: false,
+                isShared: req.query.code ? true : false 
+            };
+            res.render('results', markedResults);
+        });
+    } else if (req.query.code && req.query.path) {
+        // Fallback: Handle legacy minimal shared result display (no scores available)
+        const sharedResult = {
+            hollandCode: req.query.code,
+            topPath: decodeURIComponent(req.query.path),
+            major: decodeURIComponent(req.query.major || ''),
+            rank: parseInt(req.query.rank) || 1,
+            isShared: true
+        };
+        
+        res.render('results', { 
+            hollandCode: sharedResult.hollandCode,
+            scores: { R: 20, I: 20, A: 20, S: 20, E: 20, C: 20 },
+            topMatches: [],
+            isShared: true,
+            sharedResult: sharedResult,
+            isDev: false
+        });
+    } else {
+        // No parameters provided - return 400 Bad Request
+        res.status(400).send('Missing required parameters for results page.');
+    }
 });
 
 // ROUTE: Search/Browse Courses Page

@@ -1687,7 +1687,7 @@ input:checked + .slider:before {
 <body>
 
 <div id="dev-panel">
-    <h3>🛠 Dev Profiles</h3>
+    <h3>Dev Profiles</h3>
     <div id="profile-buttons" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;">
         <button class="dev-btn" style="background: #e67e22;" onclick="loadProfile('MY_IA')">My Profile (IA)</button>
         
@@ -1785,6 +1785,49 @@ input:checked + .slider:before {
 </div>
 
 <script>
+    // ========== GATEKEEPER LOGIC: Check for Shared Links & Saved Results ==========
+    // This runs immediately to avoid "flicker" of landing page
+    (function() {
+        // PRIORITY 1: Check for URL parameters (shared links take precedence)
+        const urlParams = new URLSearchParams(window.location.search);
+        const hasScores = urlParams.has('r') || urlParams.has('i') || urlParams.has('a') || 
+                          urlParams.has('s') || urlParams.has('e') || urlParams.has('c');
+        
+        if (hasScores) {
+            // User opened a shared link with scores - redirect to results to process them
+            // The /results route will handle score-based reconstruction
+            window.location.href = `/results?${window.location.search.substring(1)}`;
+            return;
+        }
+        
+        // PRIORITY 2: Check for saved result in localStorage (local persistence)
+        const savedResult = localStorage.getItem('user_assessment_result');
+        if (savedResult) {
+            try {
+                const result = JSON.parse(savedResult);
+                // If we have a saved assessment result, redirect to results page with score parameters
+                if (result.hollandCode && result.scores) {
+                    // Build URL with all score parameters for full reconstruction
+                    const params = new URLSearchParams();
+                    params.append('r', result.scores.R || 0);
+                    params.append('i', result.scores.I || 0);
+                    params.append('a', result.scores.A || 0);
+                    params.append('s', result.scores.S || 0);
+                    params.append('e', result.scores.E || 0);
+                    params.append('c', result.scores.C || 0);
+                    params.append('code', result.hollandCode);
+                    params.append('path', encodeURIComponent(result.topPath || ''));
+                    params.append('major', encodeURIComponent(result.major || ''));
+                    params.append('rank', result.rank || '1');
+                    
+                    // Redirect to results with encoded parameters
+                    window.location.href = `/results?${params.toString()}`;
+                }
+            } catch (e) {
+                console.warn('Failed to parse saved result:', e);
+            }
+        }
+    })();
     
     const cards = document.querySelectorAll('.card');
     const themeToggle = document.getElementById('theme-toggle');

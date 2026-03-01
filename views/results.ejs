@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -100,57 +100,13 @@
             font-weight: 900;
         }
 
-        /* --- HAMBURGER --- */
         .hamburger {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
-            transition: opacity 0.2s ease;
-        }
-
-        .hamburger span {
-            width: 24px;
-            height: 3px;
-            background: var(--text-main);
-            border-radius: 2px;
-        }
-
-        .hamburger:hover {
-            opacity: 0.7;
+            display: none !important;
         }
 
         /* --- MOBILE DRAWER --- */
         .mobile-drawer {
-            position: fixed;
-            top: 15px;
-            bottom: 15px;
-            right: -110%;
-            width: 290px;
-            
-            background: rgba(var(--nav-bg-rgb), 0.5) !important;
-            backdrop-filter: blur(15px) saturate(160%);
-            -webkit-backdrop-filter: blur(25px) saturate(160%);
-            
-            z-index: 3000;
-            padding: 70px 25px 40px;
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            
-            visibility: hidden;
-            pointer-events: none;
-            
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .mobile-drawer.active {
-            right: 15px;
-            visibility: visible;
-            pointer-events: auto;
-            box-shadow: -15px 15px 50px rgba(0,0,0,0.1);
+            display: none !important;
         }
 
         .mobile-drawer h3 {
@@ -270,25 +226,11 @@
         }
 
         .drawer-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            
-            background: rgba(0, 0, 0, 0.25);
-            
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            
-            display: none;
-            z-index: 2500;
-            
-            animation: fadeIn 0.3s ease;
+            display: none !important;
         }
 
         .drawer-overlay.active {
-            display: block;
+            display: none !important;
         }
 
         .drawer-content {
@@ -301,6 +243,64 @@
             align-items: center;
             justify-content: flex-end;
             grid-column: 3;
+        }
+
+        /* --- SCREENSHOT BUTTON --- */
+        .screenshot-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #1a73e8, #00d4ff);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-family: var(--main-font);
+        }
+
+        .screenshot-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(26, 115, 232, 0.3);
+        }
+
+        .screenshot-btn:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 600px) {
+            .screenshot-btn {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+                gap: 6px;
+            }
+        }
+
+        /* --- TOAST NOTIFICATION --- */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(150px);
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            z-index: 5000;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
         }
 
         /* --- FLOATING LAYOUT --- */
@@ -333,25 +333,244 @@
             box-shadow: 0 8px 20px rgba(26, 115, 232, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.3);
         }
 
-        /* --- TOP 3 (PRESERVING CIRCLES) --- */
-        .top-three-section { background: rgba(26, 115, 232, 0.05); border: 1px solid rgba(26, 115, 232, 0.2); border-radius: 24px; padding: 28px; }
-        .top-match-card {
-            display: flex; align-items: center; padding: 15px 20px;
-            background: var(--card-bg); border: 1px solid var(--border-color);
-            border-radius: 16px; margin-bottom: 12px;
+        /* --- UNIFIED RANKED COURSE LIST --- */
+        .unified-courses-container { display: grid; gap: 20px; }
+        
+        .course-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        .course-card:hover {
+            border-color: var(--accent-blue);
+            box-shadow: 0 12px 30px var(--shadow);
+            transform: translateY(-4px);
+        }
+        
+        /* Top 3 Rank Highlights */
+        .course-card-top-1,
+        .course-card-top-2,
+        .course-card-top-3 {
+            background: linear-gradient(135deg, var(--card-bg), rgba(212, 165, 116, 0.03));
+        }
+        
+        .course-card-top-1 { border-left-width: 6px; border-left-color: #d4a574; }
+        .course-card-top-2 { border-left-width: 6px; border-left-color: #c0c0c0; }
+        .course-card-top-3 { border-left-width: 6px; border-left-color: #cd7f32; }
+        
+        .course-card-header {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            align-items: flex-start;
+        }
+        
+        .course-rank-section {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        
+        .course-rank-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-color);
+            font-weight: 800;
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            border: 2px solid var(--border-color);
+        }
+        
+
+        
+        .course-info {
+            flex-grow: 1;
+            min-width: 0;
+        }
+        
+        .course-title {
+            margin: 0 0 6px 0;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.3;
+            word-break: break-word;
+        }
+        
+        .course-category {
+            font-size: 0.8rem;
+            color: var(--accent-blue);
+            font-weight: 500;
+            opacity: 0.85;
+        }
+        
+        .course-card-body {
+            padding: 16px 20px;
+        }
+        
+        /* --- INSTITUTIONS ACCORDION --- */
+        .institutions-accordion {
+            width: 100%;
+        }
+        
+        .accordion-btn {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: var(--bg-color);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-main);
+            transition: all 0.2s ease;
+        }
+        
+        .accordion-btn:hover {
+            background: rgba(0, 0, 0, 0.03);
+            border-color: var(--accent-blue);
+        }
+        
+        .accordion-label { font-weight: 600; }
+        
+        .accordion-icon {
+            opacity: 0.6;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: inline-block;
+        }
+        
+        .accordion-btn.expanded .accordion-icon {
+            transform: rotate(180deg);
+        }
+        
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-top: 0;
+        }
+        
+        .accordion-content.expanded {
+            max-height: 2000px;
+            opacity: 1;
+            margin-top: 12px;
+        }
+        
+        .institutions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .institution-item {
+            padding: 12px;
+            border-radius: 8px;
+            background: var(--bg-color);
+            transition: all 0.2s ease;
+        }
+        
+        .institution-item.single-campus {
+            padding: 14px;
+            border-left: 3px solid var(--accent-blue);
+        }
+        
+        .institution-item.multi-campus {
+            border: 1px solid var(--border-color);
+            padding: 0;
+        }
+        
+        .institution-toggle {
+            width: 100%;
+            padding: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            transition: all 0.2s ease;
+        }
+        
+        .institution-item.multi-campus .institution-toggle:hover {
+            background: rgba(26, 115, 232, 0.05);
+        }
+        
+        .institution-name {
+            font-weight: 700;
+            color: var(--text-main);
+            flex-grow: 1;
+            text-align: left;
+        }
+        
+        .campus-count {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin: 0 8px;
+            font-weight: 500;
+        }
+        
+        .toggle-icon {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: inline-block;
+        }
+        
+        .institution-toggle.expanded .toggle-icon {
+            transform: rotate(180deg);
+        }
+        
+        .campuses-list {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .top-match-card:hover { transform: translateX(10px); border-color: var(--accent-blue); }
         
-        /* Fixed Circle Logic */
-        .rank-badge {
-            width: 44px; height: 44px; min-width: 44px; min-height: 44px; /* Fixes ovaling on mobile */
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-weight: 900; margin-right: 15px; flex-shrink: 0; font-size: 1.1rem;
+        .campuses-list.expanded {
+            max-height: 1000px;
+            opacity: 1;
         }
-        .rank-1 .rank-badge { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; }
-        .rank-2 .rank-badge { background: linear-gradient(135deg, #C0C0C0, #808080); color: #fff; }
-        .rank-3 .rank-badge { background: linear-gradient(135deg, #CD7F32, #8B4513); color: #fff; }
+        
+        .campus-item {
+            padding: 12px 14px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            color: var(--text-main);
+            padding-left: 28px;
+            position: relative;
+        }
+        
+        .campus-item::before {
+            content: "├─";
+            position: absolute;
+            left: 14px;
+            color: var(--text-muted);
+            opacity: 0.5;
+        }
+        
+        .major-info {
+            font-size: 0.8rem;
+            color: var(--accent-blue);
+            margin-top: 4px;
+            font-weight: 500;
+        }
 
         /* --- SCORE CHART (POSITIVE SCORING) --- */
         .score-row { display: flex; align-items: center; margin-bottom: 18px; gap: 12px; }
@@ -368,10 +587,16 @@
         .recommendation-group:hover { transform: translateY(-4px); box-shadow: 0 15px 35px var(--shadow); border-color: var(--accent-blue); }
         .course-title { margin: 0 0 8px 0; color: var(--accent-blue); font-size: 1.15rem; font-weight: 700; line-height: 1.3; }
         
+        /* Ensure screenshot doesn't include irrelevant elements */
+        @media print {
+            .navbar { display: none; }
+            body { padding-top: 0; }
+        }
+        
         .provider-dropdown { margin-top: 18px; border: 1px solid var(--border-color); border-radius: 12px; background: var(--bg-color); overflow: hidden; transition: all 0.2s ease; }
         .provider-dropdown:hover { border-color: var(--accent-blue); }
         .provider-dropdown summary { padding: 14px 16px; cursor: pointer; font-weight: 600; font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; list-style: none; color: var(--text-main); }
-        .provider-dropdown summary::after { content: '→'; opacity: 0.6; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); font-weight: 700; }
+        .provider-dropdown summary::after { content: ''; opacity: 0.6; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); font-weight: 700; }
         .provider-dropdown[open] summary::after { transform: rotate(90deg); }
         .provider-list { padding: 0 16px 12px 16px; border-top: 1px solid var(--border-color); animation: slideDown 0.3s ease-out; }
         .provider-item { padding: 12px 0; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; color: var(--text-main); }
@@ -384,11 +609,11 @@
         }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } } }
 
         @media (max-width: 600px) {
             .holland-badge { font-size: 1.8rem; padding: 10px 40px; }
-            .rank-badge { width: 40px; height: 40px; min-width: 40px; font-size: 1rem; }
+            .rank-badge { font-size: 1rem; }
             .trait-name { width: 85px; font-size: 0.7rem; }
             .course-title { font-size: 1.05rem; }
         }
@@ -638,9 +863,7 @@
     <div class="drawer-content">
         <h3>Menu</h3>
         <ul class="drawer-links">
-            <li><a href="/" onclick="toggleDrawer()">← Back to Test</a></li>
-            <li><a href="javascript:void(0)" onclick="handleMenuClick('about-modal')">About the Study</a></li>
-            <li><a href="javascript:void(0)" onclick="handleMenuClick('help-modal')">Need Help?</a></li>
+            <li><a href="/" onclick="toggleDrawer()">Back to Test</a></li>
         </ul>
     </div>
 </div>
@@ -649,12 +872,10 @@
 <nav class="navbar">
     <div class="nav-container">
         <a href="/" class="nav-logo"><span>T.A.H.A.K.</span></a>
-        <div style="font-size: 0.8rem; opacity: 0.7; font-weight: bold;">COMPLETE</div>
+        <div style="font-size: 0.8rem; opacity: 0.7; font-weight: bold; display: none;">COMPLETE</div>
         <div class="nav-controls">
-            <button class="hamburger" id="hamburger-btn">
-                <span></span>
-                <span></span>
-                <span></span>
+            <button class="screenshot-btn" id="share-btn" title="Share your results">
+                <span>SHARE</span>
             </button>
         </div>
     </div>
@@ -663,25 +884,34 @@
 <div class="content-wrapper">
     
     <div class="header-box">
-        <% if (locals.isDev) { %>
-            <div style="color: #e67e22; font-weight: bold; margin-bottom: 10px; border: 1px dashed #e67e22; padding: 4px 10px; display:inline-block; border-radius: 6px; font-size: 0.7rem;">🛠 DEV MODE</div>
+        <% if (false) { %>
+            <div style="color: #e67e22; font-weight: bold; margin-bottom: 10px; border: 1px dashed #e67e22; padding: 4px 10px; display:inline-block; border-radius: 6px; font-size: 0.7rem;">DEV MODE</div>
         <% } %>
         <h1 style="margin:0; font-size: 1.4rem;">Your Holland Code:</h1>
         <div class="holland-badge"><%= hollandCode %></div>
     </div>
 
-    <div class="top-three-section">
-        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px;">
-            <span style="font-size: 1.2rem;">🏆</span>
-            <h3 style="margin:0; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-blue);">Top 3 Recommended Courses</h3>
-        </div>
-        <% topMatches.slice(0, 3).forEach((group, index) => { %>
-            <div class="top-match-card rank-<%= index + 1 %>">
-                <div class="rank-badge"><%= index + 1 %></div>
-                <div class="match-info">
-                    <h4 style="margin:0; font-size: 1rem; color: var(--text-main);"><%= group.courseName %></h4>
-                    <span style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Holland Match: <%= group.riasec %></span>
+    <div class="glass-section">
+        <h3 style="margin: 0 0 20px 0; font-size: 0.9rem; text-align: center; color: var(--text-muted); text-transform: uppercase;">Interpretation</h3>
+        <% 
+            const hollandDescriptions = {
+                'R': 'Realistic',
+                'I': 'Investigative',
+                'A': 'Artistic',
+                'S': 'Social',
+                'E': 'Enterprising',
+                'C': 'Conventional'
+            };
+        %>
+        <% hollandCode.split('').forEach(code => { %>
+            <div style="margin-bottom: 18px;">
+                <div style="margin-bottom: 10px;">
+                    <h4 style="margin: 0; font-size: 1.2rem; color: var(--text-main); font-weight: 700;"><%= hollandDescriptions[code] %></h4>
                 </div>
+                <p style="margin: 0; color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
+                    <!-- Placeholder: Add your interpretation for <%= code %> here -->
+                    Your profile shows strong interests and characteristics aligned with the <%= hollandDescriptions[code] %> category. This reflects your natural aptitudes, values, and work preferences in this area.
+                </p>
             </div>
         <% }) %>
     </div>
@@ -702,104 +932,395 @@
         <% }) %>
     </div>
 
-    <div class="glass-section">
-        <h3 style="margin: 0 0 20px 0; font-size: 0.9rem; text-align: center; color: var(--text-muted); text-transform: uppercase;">Subcategory Breakdown</h3>
-        <% 
-            const subCategoryGroups = [
-                { main: "R", subs: ["R-Mechanical", "R-Natural"] },
-                { main: "I", subs: ["I-Health", "I-Physical"] },
-                { main: "A", subs: ["A-Digital", "A-Literary"] },
-                { main: "S", subs: ["S-Educational", "S-Service"] },
-                { main: "E", subs: ["E-Management", "E-Hospitality"] },
-                { main: "C", subs: ["C-Financial", "C-Logistical"] }
-            ];
-            
-            const subCategoryNames = {
-                "R-Mechanical": "Mechanical",
-                "R-Natural": "Natural",
-                "I-Health": "Health",
-                "I-Physical": "Physical",
-                "A-Digital": "Digital",
-                "A-Literary": "Literary",
-                "S-Educational": "Educational",
-                "S-Service": "Service",
-                "E-Management": "Management",
-                "E-Hospitality": "Hospitality",
-                "C-Financial": "Financial",
-                "C-Logistical": "Logistical"
-            };
-            
-            subCategoryGroups.forEach(group => {
-        %>
-            <div style="margin-bottom: 16px;">
-                <div style="font-size: 0.8rem; color: var(--accent-blue); font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;"><%= traitNames[group.main] %></div>
-                <% group.subs.forEach(sub => {
-                    const subScore = subScores[sub] || 0;
-                    const subPercentage = Math.min((subScore / 20) * 100, 100);
-                %>
-                    <div class="score-row" style="margin-bottom: 8px;">
-                        <div class="trait-name" style="font-size: 0.75rem;"><%= subCategoryNames[sub] %></div>
-                        <div class="bar-wrapper" style="height: 20px;">
-                            <% if (subScore > 0) { %><div class="bar-fill" style="width: <%= subPercentage %>%; font-size: 0.65rem;">+<%= subScore %></div><% } else { %><span style="position: absolute; left: 8px; font-size: 0.65rem; color: var(--text-muted); font-weight: 700;">0</span><% } %>
+    <!-- Unified Ranked Course List -->
+    <div style="margin-top: 40px; margin-bottom: 0;">
+        <h3 style="margin: 0 0 24px 0; font-size: 0.9rem; text-align: center; color: var(--text-muted); text-transform: uppercase;">Top Career &amp; Degree Paths</h3>
+        
+        <div class="unified-courses-container">
+            <% topMatches.forEach((group, courseIndex) => {
+                const rank = courseIndex + 1;
+                const isTopThree = rank <= 3;
+                const rankColors = { 1: '#d4a574', 2: '#c0c0c0', 3: '#cd7f32' }; // Gold, Silver, Bronze
+                
+                // Group providers by university with campuses
+                const groupedProviders = {};
+                (group.providers || []).forEach(prov => {
+                    if (!groupedProviders[prov.university]) {
+                        groupedProviders[prov.university] = {
+                            university: prov.university,
+                            major: prov.major,
+                            campuses: [],
+                            firstCampus: prov.campus
+                        };
+                    }
+                    if (prov.campus && !groupedProviders[prov.university].campuses.includes(prov.campus)) {
+                        groupedProviders[prov.university].campuses.push(prov.campus);
+                    }
+                });
+                
+                const providerList = Object.values(groupedProviders);
+                const hasCampusGroups = providerList.some(p => p.campuses.length > 1);
+            %>
+                <div class="course-card <%= isTopThree ? 'course-card-top-' + rank : '' %>" 
+                     style="<%= isTopThree ? `border-left: 5px solid ${rankColors[rank]};` : '' %>">
+                    
+                    <div class="course-card-header">
+                        <div class="course-rank-section">
+                            <div class="course-rank-badge" <% if (isTopThree) { %>style="color: <%= rankColors[rank] %>; border-color: <%= rankColors[rank] %>;"<% } %>>
+                                <%= rank %>
+                            </div>
+                        </div>
+                        
+                        <div class="course-info">
+                            <h3 class="course-title"><%= group.courseName %></h3>
+                            <% if (group.subcategoryName) { %>
+                                <div class="course-category">
+                                    Strongest match for <strong><%= group.subcategoryName %></strong>
+                                </div>
+                            <% } %>
                         </div>
                     </div>
-                <% }) %>
-            </div>
-        <% }) %>
+                    
+                    <div class="course-card-body">
+                        <!-- Available Institutions Accordion -->
+                        <div class="institutions-accordion">
+                            <button class="accordion-btn <%= isTopThree ? 'expanded' : '' %>" 
+                                    data-target="institutions-<%= courseIndex %>">
+                                <span class="accordion-label">Available Institutions</span>
+                                <span class="accordion-icon">▾</span>
+                            </button>
+                            
+                            <div class="accordion-content <%= isTopThree ? 'expanded' : '' %>" 
+                                 id="institutions-<%= courseIndex %>">
+                                <div class="institutions-list">
+                                    <% providerList.forEach((provider, idx) => {
+                                        const hasCampuses = provider.campuses.length > 1;
+                                    %>
+                                        <% if (hasCampuses) { %>
+                                            <!-- Multi-campus institution with sub-accordion -->
+                                            <div class="institution-item multi-campus">
+                                                <button class="institution-toggle" 
+                                                        data-target="campuses-<%= courseIndex %>-<%= idx %>">
+                                                    <span class="institution-name"><%= provider.university %></span>
+                                                    <span class="campus-count">(<%= provider.campuses.length %> Campuses)</span>
+                                                    <span class="toggle-icon">▾</span>
+                                                </button>
+                                                
+                                                <div class="campuses-list" id="campuses-<%= courseIndex %>-<%= idx %>">
+                                                    <% provider.campuses.forEach(campus => { %>
+                                                        <div class="campus-item">
+                                                            <%= campus %>
+                                                            <% if (provider.major) { %>
+                                                                <div class="major-info">Major in <%= provider.major %></div>
+                                                            <% } %>
+                                                        </div>
+                                                    <% }) %>
+                                                </div>
+                                            </div>
+                                        <% } else { %>
+                                            <!-- Single-campus institution (no dropdown) -->
+                                            <div class="institution-item single-campus">
+                                                <div class="institution-name"><%= provider.university %></div>
+                                                <% if (provider.major) { %>
+                                                    <div class="major-info">Major in <%= provider.major %></div>
+                                                <% } %>
+                                            </div>
+                                        <% } %>
+                                    <% }) %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
     </div>
 
-    <h3 style="text-align: center; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; margin: 10px 0;">All Matched Career Paths</h3>
-
-    <% topMatches.forEach(group => { %>
-        <div class="recommendation-group">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
-                <div style="flex: 1;">
-                    <h3 class="course-title"><%= group.courseName %></h3>
-                    <% if (group.subcategoryName) { %>
-                        <div style="font-size: 0.65rem; color: var(--accent-blue); opacity: 0.85; margin-bottom: 6px; font-weight: 600;">
-                            ✨ Strongest match for your interest in <strong><%= group.subcategoryName %></strong>
-                        </div>
-                    <% } %>
-                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Holland Match: <strong><%= group.riasec %></strong></div>
-                </div>
-                <div style="background: var(--accent-blue); color: white; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: bold; white-space: nowrap;">Score: <%= group.score %></div>
-            </div>
-
-            <details class="provider-dropdown">
-                <summary>View Schools & Majors</summary>
-                <div class="provider-list">
-                    <% group.providers.forEach(prov => { %>
-                        <div class="provider-item">
-                            <strong><%= prov.university %></strong>
-                            <% if (prov.major) { %><br><span style="color: var(--accent-blue);">Major in <%= prov.major %></span><% } %>
-                            <% if (prov.campus) { %><br><small style="opacity: 0.7;">Campus: <%= prov.campus %></small><% } %>
-                        </div>
-                    <% }) %>
-                </div>
-            </details>
-        </div>
-    <% }) %>
-
-    <a href="/" class="btn">Retake Assessment</a>
+    <a href="#" class="btn" id="retake-btn" onclick="resetAssessment(); return false;">Retake Assessment</a>
 </div>
 
 <script>
+    // ========== SHARE RESULTS & PERSISTENCE FEATURE ==========
+    
+    let currentResults = {};
+
+    /**
+     * Save assessment result data to localStorage
+     * @param {Object} resultData - The result object containing hollandCode, topPath, major, rank
+     */
+    function saveResultToLocalStorage(resultData) {
+        localStorage.setItem('user_assessment_result', JSON.stringify(resultData));
+    }
+
+    /**
+     * Load assessment result from localStorage
+     * @returns {Object|null} The saved result object or null if not found
+     */
+    function loadResultFromLocalStorage() {
+        const stored = localStorage.getItem('user_assessment_result');
+        if (stored) {
+            try {
+                return JSON.parse(stored);
+            } catch (e) {
+                console.warn('Failed to parse stored result:', e);
+                return null;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Generate a shareable URL with result parameters
+     * @returns {string} The full shareable URL
+     */
+    function generateShareLink() {
+        // Extract all 6 RIASEC scores from the rendered bars
+        const scoreMap = { R: 0, I: 0, A: 0, S: 0, E: 0, C: 0 };
+        const scoreBars = document.querySelectorAll('.score-row');
+        const traitOrder = ['R', 'I', 'A', 'S', 'E', 'C'];
+        
+        scoreBars.forEach((row, index) => {
+            if (index < traitOrder.length) {
+                const barFill = row.querySelector('.bar-fill');
+                if (barFill && barFill.textContent) {
+                    const scoreText = barFill.textContent.trim();
+                    const score = parseInt(scoreText.replace('+', '')) || 0;
+                    scoreMap[traitOrder[index]] = score;
+                }
+            }
+        });
+        
+        // Build URL with all parameters
+        const params = new URLSearchParams();
+        params.append('r', scoreMap.R);
+        params.append('i', scoreMap.I);
+        params.append('a', scoreMap.A);
+        params.append('s', scoreMap.S);
+        params.append('e', scoreMap.E);
+        params.append('c', scoreMap.C);
+        params.append('code', currentResults.hollandCode || '');
+        params.append('path', encodeURIComponent(currentResults.topPath || ''));
+        params.append('major', encodeURIComponent(currentResults.major || ''));
+        params.append('rank', currentResults.rank || '1');
+        
+        // Point to root with query parameters
+        const shareUrl = `${window.location.origin}/?${params.toString()}`;
+        return shareUrl;
+    }
+
+    /**
+     * Copy text to clipboard with fallback support
+     * @param {string} text - The text to copy
+     * @returns {Promise<boolean>} True if successful
+     */
+    function copyToClipboard(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+            return navigator.clipboard.writeText(text)
+                .then(() => true)
+                .catch(() => legacyCopyToClipboard(text));
+        } else {
+            return Promise.resolve(legacyCopyToClipboard(text));
+        }
+    }
+
+    /**
+     * Legacy clipboard copy fallback
+     * @param {string} text - The text to copy
+     * @returns {boolean} True if successful
+     */
+    function legacyCopyToClipboard(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        
+        try {
+            textarea.select();
+            const success = document.execCommand('copy');
+            document.body.removeChild(textarea);
+            return success;
+        } catch (err) {
+            document.body.removeChild(textarea);
+            return false;
+        }
+    }
+
+    /**
+     * Show a toast notification
+     * @param {string} message - The message to display
+     * @param {number} duration - Duration in milliseconds (default: 3000)
+     */
+    function showToast(message, duration = 3000) {
+        let toast = document.getElementById('share-toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'share-toast';
+            toast.className = 'toast';
+            document.body.appendChild(toast);
+        }
+        
+        toast.textContent = message;
+        toast.classList.add('show');
+        
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, duration);
+    }
+
+    /**
+     * Handle share button click with Web Share API
+     */
+    function handleShareClick() {
+        const shareUrl = generateShareLink();
+        
+        if (navigator.share) {
+            navigator.share({
+                title: 'My T.A.H.A.K. Results',
+                text: `Check out my career assessment results! Holland Code: ${currentResults.hollandCode}`,
+                url: shareUrl
+            }).catch(err => {
+                if (err.name !== 'AbortError') {
+                    handleShareFallback(shareUrl);
+                }
+            });
+        } else {
+            handleShareFallback(shareUrl);
+        }
+    }
+
+    /**
+     * Fallback share method: copy URL and show toast
+     * @param {string} shareUrl - The URL to copy
+     */
+    function handleShareFallback(shareUrl) {
+        copyToClipboard(shareUrl).then(success => {
+            if (success) {
+                showToast('Result link copied to clipboard! 📋');
+            } else {
+                showToast('Failed to copy link. Please try again.');
+            }
+        });
+    }
+
+    /**
+     * Reset assessment and return to test
+     */
+    function resetAssessment() {
+        localStorage.removeItem('user_assessment_result');
+        window.location.href = '/';
+    }
+
+    /**
+     * Initialize: extract current results from page and save to localStorage
+     */
+    function initializeResults() {
+        // Extract Holland Code from badge
+        const hollandBadge = document.querySelector('.holland-badge');
+        if (hollandBadge && hollandBadge.textContent) {
+            currentResults.hollandCode = hollandBadge.textContent.trim();
+        }
+        
+        // Extract top path from first course card
+        const firstCourseTitle = document.querySelector('.course-title');
+        if (firstCourseTitle && firstCourseTitle.textContent) {
+            currentResults.topPath = firstCourseTitle.textContent.trim();
+        }
+        
+        // Extract all 6 RIASEC scores from the rendered Interest Intensity Profile
+        const scoreMap = { R: 0, I: 0, A: 0, S: 0, E: 0, C: 0 };
+        const scoreBars = document.querySelectorAll('.score-row');
+        const traitOrder = ['R', 'I', 'A', 'S', 'E', 'C'];
+        
+        scoreBars.forEach((row, index) => {
+            if (index < traitOrder.length) {
+                const barFill = row.querySelector('.bar-fill');
+                if (barFill && barFill.textContent) {
+                    const scoreText = barFill.textContent.trim();
+                    const score = parseInt(scoreText.replace('+', '')) || 0;
+                    scoreMap[traitOrder[index]] = score;
+                }
+            }
+        });
+        
+        // Store scores in currentResults
+        currentResults.scores = scoreMap;
+        
+        // Set default rank
+        currentResults.rank = 1;
+        
+        // If we have at least the Holland code, save to localStorage
+        if (currentResults.hollandCode && currentResults.topPath) {
+            saveResultToLocalStorage(currentResults);
+        }
+    }
+
+    // ========== PAGE INITIALIZATION ==========
+    
+    // Initialize Unified Course List Accordions
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle main accordion buttons for each course card
+        const accordionBtns = document.querySelectorAll('.accordion-btn');
+        accordionBtns.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('data-target');
+                const content = document.getElementById(targetId);
+                
+                if (!content) return;
+                
+                const isExpanded = this.classList.contains('expanded');
+                
+                // Toggle expanded state
+                this.classList.toggle('expanded');
+                content.classList.toggle('expanded');
+            });
+        });
+        
+        // Handle institution toggle buttons for multi-campus institutions
+        const institutionToggles = document.querySelectorAll('.institution-toggle');
+        institutionToggles.forEach(toggle => {
+            toggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('data-target');
+                const campusList = document.getElementById(targetId);
+                
+                if (!campusList) return;
+                
+                const isExpanded = this.classList.contains('expanded');
+                
+                // Toggle expanded state
+                this.classList.toggle('expanded');
+                campusList.classList.toggle('expanded');
+            });
+        });
+    });
+
+    // Initialize results (extract from page and save to localStorage)
+    initializeResults();
+
+    // Apply theme preferences
     if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
     if (localStorage.getItem('warm') === 'true') document.body.classList.add('warm-mode');
 
-    const hamburgerBtn = document.getElementById('hamburger-btn');
-    const closeBtn = document.getElementById('close-drawer');
-    const drawer = document.getElementById('mobile-drawer');
-    const overlay = document.getElementById('drawer-overlay');
+    // Share Results button functionality
+    const shareBtn = document.getElementById('share-btn');
+    shareBtn.addEventListener('click', () => {
+        const btn = shareBtn;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span>Generating...</span>';
+        btn.disabled = true;
 
-    function toggleDrawer() {
-        drawer.classList.toggle('active');
-        overlay.classList.toggle('active');
-    }
-
-    hamburgerBtn.addEventListener('click', toggleDrawer);
-    closeBtn.addEventListener('click', toggleDrawer);
-    overlay.addEventListener('click', toggleDrawer);
+        setTimeout(() => {
+            handleShareClick();
+            
+            btn.innerHTML = '<span>Shared!</span>';
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }, 2000);
+        }, 300);
+    });
 
     // Modal functions
     function openModal(id) {
@@ -820,11 +1341,9 @@
             document.body.style.overflow = 'auto';
         }
     });
-
-    function handleMenuClick(modalId) {
-        toggleDrawer();
-        openModal(modalId);
-    }
 </script>
 </body>
 </html>
+
+
+

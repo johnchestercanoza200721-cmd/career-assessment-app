@@ -341,64 +341,31 @@
             padding: 0;
         }
 
-        /* --- FIXED SEARCH BAR --- */
-        .search-bar-container {
-            background: transparent;
-            padding: 20px 0;
-            margin-top: 20px;
-        }
 
-        .search-bar-content {
-            max-width: 1400px;
-            width: 95%;
-            margin: 0 auto;
-            display: flex;
-            gap: 12px;
-        }
 
-        #searchInput {
-            flex: 1;
-            padding: 12px 18px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            background: rgba(var(--card-bg-rgb), 0.6);
-            backdrop-filter: blur(10px);
-            color: var(--text-main);
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-        }
-
-        #searchInput:focus {
-            outline: none;
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
-            background: rgba(var(--card-bg-rgb), 0.9);
-        }
-
-        #searchInput::placeholder {
-            color: var(--text-muted);
-        }
-
+        /* Single-column mobile-first layout */
         .explorer-container {
-            display: grid;
-            grid-template-columns: 1fr 1.2fr;
+            display: flex;
+            flex-direction: column;
             gap: 24px;
-            align-items: start;
+            align-items: stretch;
         }
 
         .filters-column {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 16px;
+            order: 1;
         }
 
         .courses-column {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 16px;
+            order: 2;
         }
 
-        .glass-section {
+.glass-section {
             background: var(--card-bg);
             border-radius: 20px;
             padding: 28px;
@@ -409,11 +376,50 @@
             flex-direction: column;
         }
 
+        @media (max-width: 768px) {
+            .glass-section {
+                padding: 20px 20px 12px 20px;
+                border-radius: 16px;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+        }
+
+        /* --- SECTION HEADER --- */
+        .explore-header { grid-row: 1;
+            margin-bottom: 24px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 1;
+            max-height: 200px;
+            overflow: hidden;
+        }
+
+        .explore-header.hidden {
+            display: none;
+            opacity: 0;
+            max-height: 0;
+            margin-bottom: 0;
+            pointer-events: none;
+        }
+
+        .explore-header h2 {
+            margin: 0 0 8px 0;
+            font-size: 1.4rem;
+            color: var(--text-main);
+        }
+
+        .explore-header p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
         /* --- SECTION LABEL --- */
         .section-label {
             font-size: 0.8rem;
             color: var(--text-muted);
-            margin: 20px 0 12px 0;
+            margin: 0 0 12px 0;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -421,37 +427,57 @@
             align-items: center;
             gap: 8px;
             order: 1;
+            transition: all 0.3s ease;
         }
 
-        .section-label:first-of-type {
-            margin-top: 0;
+        #selectUniLabel { grid-row: 2;
+            transition: opacity 0.3s ease, max-height 0.3s ease;
+            max-height: 100px;
+            opacity: 1;
+        }
+
+        #selectUniLabel.hidden {
+            max-height: 0;
+            opacity: 0;
+            display: none;
         }
 
         /* --- BUTTON STYLES --- */
         .uni-btn,
         .campus-btn {
-            padding: 12px 18px;
-            border: 2px solid var(--border-color);
+            border: none;
             background: var(--bg-color);
             color: var(--text-main);
-            border-radius: 20px;
+            border-radius: 14px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             font-family: var(--main-font);
-            white-space: nowrap;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .uni-btn:hover,
-        .campus-btn:hover {
-            border-color: var(--accent-blue);
+        /* University cards: Full-width with word wrapping */
+        .uni-btn {
+            width: 100%;
+            padding: 16px 18px;
+            font-size: 1rem;
+            text-align: left;
+            white-space: normal;
+            word-wrap: break-word;
+            word-break: break-word;
+            line-height: 1.4;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px var(--shadow);
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .uni-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.15);
+            box-shadow: 0 4px 16px var(--shadow);
+            border-color: var(--accent-blue);
         }
 
-        .uni-btn.active,
-        .campus-btn.active {
+        .uni-btn.active {
             background: linear-gradient(135deg, #1a73e8, #00d4ff);
             color: white;
             border-color: transparent;
@@ -462,30 +488,123 @@
             display: none;
         }
 
+        /* Selected University Display */
+        .selected-university-display { grid-row: 5; display: none; margin-bottom: 15px; animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .selected-university-display.visible {
+            display: block;
+        }
+
+        .selected-uni-card {
+            background: linear-gradient(135deg, #1a73e8, #00d4ff);
+            color: white;
+            padding: 14px 16px;
+            border-radius: 14px;
+            font-weight: 600;
+            white-space: normal;
+            word-wrap: break-word;
+            word-break: break-word;
+            line-height: 1.4;
+            box-shadow: 0 8px 20px rgba(26, 115, 232, 0.3);
+            text-align: left;
+        }
+
+        /* Campus pills: Horizontal scroll, no wrap */
+        .campus-btn {
+            padding: 10px 16px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            flex-shrink: 0;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 6px var(--shadow);
+        }
+
+        .campus-btn:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.15);
+        }
+
+        .campus-btn.active {
+            background: linear-gradient(135deg, #1a73e8, #00d4ff);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 8px 20px rgba(26, 115, 232, 0.3);
+        }
+
+        /* Change University button */
+        .change-uni-btn { grid-row: 4; align-self: flex-start; padding: 8px 14px; font-size: 0.85rem; background: rgba(26, 115, 232, 0.1); color: var(--accent-blue); border: 1px solid var(--accent-blue); border-radius: 12px; cursor: pointer; font-weight: 600; font-family: var(--main-font); transition: all 0.3s ease; margin-bottom: 20px; margin-top: 10px; display: none;
+            display: none;
+        }
+
+        .change-uni-btn.visible {
+            display: inline-block;
+        }
+
+        .change-uni-btn:hover {
+            background: var(--accent-blue);
+            color: white;
+            transform: translateY(-1px);
+        }
+
         /* --- BUTTON CONTAINERS --- */
-        .universities-buttons,
+        .universities-buttons { grid-row: 3;
+            transition: order 0.3s ease;
+        }
+
         .campus-buttons {
             display: flex;
             gap: 10px;
-            flex-wrap: wrap;
             margin-bottom: 12px;
             align-items: center;
             animation: fadeIn 0.3s ease;
             order: 1;
-            transition: order 0.3s ease;
+            /* Horizontal scrolling */
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            padding: 8px 0 14px 0;
         }
 
-        .glass-section.search-active .universities-buttons {
-            order: 3;
+        /* Subtle scrollbar styling */
+        .campus-buttons::-webkit-scrollbar {
+            height: 4px;
         }
 
-        .glass-section.search-active .courses-section {
-            order: -1;
-            margin-top: 0;
+        .campus-buttons::-webkit-scrollbar-track {
+            background: transparent;
         }
 
-        .glass-section.search-active .campus-section {
-            order: 2;
+        .campus-buttons::-webkit-scrollbar-thumb {
+            background: var(--text-muted);
+            border-radius: 2px;
+            opacity: 0.3;
+        }
+
+        .campus-buttons::-webkit-scrollbar-thumb:hover {
+            opacity: 0.6;
+        }
+
+        /* Mobile: Horizontal scrolling for campus buttons */
+        @media (max-width: 768px) {
+            .universities-buttons {
+                gap: 12px;
+            }
+
+            .uni-btn {
+                padding: 14px 16px;
+                font-size: 0.95rem;
+            }
+
+            .campus-btn {
+                padding: 10px 14px;
+                font-size: 0.85rem;
+            }
         }
 
         .unis-loading {
@@ -494,17 +613,30 @@
         }
 
         /* --- CAMPUS SECTION --- */
-        .campus-section {
-            display: none;
-            order: -1;
-            padding-top: 20px;
-            border-top: 2px solid var(--border-color);
-            margin-top: 20px;
+        .campus-section { grid-row: 6; display: none; margin-top: 0; margin-bottom: 0; padding: 15px 0 0 0; opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            max-height: 0;
+            overflow: visible !important;
         }
 
         .campus-section.active {
             display: block;
-            animation: fadeIn 0.3s ease;
+            animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 1;
+            pointer-events: auto;
+            max-height: 500px;
+        }
+
+        /* Disabled/Grayed out state when no university is selected */
+        .campus-section:not(.active) .section-label,
+        .campus-section:not(.active) .campus-buttons {
+            opacity: 0.5;
+        }
+
+        .campus-section:not(.active) .campus-btn {
+            cursor: not-allowed;
+            opacity: 0.6;
         }
 
         /* --- COURSE CARDS --- */
@@ -512,6 +644,12 @@
             margin-top: 20px;
             order: 2;
             transition: order 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .courses-section {
+                margin-top: 0;
+            }
         }
 
         .courses-list {
@@ -613,20 +751,45 @@
             }
         }
 
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                max-height: 500px;
+            }
+        }
+
         /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
-            body { padding-top: 80px; }
+            body { 
+                padding-top: 80px;
+                padding-bottom: 30px;
+            }
             
             .navbar { height: 60px; }
             
             .nav-logo { font-size: 1.1rem; }
             
+            .content-wrapper {
+                margin-bottom: 30px;
+            }
+            
             .glass-section {
-                padding: 20px;
+                padding: 18px;
                 border-radius: 16px;
+                margin-bottom: 0;
             }
 
-            .uni-btn,
+            .uni-btn {
+                padding: 14px 16px;
+                font-size: 0.95rem;
+            }
+
             .campus-btn {
                 padding: 10px 14px;
                 font-size: 0.85rem;
@@ -643,14 +806,25 @@
 
             .section-label {
                 font-size: 0.75rem;
+                margin: 8px 0 8px 0;
             }
 
             .course-name {
-                font-size: 1rem;
+                font-size: 0.95rem;
             }
-
-            .explorer-container {
-                grid-template-columns: 1fr;
+            
+            .course-card {
+                padding: 14px;
+                border-radius: 12px;
+            }
+            
+            .course-meta {
+                font-size: 0.8rem;
+            }
+            
+            .meta-label {
+                min-width: 60px;
+                font-size: 0.75rem;
             }
         }
 
@@ -922,9 +1096,7 @@
     <div class="drawer-content">
         <h3>Menu</h3>
         <ul class="drawer-links">
-            <li><a href="/" onclick="toggleDrawer()">← Back to Test</a></li>
-            <li><a href="javascript:void(0)" onclick="handleMenuClick('about-modal')">About the Study</a></li>
-            <li><a href="javascript:void(0)" onclick="handleMenuClick('help-modal')">Need Help?</a></li>
+            <li><a href="/" onclick="toggleDrawer()">Back to Test</a></li>
         </ul>
     </div>
 </div>
@@ -943,38 +1115,35 @@
     </div>
 </nav>
 
-<div class="search-bar-container">
-    <div class="search-bar-content">
-        <input 
-            type="text" 
-            id="searchInput" 
-            placeholder="🔍 Search by course name, major, or college..."
-            autocomplete="off"
-        >
-    </div>
-</div>
-
 <div class="content-wrapper">
     
     <div class="explorer-container">
         <!-- Left Column: Filters -->
         <div class="filters-column">
             <div class="glass-section">
-                <div style="margin-bottom: 24px;">
-                    <h2 style="margin: 0 0 8px 0; font-size: 1.4rem; color: var(--text-main);">Explore around Nueva Ecija</h2>
-                    <p style="margin: 0 0 20px 0; color: var(--text-muted); font-size: 0.9rem;">Find the courses offered by the university of your choosing</p>
+                <div id="exploreHeader" class="explore-header">
+                    <h2>Explore Universities in Nueva Ecija</h2>
+                    <p>Find the courses and programs that match your career interests</p>
                 </div>
 
-                <div class="section-label">
-                    <span></span> Select a University
+                <div class="section-label" id="selectUniLabel">
+                    <span>🎓</span> Select a University
                 </div>
                 <div class="universities-buttons" id="universitiesContainer">
                     <div class="unis-loading">Loading universities...</div>
                 </div>
 
+                <button class="change-uni-btn" id="changeUniBtn" onclick="deselectUniversity()">← Back to Universities</button>
+
+                <div class="selected-university-display" id="selectedUniversityDisplay" style="display: none;">
+                    <div class="selected-uni-card">
+                        <span id="selectedUniName"></span>
+                    </div>
+                </div>
+
                 <div class="campus-section" id="campusSection">
                     <div class="section-label">
-                        <span></span> Filter by Campus (optional)
+                        Campuses:
                     </div>
                     <div class="campus-buttons" id="campusContainer"></div>
                 </div>
@@ -985,9 +1154,7 @@
         <div class="courses-column">
             <div class="courses-section" id="coursesSection" style="display: none;">
                 <div class="glass-section">
-                    <div class="section-label">
-                        <span>📚</span> Available Courses
-                    </div>
+                    
                     <div class="courses-list" id="coursesList"></div>
                 </div>
             </div>
@@ -1001,6 +1168,7 @@
         let currentCampus = '';
         let searchQuery = '';
         let debounceTimer;
+        let allCoursesCache = {}; // Cache for courses at each level
 
         console.log('explore.ejs script loaded');
 
@@ -1025,8 +1193,8 @@
                 .then(universities => {
                     console.log('Universities data:', universities);
                     const html = universities.map(uni => `
-                        <button class="uni-btn" onclick="selectUniversity('${escapeHtml(uni.name)}', event)">
-                            ${escapeHtml(uni.name)} <span style="opacity: 0.7; font-size: 0.85rem;">(${uni.courseCount})</span>
+                        <button class="uni-btn" onclick="selectUniversity('${escapeHtml(uni.name)}', event)" title="${escapeHtml(uni.name)}">
+                            ${escapeHtml(uni.name)}<br><span style="opacity: 0.7; font-size: 0.8rem;">(${uni.courseCount})</span>
                         </button>
                     `).join('');
                     document.getElementById('universitiesContainer').innerHTML = html;
@@ -1050,7 +1218,15 @@
             currentUni = uniName;
             currentCampus = '';
             searchQuery = '';
-            document.getElementById('searchInput').value = '';
+
+            // Hide header and show selected university display
+            document.getElementById('exploreHeader').classList.add('hidden');
+            document.getElementById('selectUniLabel').classList.add('hidden');
+            document.getElementById('changeUniBtn').classList.add('visible');
+
+            // Show selected university card
+            document.getElementById('selectedUniName').textContent = uniName;
+            document.getElementById('selectedUniversityDisplay').classList.add('visible');
 
             // Update button states - hide non-selected universities
             document.querySelectorAll('.uni-btn').forEach(btn => {
@@ -1064,12 +1240,24 @@
                 .then(res => res.json())
                 .then(campuses => {
                     const html = campuses.map(campus => `
-                        <button class="campus-btn" onclick="selectCampus('${escapeHtml(uniName)}', '${escapeHtml(campus.name)}', event)">
-                            ${escapeHtml(campus.name)} <span style="opacity: 0.7; font-size: 0.85rem;">(${campus.courseCount})</span>
+                        <button class="campus-btn" onclick="selectCampus('${escapeHtml(uniName)}', '${escapeHtml(campus.name)}', event)" title="${escapeHtml(campus.name)}">
+                            ${escapeHtml(campus.name)}<br><span style="opacity: 0.7; font-size: 0.8rem;">(${campus.courseCount})</span>
                         </button>
                     `).join('');
-                    document.getElementById('campusContainer').innerHTML = html;
-                    document.getElementById('campusSection').classList.add('active');
+                    if (campuses.length > 1) { document.getElementById('campusContainer').innerHTML = html;
+                    document.getElementById('campusSection').classList.add('active'); } else if (campuses.length === 1) {
+                        // Auto-select and load courses for single campus
+                        currentCampus = campuses[0].name;
+                        const campusName = campuses[0].name;
+                        fetch(`/api/universities/${encodeURIComponent(uniName)}/campuses/${encodeURIComponent(campusName)}/courses`)
+                            .then(res => res.json())
+                            .then(courses => {
+                                allCoursesCache[campusName] = courses;
+                                displayCourses(courses);
+                            })
+                            .catch(err => console.error(err));
+                        return;
+                    }
                     
                     // Load all courses for this university by default
                     loadCoursesForUni(uniName);
@@ -1081,7 +1269,12 @@
             currentUni = '';
             currentCampus = '';
             searchQuery = '';
-            document.getElementById('searchInput').value = '';
+
+            // Show header again
+            document.getElementById('exploreHeader').classList.remove('hidden');
+            document.getElementById('selectUniLabel').classList.remove('hidden');
+            document.getElementById('changeUniBtn').classList.remove('visible');
+            document.getElementById('selectedUniversityDisplay').classList.remove('visible');
 
             // Show all universities and remove active state
             document.querySelectorAll('.uni-btn').forEach(btn => {
@@ -1103,6 +1296,7 @@
             }
             
             currentCampus = campusName;
+            searchQuery = '';
 
             // Update button states
             document.querySelectorAll('.campus-btn').forEach(btn => btn.classList.remove('active'));
@@ -1111,12 +1305,16 @@
             // Load courses for this campus
             fetch(`/api/universities/${encodeURIComponent(uniName)}/campuses/${encodeURIComponent(campusName)}/courses`)
                 .then(res => res.json())
-                .then(courses => displayCourses(courses))
+                .then(courses => {
+                    allCoursesCache[campusName] = courses;
+                    displayCourses(courses);
+                })
                 .catch(err => console.error(err));
         }
 
         function deselectCampus(uniName) {
             currentCampus = '';
+            searchQuery = '';
 
             // Remove active state from all campus buttons
             document.querySelectorAll('.campus-btn').forEach(btn => btn.classList.remove('active'));
@@ -1137,6 +1335,7 @@
                         fetch(`/api/universities/${encodeURIComponent(uniName)}/campuses/${encodeURIComponent(campus.name)}/courses`)
                             .then(res => res.json())
                             .then(courses => {
+                                allCoursesCache[campus.name] = courses;
                                 allCourses = allCourses.concat(courses);
                                 loaded++;
                                 if (loaded === campuses.length) {
@@ -1178,64 +1377,6 @@
 
             document.getElementById('coursesList').innerHTML = html;
             document.getElementById('coursesSection').style.display = 'block';
-        }
-
-        // SEARCH FUNCTIONALITY
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            searchQuery = e.target.value.toLowerCase();
-            clearTimeout(debounceTimer);
-            
-            // Toggle search-active class on glass-section for reordering
-            const glassSection = document.querySelector('.glass-section');
-            if (searchQuery.length > 0) {
-                glassSection.classList.add('search-active');
-            } else {
-                glassSection.classList.remove('search-active');
-            }
-            
-            debounceTimer = setTimeout(performSearch, 300);
-        });
-
-        function performSearch() {
-            if (searchQuery.length === 0) {
-                if (currentUni) {
-                    loadCoursesForUni(currentUni);
-                } else {
-                    document.getElementById('coursesSection').style.display = 'none';
-                }
-                return;
-            }
-
-            // Search across all courses
-            fetch(`/api/search?q=${encodeURIComponent(searchQuery)}&riasec=`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.results.length === 0) {
-                        document.getElementById('coursesList').innerHTML = '<div class="empty-state"><h3>No courses found</h3></div>';
-                    } else {
-                        displaySearchResults(data.results);
-                    }
-                    document.getElementById('coursesSection').style.display = 'block';
-                })
-                .catch(err => console.error(err));
-        }
-
-        function displaySearchResults(results) {
-            const html = results.map(course => `
-                <div class="course-card">
-                    <div class="course-header">
-                        <h3 class="course-name">${escapeHtml(course.course)}</h3>
-                        <span class="riasec-badge">${escapeHtml(course.riasec)}</span>
-                    </div>
-                    <div class="course-meta">
-                        <div class="meta-item"><span class="meta-label">University:</span> <span>${escapeHtml(course.university)}</span></div>
-                        <div class="meta-item"><span class="meta-label">Campus:</span> <span>${escapeHtml(course.campus)}</span></div>
-                        ${course.major ? `<div class="meta-item"><span class="meta-label">Major:</span> <span>${escapeHtml(course.major)}</span></div>` : ''}
-                    </div>
-                </div>
-            `).join('');
-
-            document.getElementById('coursesList').innerHTML = html;
         }
 
         function escapeHtml(text) {
@@ -1285,3 +1426,16 @@
     </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
