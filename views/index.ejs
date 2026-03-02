@@ -106,7 +106,7 @@ html, body {
     overflow-x: hidden;
     width: 100%;
     box-sizing: border-box; /* Ensures padding doesn't add to width */
-    touch-action: pan-y; /* FORCES the browser to only allow vertical scrolling */
+    touch-action: manipulation; /* Allows pinch-zoom on mobile */
 }
 
     /* 3. DEV TOOLS STYLING */
@@ -456,7 +456,7 @@ body.dark-mode .nav-status#progress-status {
     max-width: 500px;      
     
     /* Helps with the scrolling issue we fixed earlier */
-    touch-action: pan-y;   
+    touch-action: manipulation;   
 }
 
 /* Specific Label Styling to prevent clipping */
@@ -1183,7 +1183,7 @@ input:checked + .slider:before {
         box-sizing: border-box; 
         width: 100%; 
         
-        touch-action: pan-y;   
+        touch-action: manipulation;   
         overflow: visible; /* Changed from hidden so labels aren't clipped */
     }
 
