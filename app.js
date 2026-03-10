@@ -1,9 +1,56 @@
+/**
+ * ────────────────────────────────────────────────────────────
+ * PROJECT: T.A.H.A.K (Talents, Abilities, Hobbies & Knowledge)
+ * ────────────────────────────────────────────────────────────
+ * Research & Development Team:
+ * • John Chester C. Canoza (Lead Developer)
+ * • Jariz Maria T. Gose
+ * • Marcus Lord Isiah R. Basañes
+ * • Rhiane Chastine Lei V. Perida
+ *
+ * NOTICE: This source code is an original academic output
+ * submitted for research documentation and archival purposes.
+ * All rights reserved under the Intellectual Property Code
+ * of the Philippines (R.A. 8293). Unauthorized reproduction,
+ * redistribution, or commercial use is strictly prohibited.
+ *
+ * Build ID: STEM12-GRD12-TAHAK-2026
+ * ────────────────────────────────────────────────────────────
+ */
+
 // ============================================================================
 // IMPORTS
 // ============================================================================
 const express = require('express');
 const fs = require('fs');
 const csv = require('csv-parser');
+
+// ============================================================================
+// TAHAK CORE IDENTITY & VERSION TRACKING
+// ============================================================================
+/**
+ * Digital fingerprint for TAHAK core engine.
+ * Updated on each stable build to track development progression.
+ */
+const _tahak_core = {
+  projectName: 'T.A.H.A.K',
+  fullName: 'Talents, Abilities, Hobbies and Knowledge',
+  version: '1.0.0-Stable',
+  build_id: 'STEM12-GRD12-TAHAK-2026',
+  lead_developer: 'John Chester C. Canoza',
+  team: [
+    'John Chester C. Canoza',
+    'Jariz Maria T. Gose',
+    'Marcus Lord Isiah R. Basañes',
+    'Rhiane Chastine Lei V. Perida'
+  ],
+  created: '2026-03-10',
+  riasec_engine: 'Holland Code Matching v1.0',
+  subcategory_tiebreaker: 'Enabled',
+  education_demotion_threshold: 0.8,
+};
+
+console.log(`\n✓ ${_tahak_core.projectName} v${_tahak_core.version} | Build: ${_tahak_core.build_id}\n`);
 
 // ============================================================================
 // EXPRESS APPLICATION SETUP

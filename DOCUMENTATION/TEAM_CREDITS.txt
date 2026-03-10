@@ -1,0 +1,203 @@
+================================================================================
+TEAM CREDITS - T.A.H.A.K Research Project 2026
+================================================================================
+
+PROJECT TITLE: T.A.H.A.K
+Talents, Abilities, Hobbies and Knowledge - Career Assessment Platform
+
+================================================================================
+RESEARCH & DEVELOPMENT TEAM
+================================================================================
+
+LEAD DEVELOPER & PRINCIPAL ARCHITECT:
+🔹 John Chester C. Canoza
+   Role: Full-Stack Developer, System Design, RIASEC Engine Architect
+   Responsibilities: Backend development, algorithm implementation, database 
+                    integration, API design, front-end architecture
+   Notable Contributions: Core matching algorithm, subcategory tie-breaking 
+                         logic, education course demotion system
+
+CO-RESEARCHERS:
+🔹 Jariz Maria T. Gose
+   Role: Research & Development
+   Responsibilities: Question design, content validation, user testing
+
+🔹 Marcus Lord Isiah R. Basañes
+   Role: Research & Development
+   Responsibilities: Database curation, institution data verification
+
+🔹 Rhiane Chastine Lei V. Perida
+   Role: Research & Development
+   Responsibilities: User interface feedback, UX testing
+
+================================================================================
+TECHNICAL STACK ATTRIBUTION
+================================================================================
+
+Framework & Libraries:
+• Express.js - Web server framework
+• EJS - Template engine
+• csv-parser - CSV database parsing
+• Node.js - Runtime environment
+
+Design & Styling:
+• CSS3 - Styling and responsive design
+• HTML5 - Semantic markup
+• Glassmorphism pattern - UI design approach
+
+Research Foundation:
+• Holland Code (RIASEC Model) - Career assessment theory
+• Philippine DepEd Curriculum - Educational context
+
+================================================================================
+INTELLECTUAL PROPERTY STATEMENT
+================================================================================
+
+This project represents original academic research conducted by the Grade 12
+STEM cohort of [School Name] in 2026.
+
+All source code, algorithms, and database structures are the intellectual
+property of the research team and are protected under:
+
+📜 Republic Act 8293 - Intellectual Property Code of the Philippines
+
+Key Protected Elements:
+✓ RIASEC scoring engine and weighted matching algorithm
+✓ Subcategory tie-breaking system
+✓ Education course demotion logic
+✓ User interface and design patterns
+✓ Database structure and course mappings
+
+All rights reserved. Unauthorized reproduction, redistribution, or commercial
+use without explicit permission from the research team is prohibited.
+
+================================================================================
+PROJECT TIMELINE
+================================================================================
+
+Project Start Date:     [INSERT DATE]
+Research Phase:         [INSERT DATES]
+Development Phase:      [INSERT DATES]
+Testing & Refinement:   [INSERT DATES]
+Final Submission:       March 10, 2026
+
+Total Development Hours: [INSERT NUMBER]
+
+================================================================================
+ACKNOWLEDGMENTS
+================================================================================
+
+We would like to acknowledge:
+
+• [School Name] - For institutional support and resources
+• [Teacher/Advisor Name] - For guidance and mentorship
+• All participating students in user testing phase
+• Philippine Department of Education - For curriculum framework
+• Holland Code researchers - For the foundational RIASEC theory
+
+================================================================================
+ARCHIVE INFORMATION
+================================================================================
+
+Submission Format: USB Archive
+Submission Date: March 10, 2026
+Archive Status: Grade 12 STEM Research Project - School Records
+
+Files Included:
+• Source code (app.js, views, config)
+• Course database (schools_database.csv)
+• Documentation (README.md, SUBMISSION_NOTES.txt)
+• This credits file
+
+Files Excluded (for security):
+• node_modules/ (reinstall via npm)
+• .env and .env.local (contains API keys)
+• .git/ (version control history)
+• Backup files
+
+================================================================================
+VERIFICATION & AUTHENTICITY
+================================================================================
+
+To verify this is the official T.A.H.A.K submission:
+
+1. Check console output on startup:
+   Expected: "✓ T.A.H.A.K v1.0.0-Stable | Build: STEM12-GRD12-TAHAK-2026"
+
+2. Open browser DevTools (F12) and check Console:
+   Expected: TAHAK ASCII art logo with team attribution
+
+3. Verify all .ejs files contain project header comments
+   Expected: HTML comments at top of each view file
+
+4. Check app.js for _tahak_core object
+   Expected: Digital fingerprint object with version and team names
+
+These security markers confirm this is the authentic submission.
+
+================================================================================
+FUTURE DEVELOPMENT NOTES
+================================================================================
+
+For future versions, please maintain:
+• Version tracking in _tahak_core object
+• Header comments on all new files
+• Updated SUBMISSION_NOTES.txt for each build
+• Console watermark in index.ejs
+• IP notices in all template files
+
+Recommended Enhancements (Not included in v1.0.0):
+□ Database connection to persistent storage (instead of CSV)
+□ User accounts and result history
+□ Advanced analytics dashboard
+□ Multi-language support (Korean, Japanese, etc.)
+□ Mobile app version (React Native)
+□ Commercial licensing option for qualified institutions
+
+================================================================================
+CONTACT & SUPPORT
+================================================================================
+
+For official inquiries about this project:
+
+Primary Contact:
+Name: John Chester C. Canoza
+Role: Lead Developer
+Purpose: IP verification, commercial licensing, technical support
+
+All external requests should be directed to school administration
+for proper routing to the research team.
+
+================================================================================
+DISCLAIMER
+================================================================================
+
+This research project is provided on an "as-is" basis for educational and
+archival purposes. The research team makes no warranties regarding accuracy,
+completeness, or fitness for any particular purpose.
+
+The RIASEC assessment in this platform is for educational guidance only and
+should not be used as the sole basis for career decisions. Professional
+career counseling is recommended.
+
+================================================================================
+SIGNATURES & DATES
+================================================================================
+
+Lead Developer Signature: _________________________ Date: __________
+John Chester C. Canoza
+
+Team Member Sign-Off:     _________________________ Date: __________
+Jariz Maria T. Gose
+
+Team Member Sign-Off:     _________________________ Date: __________
+Marcus Lord Isiah R. Basañes
+
+Team Member Sign-Off:     _________________________ Date: __________
+Rhiane Chastine Lei V. Perida
+
+School Administrator:     _________________________ Date: __________
+
+================================================================================
+Document Version: 1.0 | Last Updated: March 10, 2026
+================================================================================

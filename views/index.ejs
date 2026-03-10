@@ -1,3 +1,18 @@
+<!--
+    ────────────────────────────────────────────────────────────
+    PROJECT: T.A.H.A.K (Talents, Abilities, Hobbies & Knowledge)
+    ────────────────────────────────────────────────────────────
+    Research & Development Team:
+    • John Chester C. Canoza (Lead Developer)
+    • Jariz Maria T. Gose
+    • Marcus Lord Isiah R. Basañes
+    • Rhiane Chastine Lei V. Perida
+
+    NOTICE: This source code is an original academic output
+    submitted for research documentation and archival purposes.
+    All rights reserved under R.A. 8293 (Philippines IP Code).
+    ────────────────────────────────────────────────────────────
+-->
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,60 +22,49 @@
     <title>Career Assessment</title>
     
     <style>
-/* --- DISABLE MOBILE TAP HIGHLIGHT --- */
 * {
-    /* Prevents the blue/grey box when clicking buttons/links on mobile */
     -webkit-tap-highlight-color: transparent;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-/* Also disable the gray semi-transparent overlay on some browsers */
 .theme-toggle, 
 .hamburger, 
 button, 
 .likert-circle {
     outline: none;
-    -webkit-touch-callout: none; /* Prevents long-press "copy" menu on icons */
-    user-select: none;           /* Prevents text selection on these elements */
+    -webkit-touch-callout: none; 
+    user-select: none;           
 }
 
 :root {
-    /* 1. Inter (Your favorite)
-       2. -apple-system / BlinkMacSystemFont (Apple's ultra-clean San Francisco)
-       3. Segoe UI (Windows default)
-       4. Roboto (Android - placed last as requested)
-       5. sans-serif (The emergency backup) */
     --main-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 body {
     font-family: var(--main-font);
-    -webkit-font-smoothing: antialiased; /* Makes fonts look smoother on Mac and iPhone */
+    -webkit-font-smoothing: antialiased; 
     -moz-osx-font-smoothing: grayscale;
 }
 
         html, body {
     max-width: 100%;
-    overflow-x: hidden; /* This is the most important line for mobile */
+    overflow-x: hidden; 
     position: relative;
 }
 
-/* --- SECTION 1: GLOBAL RESET (Put this at the top of your <style> tag) --- */
 html, body {
     margin: 0;
     padding: 0;
     width: 100%;
-    /* This prevents the "rubber-band" effect on mobile that can shift the navbar */
     overflow-x: hidden;
 }
 
-    /* 1. THEME VARIABLES */
     :root {
         --bg-color: #f0f2f5;
         --card-bg: #ffffff;
         --text-main: #2c3e50;
         --text-muted: #5f6368;
-        --nav-bg-rgb: 255, 255, 255; /* Needed for Glassmorphism */
+        --nav-bg-rgb: 255, 255, 255; 
         --nav-text: #2c3e50;
         --likert-bg: #f8f9fa;
         --border-color: #dadce0;
@@ -74,7 +78,7 @@ html, body {
         --card-bg: #1e1e1e;
         --text-main: #e8eaed;
         --text-muted: #9aa0a6;
-        --nav-bg-rgb: 30, 30, 30; /* Darker RGB for Glassmorphism */
+        --nav-bg-rgb: 30, 30, 30; 
         --nav-text: #e8eaed;
         --likert-bg: #2d2d2d;
         --border-color: #3c4043;
@@ -1783,6 +1787,26 @@ input:checked + .slider:before {
 </div>
 
 <script>
+    // ==========================================
+    // TAHAK Development Team Console Watermark
+    // ==========================================
+    (function() {
+      const tahakAscii = `
+        ████████╗ █████╗ ██╗  ██╗ █████╗ ██╗  ██╗
+        ╚══██╔══╝██╔══██╗██║  ██║██╔══██╗██║ ██╔╝
+           ██║   ███████║███████║███████║█████╔╝ 
+           ██║   ██╔══██║██╔══██║██╔══██║██╔═██╗ 
+           ██║   ██║  ██║██║  ██║██║  ██║██║  ██╗
+           ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝
+      `;
+      
+      console.log(tahakAscii);
+      console.log('%c T.A.H.A.K Development Team 2026', 'font-weight: bold; font-size: 14px; color: #1a73e8;');
+      console.log('%c Talents, Abilities, Hobbies & Knowledge Assessment Platform', 'color: #666; font-style: italic;');
+      console.log('%c Lead Developer: John Chester C. Canoza', 'color: #999; font-size: 12px;');
+      console.log('%c All rights reserved under R.A. 8293 (Philippines Intellectual Property Code)', 'color: #d32f2f; font-size: 11px; font-weight: bold;');
+    })();
+
     // ========== GATEKEEPER LOGIC: Check for Shared Links & Saved Results ==========
     // This runs immediately to avoid "flicker" of landing page
     (function() {
@@ -1834,7 +1858,6 @@ input:checked + .slider:before {
     const body = document.body;
 
     // --- DEV TOOLS (Shift + D) ---
-    // --- UPDATED DEV TOOLS LOGIC WITH NEW POSITIVE SCORING SYSTEM ---
     // Max per category: 40 points (8 questions × 5 points)
 const profiles = {
     MY_IA:     { r: 12, i: 35, a: 18, s: 8,  e: 5,  c: 10 },

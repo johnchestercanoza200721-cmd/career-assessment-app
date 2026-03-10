@@ -1,0 +1,146 @@
+================================================================================
+T.A.H.A.K - GRADE 12 STEM RESEARCH PROJECT
+================================================================================
+
+PROJECT: Talents, Abilities, Hobbies & Knowledge
+VERSION: 1.0.0 Stable
+BUILD: STEM12-GRD12-TAHAK-2026
+
+RESEARCH TEAM:
+• John Chester C. Canoza (Lead Developer)
+• Jariz Maria T. Gose
+• Marcus Lord Isiah R. Basañes
+• Rhiane Chastine Lei V. Perida
+
+================================================================================
+INTELLECTUAL PROPERTY NOTICE
+================================================================================
+
+This source code is the original academic output of the 2026 STEM research
+cohort. All rights reserved under the Intellectual Property Code of the
+Philippines (R.A. 8293). This code is for archival and educational purposes
+only. Unauthorized reproduction, redistribution, or commercial use is
+strictly prohibited.
+
+================================================================================
+SETUP INSTRUCTIONS
+================================================================================
+
+REQUIREMENTS:
+- Node.js 14.0 or higher
+- npm (comes with Node.js)
+
+INSTALLATION:
+1. Extract this folder to your desired location
+2. Open terminal/command prompt in the project directory
+3. Run: npm install
+4. Run: node app.js
+5. Open browser and navigate to: http://localhost:3000
+
+TO STOP THE SERVER:
+- Press Ctrl+C in the terminal
+
+================================================================================
+PROJECT STRUCTURE
+================================================================================
+
+Career Assessment Platform/
+├── app.js                    (Main Express server + RIASEC engine)
+├── package.json              (Node.js dependencies)
+├── schools_database.csv      (Course database from schools_database.csv)
+├── views/
+│   ├── index.ejs            (Quiz assessment page)
+│   ├── results.ejs          (Results & course matching page)
+│   └── explore.ejs          (Course exploration interface)
+└── public/                  (Static assets directory)
+
+================================================================================
+KEY FEATURES
+================================================================================
+
+✓ Holland Code (RIASEC) Career Assessment - 48 questions
+✓ Intelligent course matching with subcategory tie-breaking
+✓ Education career demotion logic (contextual scoring)
+✓ Course exploration interface with university/campus filtering
+✓ Responsive design for desktop and mobile devices
+✓ Dark mode support
+✓ Results sharing via URL query parameters
+✓ Dev mode for testing (Press Shift+D to toggle)
+
+================================================================================
+VERIFICATION CHECKLIST
+================================================================================
+
+When the app starts, you should see:
+
+Console Output:
+✓ T.A.H.A.K v1.0.0-Stable | Build: STEM12-GRD12-TAHAK-2026
+
+Browser Console (Right-click > Inspect > Console):
+✓ ASCII art logo
+✓ "T.A.H.A.K Development Team 2026"
+✓ Team member citations
+✓ IP notice about R.A. 8293
+
+These indicators confirm the IP protection headers are active.
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Q: Port 3000 already in use
+A: Run on a different port: PORT=3001 node app.js
+
+Q: Module not found error
+A: Run: npm install (ensure node_modules installed)
+
+Q: CSV file not found
+A: Verify schools_database.csv is in the project root directory
+
+Q: Cannot connect to localhost:3000
+A: Check that the server started successfully (look for port 3000 message)
+
+================================================================================
+FILE EXCLUSIONS (SENSITIVE DATA)
+================================================================================
+
+The following files/folders should NOT be included in the USB submission:
+- node_modules/ (reinstall with npm install)
+- .env / .env.local (contains API keys - DELETE BEFORE SUBMISSION)
+- .git/ (optional, saves space)
+- *.bak / backup/ (save separately if needed)
+
+Reason: Security and intellectual property protection
+
+================================================================================
+ADDITIONAL NOTES
+================================================================================
+
+• Database: The schools_database.csv contains publicly available information
+  about Philippine educational institutions.
+  
+• Scoring Algorithm: The RIASEC scoring logic uses a weighted position-based
+  system with subcategory tie-breaking. See app.js processRiasec() function
+  for implementation details.
+
+• Modifications: If you modify this code, update the build_id in app.js
+  (_tahak_core object) to track changes.
+
+================================================================================
+SUPPORT & DOCUMENTATION
+================================================================================
+
+For questions about the RIASEC model, see:
+- Holland Code Theory: https://en.wikipedia.org/wiki/Holland_code
+- RIASEC Dimensions: Realistic, Investigative, Artistic, Social, Enterprising, Conventional
+
+For Node.js/Express documentation:
+- Express.js: https://expressjs.com
+- Node.js: https://nodejs.org
+
+For EJS templating:
+- EJS Documentation: https://ejs.co
+
+================================================================================
+ARCHIVE DATE: March 10, 2026
+================================================================================
