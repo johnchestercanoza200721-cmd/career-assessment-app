@@ -2034,7 +2034,11 @@ document.querySelector('form[action="/submit"]').addEventListener('submit', func
     const totalQuestions = <%= quizQuestions.length %>;
     const selectedRadios = document.querySelectorAll('input[type="radio"]:checked');
     
-    if (selectedRadios.length < totalQuestions) return;
+    if (selectedRadios.length < totalQuestions) {
+        e.preventDefault();
+        alert('Please answer all ' + totalQuestions + ' questions before submitting.');
+        return;
+    }
 
     const counts = {};
     selectedRadios.forEach(radio => {

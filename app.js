@@ -1,24 +1,37 @@
+// ============================================================================
+// IMPORTS
+// ============================================================================
 const express = require('express');
 const fs = require('fs');
 const csv = require('csv-parser');
+
+// ============================================================================
+// EXPRESS APPLICATION SETUP
+// ============================================================================
 const app = express();
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-// 1. DATA: 48 Filipinized RIASEC Questions with Subcategory Tags
-// Golden Rule: Each RIASEC letter has 8 questions, evenly split between 2 subcategories (4-4 balance)
+// ============================================================================
+// DATA: RIASEC QUIZ QUESTIONS
+// ============================================================================
+/**
+ * 48 Filipinized RIASEC questions mapped to 6 main traits and 12 subcategories.
+ * Golden rule: each RIASEC letter has 8 questions, evenly split between 2
+ * subcategories (4-4 balance) for precise career matching.
+ */
 const quizQuestions = [
     // REALISTIC (R) - 8 questions: 4 R-Mechanical, 4 R-Natural
     { id: 1, text: "Repair a broken household appliance or gadget (e.g., electric fan, phone).", cat: "R", subcategory: "R-Mechanical" },
     { id: 2, text: "Assemble furniture or build things using tools.", cat: "R", subcategory: "R-Mechanical" },
     { id: 3, text: "Work on a motorcycle or car engine (mechanical tasks).", cat: "R", subcategory: "R-Mechanical" },
-    { id: 4, text: "Do practical 'DIY' projects around the house or school.", cat: "R", subcategory: "R-Natural" },
+    { id: 4, text: "Do practical 'DIY' projects around the house or school.", cat: "R", subcategory: "R-Natural", negativeCategory: "A" },
     { id: 5, text: "Operate heavy machinery or power tools (like those in TESDA courses).", cat: "R", subcategory: "R-Mechanical" },
     { id: 6, text: "Spend time gardening or doing outdoor landscaping work.", cat: "R", subcategory: "R-Natural" },
-    { id: 7, text: "Install or troubleshoot a home/office network (CCTV, Wi-Fi).", cat: "R", subcategory: "R-Mechanical" },
-    { id: 8, text: "Use a blueprint or technical drawing to build a physical object.", cat: "R", subcategory: "R-Natural" },
+    { id: 7, text: "Install or troubleshoot a home/office network (CCTV, Wi-Fi).", cat: "R", subcategory: "R-Natural" },
+    { id: 8, text: "Use a blueprint or technical drawing to build a physical object.", cat: "R", subcategory: "R-Natural", negativeCategory: "A" },
     
     // INVESTIGATIVE (I) - 8 questions: 4 I-Health, 4 I-Physical
     { id: 9, text: "Conduct a scientific experiment in a laboratory.", cat: "I", subcategory: "I-Physical" },
@@ -41,14 +54,14 @@ const quizQuestions = [
     { id: 24, text: "Express yourself through unique creative hobbies.", cat: "A", subcategory: "A-Literary" },
     
     // SOCIAL (S) - 8 questions: 4 S-Educational, 4 S-Service
-    { id: 25, text: "Volunteer for a community outreach or NGO program.", cat: "S", subcategory: "S-Service" },
-    { id: 26, text: "Teach a friend or younger student a difficult subject.", cat: "S", subcategory: "S-Educational" },
-    { id: 27, text: "Help people resolve a personal conflict or argument.", cat: "S", subcategory: "S-Service" },
-    { id: 28, text: "Take care of someone who is sick or injured.", cat: "S", subcategory: "S-Educational" },
-    { id: 29, text: "Work with children or the elderly in a community setting.", cat: "S", subcategory: "S-Service" },
-    { id: 30, text: "Give advice to friends on their life or career problems.", cat: "S", subcategory: "S-Educational" },
-    { id: 31, text: "Participate in a group project to solve a social issue.", cat: "S", subcategory: "S-Educational" },
-    { id: 32, text: "Lead a youth group or student organization to help others.", cat: "S", subcategory: "S-Service" },
+    { id: 25, text: "Volunteer for a community outreach or NGO program.", cat: "S", subcategory: "S-Service", negativeCategory: "C" },
+    { id: 26, text: "Teach a friend or younger student a difficult subject.", cat: "S", subcategory: "S-Educational", negativeCategory: "C" },
+    { id: 27, text: "Help people resolve a personal conflict or argument.", cat: "S", subcategory: "S-Service", negativeCategory: "C" },
+    { id: 28, text: "Take care of someone who is sick or injured.", cat: "S", subcategory: "S-Service", negativeCategory: "C" },
+    { id: 29, text: "Work with children or the elderly in a community setting.", cat: "S", subcategory: "S-Educational", negativeCategory: "C" },
+    { id: 30, text: "Give advice to friends on their life or career problems.", cat: "S", subcategory: "S-Educational", negativeCategory: "C" },
+    { id: 31, text: "Participate in a group project to solve a social issue.", cat: "S", subcategory: "S-Service", negativeCategory: "C" },
+    { id: 32, text: "Lead a youth group or student organization to help others.", cat: "S", subcategory: "S-Educational", negativeCategory: "C" },
     
     // ENTERPRISING (E) - 8 questions: 4 E-Management, 4 E-Hospitality
     { id: 33, text: "Start a small online business (Shopee/Lazada shop).", cat: "E", subcategory: "E-Management" },
@@ -61,19 +74,23 @@ const quizQuestions = [
     { id: 40, text: "Manage the budget and goals for an organization.", cat: "E", subcategory: "E-Management" },
     
     // CONVENTIONAL (C) - 8 questions: 4 C-Financial, 4 C-Logistical
-    { id: 41, text: "Organize files, folders, and documents systematically.", cat: "C", subcategory: "C-Financial" },
-    { id: 42, text: "Keep detailed records of expenses for a project.", cat: "C", subcategory: "C-Financial" },
+    { id: 41, text: "Organize files, folders, and documents systematically.", cat: "C", subcategory: "C-Financial", negativeCategory: "A" },
+    { id: 42, text: "Keep detailed records of expenses for a project.", cat: "C", subcategory: "C-Financial", negativeCategory: "A" },
     { id: 43, text: "Check reports or papers for small errors.", cat: "C", subcategory: "C-Logistical" },
-    { id: 44, text: "Work with spreadsheets (Excel/Google Sheets) for data.", cat: "C", subcategory: "C-Financial" },
-    { id: 45, text: "Follow a strict set of rules and procedures.", cat: "C", subcategory: "C-Logistical" },
+    { id: 44, text: "Work with spreadsheets (Excel/Google Sheets) for data.", cat: "C", subcategory: "C-Financial", negativeCategory: "A" },
+    { id: 45, text: "Follow a strict set of rules and procedures.", cat: "C", subcategory: "C-Logistical", negativeCategory: "E" },
     { id: 46, text: "Manage a database or inventory of items/supplies.", cat: "C", subcategory: "C-Logistical" },
     { id: 47, text: "Perform audit or quality-control checks on work.", cat: "C", subcategory: "C-Financial" },
-    { id: 48, text: "Organize a schedule or calendar for a team.", cat: "C", subcategory: "C-Logistical" }
+    { id: 48, text: 'Organize a schedule or calendar for a team.', cat: 'C', subcategory: 'C-Logistical' },
 ];
 
-// 2. SUBCATEGORY MAPPING: Course Name to Primary Subcategory
-// Top 20 Philippine Courses mapped to 12-Subcategory Framework
-// This is the "ground truth" for the tie-breaker logic
+// ============================================================================
+// DATA: COURSE-TO-SUBCATEGORY MAPPING
+// ============================================================================
+/**
+ * Maps course names to their primary subcategory for tie-breaking logic.
+ * This serves as the ground truth for matching recommendations.
+ */
 const subCatMap = {
     // Investigative (I) - Health & Physical Sciences
     "BS Medical Technology": "I-Health",
@@ -89,6 +106,12 @@ const subCatMap = {
     "BS Social Work": "S-Service",
     "BS Secondary Education": "S-Educational",
     "BS Elementary Education": "S-Educational",
+    "Bachelor of Secondary Education": "S-Educational",
+    "Bachelor of Elementary Education": "S-Educational",
+    "Bachelor of Physical Education": "S-Educational",
+    "Bachelor of Early Childhood Education": "S-Educational",
+    "BS Education": "S-Educational",
+    "Bachelor of Science in Education": "S-Educational",
 
     // Realistic (R) - Mechanical & Natural
     "BS Civil Engineering": "R-Mechanical",
@@ -107,326 +130,488 @@ const subCatMap = {
     "BS Tourism Management": "E-Hospitality",
 
     // Conventional (C) - Financial & Logistical
-    "BS Accountancy": "C-Financial",
-    "BS Customs Administration": "C-Logistical"
+    'BS Accountancy': 'C-Financial',
+    'BS Customs Administration': 'C-Logistical',
 };
 
-// 3. HELPER: Subcategory Name Mapping (for display in UI)
+// ============================================================================
+// DATA: SUBCATEGORY DISPLAY NAMES
+// ============================================================================
+/**
+ * Human-readable display names for each subcategory, used in UI rendering.
+ */
 const subCategoryNames = {
-    "R-Mechanical": "Mechanical Engineering",
-    "R-Natural": "Natural Sciences",
-    "I-Health": "Health Sciences",
-    "I-Physical": "Physical Sciences",
-    "A-Digital": "Digital & Visual Arts",
-    "A-Literary": "Literary & Performance Arts",
-    "S-Educational": "Educational Services",
-    "S-Service": "Healthcare & Social Services",
-    "E-Management": "Business Management",
-    "E-Hospitality": "Hospitality & Event Management",
-    "C-Financial": "Financial Services",
-    "C-Logistical": "Logistics & Administration"
+  'R-Mechanical': 'Mechanical Engineering',
+  'R-Natural': 'Natural Sciences',
+  'I-Health': 'Health Sciences',
+  'I-Physical': 'Physical Sciences',
+  'A-Digital': 'Digital & Visual Arts',
+  'A-Literary': 'Literary & Performance Arts',
+  'S-Educational': 'Educational Services',
+  'S-Service': 'Healthcare & Social Services',
+  'E-Management': 'Business Management',
+  'E-Hospitality': 'Hospitality & Event Management',
+  'C-Financial': 'Financial Services',
+  'C-Logistical': 'Logistics & Administration',
 };
 
-// 4. HELPER: Fisher-Yates Shuffle Algorithm
+// ============================================================================
+// HELPER FUNCTIONS
+// ============================================================================
+
+/**
+ * Detects if a course is education-related (teaching profession).
+ * Used to apply special scoring logic for education career paths.
+ */
+function isEducationCourse(courseName, major) {
+  const lowerCourse = (courseName || '').toLowerCase();
+  const lowerMajor = (major || '').toLowerCase();
+  const combined = lowerCourse + ' ' + lowerMajor;
+
+  const educationKeywords = [
+    'education', 'teaching', 'teacher', 'pedagogy',
+    'elementary education', 'secondary education',
+    'early childhood', 'physical education',
+    'science education', 'mathematics education',
+    'english education', 'teacher training',
+  ];
+
+  return educationKeywords.some(keyword => combined.includes(keyword));
+}
+
+/**
+ * Fisher-Yates shuffle algorithm for randomizing array order.
+ * Used to shuffle quiz questions on each page load.
+ */
 function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }
 
-// 5. CORE LOGIC HELPER: Improved Course Matching with Subcategory Tie-Breaker
+/**
+ * Core matching algorithm: processes RIASEC scores and returns ranked course recommendations.
+ * Handles matching logic, tie-breaking via subcategories, and education course demotion.
+ */
 function processRiasec(scores, subScores, callback) {
-    // Sort by raw score (highest first)
-    let sortedEntries = Object.entries(scores).sort((a, b) => b[1] - a[1]);
-    
-    // Define top 3 traits for Holland Code
-    const top1 = sortedEntries[0][0];
-    const top2 = sortedEntries[1][0];
-    const top3 = sortedEntries[2][0];
+  // Sort by raw score (highest first) and extract top 3 traits for Holland Code
+  let sortedEntries = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+  const top1 = sortedEntries[0][0];
+  const top2 = sortedEntries[1][0];
+  const top3 = sortedEntries[2][0];
 
-    // Create the Holland Code (only include positive interests if possible)
-    let hollandCode = sortedEntries
-        .slice(0, 3)
-        .filter(entry => entry[1] > 0) 
-        .map(entry => entry[0])
-        .join('');
-    
-    if (!hollandCode) hollandCode = top1 + top2 + top3;
+  // Generate Holland Code from top 3 traits (prefer positive scores)
+  let hollandCode = sortedEntries
+    .slice(0, 3)
+    .filter(entry => entry[1] > 0)
+    .map(entry => entry[0])
+    .join('');
 
-    // Calculate normalized scores (0-1 scale) for better comparison
-    const maxScore = Math.max(...Object.values(scores), 1);
-    const minScore = Math.min(...Object.values(scores), 0);
-    const scoreRange = maxScore - minScore || 1;
-    
-    const normalizedScores = {};
-    Object.entries(scores).forEach(([trait, score]) => {
-        // Normalize to 0-1 scale
-        normalizedScores[trait] = (score - minScore) / scoreRange;
-    });
+  if (!hollandCode) hollandCode = top1 + top2 + top3;
 
-    const matches = [];
+  // Normalize scores to 0-1 scale for consistent comparison across traits
+  const maxScore = Math.max(...Object.values(scores), 1);
+  const minScore = Math.min(...Object.values(scores), 0);
+  const scoreRange = maxScore - minScore || 1;
 
-    fs.createReadStream('schools_database.csv')
-        .pipe(csv())
-        .on('data', (row) => {
-            const courseCode = (row['RIASEC CODE'] || "").toUpperCase();
-            const courseName = (row['COURSES'] || "").trim();
-            
-            if (courseCode.length === 0) return; // Skip empty codes
-            
-            let matchScore = 0;
-            let traitCount = 0;
+  const normalizedScores = {};
+  Object.entries(scores).forEach(([trait, score]) => {
+    normalizedScores[trait] = (score - minScore) / scoreRange;
+  });
 
-            // IMPROVED MATCHING ALGORITHM:
-            // Calculate compatibility based on all traits present in course
-            // Weight by both position and score strength
-            
-            for (let i = 0; i < courseCode.length && i < 3; i++) {
-                const trait = courseCode[i];
-                const userScore = normalizedScores[trait] || 0;
-                
-                // Position bonus (first position most important)
-                const positionBonus = 1 - (i * 0.15);
-                
-                // Score-weighted contribution
-                const contribution = userScore * positionBonus * 100;
-                matchScore += contribution;
-                traitCount++;
-            }
+  const matches = [];
 
-            // Bonus for matching exactly 3 traits
-            if (courseCode.length === 3) {
-                matchScore *= 1.05;
-            }
+  fs.createReadStream('schools_database.csv')
+    .pipe(csv())
+    .on('data', (row) => {
+      const courseCode = (row['RIASEC CODE'] || '').toUpperCase();
+      const courseName = (row['COURSES'] || '').trim();
 
-            // Bonus for consecutive traits (e.g., "RIA" is better than "RAI")
-            if (courseCode.length >= 2) {
-                let consecutiveCount = 0;
-                for (let i = 0; i < courseCode.length - 1; i++) {
-                    const currentTrait = courseCode[i];
-                    const nextTrait = courseCode[i + 1];
-                    const currentRank = sortedEntries.findIndex(e => e[0] === currentTrait);
-                    const nextRank = sortedEntries.findIndex(e => e[0] === nextTrait);
-                    
-                    // Reward if traits are close in ranking
-                    if (Math.abs(currentRank - nextRank) <= 1) {
-                        consecutiveCount++;
-                    }
-                }
-                if (consecutiveCount > 0) {
-                    matchScore *= (1 + consecutiveCount * 0.1);
-                }
-            }
+      if (courseCode.length === 0) return;
 
-            // Dynamic threshold: Include matches with at least 40% of max possible score
-            const maxPossibleScore = 100;
-            const threshold = maxPossibleScore * 0.25;
-            
-            if (matchScore >= threshold) { 
-                // Determine primary subcategory for this course
-                const primarySubcategory = subCatMap[courseName] || null;
-                
-                matches.push({
-                    university: row['UNIVERSITY'],
-                    campus: row['CAMPUS'],
-                    course: row['COURSES'],
-                    major: row['MAJOR'],
-                    riasec: courseCode,
-                    score: Math.round(matchScore),
-                    primarySubcategory: primarySubcategory
-                });
-            }
-        })
-        .on('end', () => {
-            // Sort matches with TIE-BREAKER LOGIC
-            // Level 1: Higher match score
-            // Level 2: Primary subcategory match (if top letter matches course's primary trait)
-            // Level 3: Subcategory score if available
-            const sortedMatches = matches.sort((a, b) => {
-                // Level 1: Compare main match scores
-                if (a.score !== b.score) {
-                    return b.score - a.score;
-                }
-                
-                // Level 2: Subcategory tie-breaker
-                // If both courses have same score, prioritize the one whose subcategory matches user's top interest
-                const courseAPrimaryTrait = a.riasec ? a.riasec[0] : null;
-                const courseBPrimaryTrait = b.riasec ? b.riasec[0] : null;
-                
-                if (courseAPrimaryTrait === top1 && a.primarySubcategory) {
-                    const aSubScore = subScores[a.primarySubcategory] || 0;
-                    const bSubScore = b.primarySubcategory ? (subScores[b.primarySubcategory] || 0) : 0;
-                    
-                    if (aSubScore !== bSubScore) {
-                        return bSubScore - aSubScore;
-                    }
-                }
-                
-                // Level 3: Original position (stable sort)
-                return 0;
-            });
+      let matchScore = 0;
+      let traitCount = 0;
 
-            // Group by course to avoid duplicates, preserving best match score
-            const grouped = {};
-            sortedMatches.forEach(match => {
-                const courseKey = match.course.trim();
-                if (!grouped[courseKey]) {
-                    grouped[courseKey] = {
-                        courseName: match.course,
-                        riasec: match.riasec,
-                        score: match.score,
-                        primarySubcategory: match.primarySubcategory,
-                        subcategoryName: match.primarySubcategory ? subCategoryNames[match.primarySubcategory] : null,
-                        providers: [] 
-                    };
-                } else {
-                    // Update to highest score if this match is better
-                    if (match.score > grouped[courseKey].score) {
-                        grouped[courseKey].score = match.score;
-                        grouped[courseKey].riasec = match.riasec;
-                        grouped[courseKey].primarySubcategory = match.primarySubcategory;
-                        grouped[courseKey].subcategoryName = match.primarySubcategory ? subCategoryNames[match.primarySubcategory] : null;
-                    }
-                }
-                grouped[courseKey].providers.push({
-                    university: match.university,
-                    campus: match.campus,
-                    major: match.major
-                });
-            });
+      // Calculate compatibility by weighing trait position and user's score strength
+      for (let i = 0; i < courseCode.length && i < 3; i++) {
+        const trait = courseCode[i];
+        const userScore = normalizedScores[trait] || 0;
+        const positionBonus = 1 - (i * 0.15); // First position weights highest
+        const contribution = userScore * positionBonus * 100;
+        matchScore += contribution;
+        traitCount++;
+      }
 
-            const finalUniqueMatches = Object.values(grouped).slice(0, 10);
-            callback({ hollandCode, topMatches: finalUniqueMatches, scores, subScores }); 
+      // Bonus for 3-trait matches (most comprehensive alignment)
+      if (courseCode.length === 3) {
+        matchScore *= 1.05;
+      }
+
+      // Bonus for consecutive (ranked) traits (e.g., 'RIA' better than 'RAI')
+      if (courseCode.length >= 2) {
+        let consecutiveCount = 0;
+        for (let i = 0; i < courseCode.length - 1; i++) {
+          const currentTrait = courseCode[i];
+          const nextTrait = courseCode[i + 1];
+          const currentRank = sortedEntries.findIndex(e => e[0] === currentTrait);
+          const nextRank = sortedEntries.findIndex(e => e[0] === nextTrait);
+
+          if (Math.abs(currentRank - nextRank) <= 1) {
+            consecutiveCount++;
+          }
+        }
+        if (consecutiveCount > 0) {
+          matchScore *= (1 + consecutiveCount * 0.1);
+        }
+      }
+
+      // Apply education course demotion if user has low S-Educational interest
+      let finalMatchScore = matchScore;
+      if (isEducationCourse(courseName, row['MAJOR'])) {
+        const sEducationalScore = subScores['S-Educational'] || 0;
+        const allSubScoresArray = Object.values(subScores);
+        const avgSubScore = allSubScoresArray.reduce((a, b) => a + b, 0) / allSubScoresArray.length;
+
+        if (sEducationalScore < avgSubScore * 0.8) {
+          finalMatchScore *= 0.50; // 50% score reduction for low educational interest
+        }
+      }
+
+      const maxPossibleScore = 100;
+      const threshold = maxPossibleScore * 0.45;
+
+      if (finalMatchScore >= threshold) {
+        const primarySubcategory = subCatMap[courseName] || null;
+        matches.push({
+          university: row['UNIVERSITY'],
+          campus: row['CAMPUS'],
+          course: row['COURSES'],
+          major: row['MAJOR'],
+          riasec: courseCode,
+          score: Math.round(finalMatchScore),
+          primarySubcategory: primarySubcategory,
         });
+      }
+    })
+    .on('end', () => {
+      // Sort matches using multi-level tie-breaker logic:
+      // Level 1: Primary match score
+      // Level 2: Subcategory alignment with user's top trait
+      // Level 3: Fallback to signed order (stable sort)
+      const sortedMatches = matches.sort((a, b) => {
+        if (a.score !== b.score) {
+          return b.score - a.score;
+        }
+
+        const courseAPrimaryTrait = a.riasec ? a.riasec[0] : null;
+        const courseBPrimaryTrait = b.riasec ? b.riasec[0] : null;
+
+        if (courseAPrimaryTrait === top1 || courseBPrimaryTrait === top1) {
+          const aSubcategory = a.primarySubcategory || null;
+          const aSubScore = aSubcategory ? (subScores[aSubcategory] || 0) : 0;
+
+          const bSubcategory = b.primarySubcategory || null;
+          const bSubScore = bSubcategory ? (subScores[bSubcategory] || 0) : 0;
+
+          if (aSubScore !== bSubScore) {
+            return bSubScore - aSubScore;
+          }
+        }
+
+        // Fallback: Check subcategory scores even if primary not mapped
+        const traitSubcategories = {
+          'R': ['R-Mechanical', 'R-Natural'],
+          'I': ['I-Health', 'I-Physical'],
+          'A': ['A-Digital', 'A-Literary'],
+          'S': ['S-Educational', 'S-Service'],
+          'E': ['E-Management', 'E-Hospitality'],
+          'C': ['C-Financial', 'C-Logistical'],
+        };
+
+        const top1Subcategories = traitSubcategories[top1] || [];
+        let userTopSubcategoryScore = 0;
+
+        top1Subcategories.forEach(sub => {
+          const score = subScores[sub] || 0;
+          if (score > userTopSubcategoryScore) {
+            userTopSubcategoryScore = score;
+          }
+        });
+
+        const aSubScore2 = a.primarySubcategory ? (subScores[a.primarySubcategory] || 0) : 0;
+        const bSubScore2 = b.primarySubcategory ? (subScores[b.primarySubcategory] || 0) : 0;
+
+        if (aSubScore2 !== bSubScore2) {
+          return bSubScore2 - aSubScore2;
+        }
+
+        return 0;
+      });
+
+      // Group courses by name to avoid duplicates, keeping the best match score
+      const grouped = {};
+      sortedMatches.forEach(match => {
+        const courseKey = match.course.trim();
+        if (!grouped[courseKey]) {
+          grouped[courseKey] = {
+            courseName: match.course,
+            riasec: match.riasec,
+            score: match.score,
+            primarySubcategory: match.primarySubcategory,
+            subcategoryName: match.primarySubcategory ? subCategoryNames[match.primarySubcategory] : null,
+            providers: [],
+          };
+        } else if (match.score > grouped[courseKey].score) {
+          grouped[courseKey].score = match.score;
+          grouped[courseKey].riasec = match.riasec;
+          grouped[courseKey].primarySubcategory = match.primarySubcategory;
+          grouped[courseKey].subcategoryName = match.primarySubcategory ? subCategoryNames[match.primarySubcategory] : null;
+        }
+        grouped[courseKey].providers.push({
+          university: match.university,
+          campus: match.campus,
+          major: match.major,
+        });
+      });
+
+      const finalUniqueMatches = Object.values(grouped).slice(0, 100);
+
+      // Debug logging
+      console.log('\n=== CAREER ASSESSMENT DEBUG INFO ===');
+      console.log('Holland Code:', hollandCode);
+      console.log('Main RIASEC Scores:', scores);
+
+      const sortedSubScores = Object.entries(subScores)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3);
+
+      const sEducScore = subScores['S-Educational'] || 0;
+      const avgSubScore = Object.values(subScores).reduce((a, b) => a + b, 0) / Object.keys(subScores).length;
+      const educationWarning = sEducScore < avgSubScore * 0.8 ? ' (⚠️  Education courses demoted)' : '';
+
+      console.log('\n--- Top 3 User Subcategories ---');
+      console.table(sortedSubScores.map(([subcategory, score]) => ({
+        'Subcategory': subCategoryNames[subcategory] || subcategory,
+        'Score': score,
+      })));
+      console.log(`S-Educational: ${sEducScore} (Avg: ${Math.round(avgSubScore)})${educationWarning}`);
+
+      const top5Matches = finalUniqueMatches.slice(0, 5);
+      console.log('\n--- Top 5 Course Recommendations ---');
+      console.table(top5Matches.map((match, idx) => ({
+        'Rank': idx + 1,
+        'Course': match.courseName,
+        'RIASEC': match.riasec,
+        'Match Score': match.score,
+        'Subcategory': match.subcategoryName || 'Not Mapped',
+      })));
+
+      console.log(`\nTotal matching courses returned: ${finalUniqueMatches.length}`);
+      console.log('====================================\n');
+
+      callback({ hollandCode, topMatches: finalUniqueMatches, scores, subScores });
+    });
 }
 
-// ROUTE: Home Page
+// ============================================================================
+// ROUTES
+// ============================================================================
+
+/**
+ * GET /
+ * Renders the career assessment quiz page with shuffled questions.
+ */
 app.get('/', (req, res) => {
-    const shuffledQuestions = [...quizQuestions];
-    shuffleArray(shuffledQuestions);
-    res.render('index', { quizQuestions: shuffledQuestions });
+  const shuffledQuestions = [...quizQuestions];
+  shuffleArray(shuffledQuestions);
+  res.render('index', { quizQuestions: shuffledQuestions });
 });
 
-// ROUTE: Submission
+/**
+ * POST /submit
+ * Processes quiz submission, calculates RIASEC scores, and returns matched courses.
+ */
 app.post('/submit', (req, res) => {
-    const userAnswers = req.body;
-    const scores = { R: 0, I: 0, A: 0, S: 0, E: 0, C: 0 };
-    
-    // Initialize 12 subcategory scores
-    const subScores = {
-        "R-Mechanical": 0, "R-Natural": 0,
-        "I-Health": 0, "I-Physical": 0,
-        "A-Digital": 0, "A-Literary": 0,
-        "S-Educational": 0, "S-Service": 0,
-        "E-Management": 0, "E-Hospitality": 0,
-        "C-Financial": 0, "C-Logistical": 0
+  const userAnswers = req.body;
+  const scores = { R: 0, I: 0, A: 0, S: 0, E: 0, C: 0 };
+
+  // Initialize 12 subcategory scores
+  const subScores = {
+    'R-Mechanical': 0,
+    'R-Natural': 0,
+    'I-Health': 0,
+    'I-Physical': 0,
+    'A-Digital': 0,
+    'A-Literary': 0,
+    'S-Educational': 0,
+    'S-Service': 0,
+    'E-Management': 0,
+    'E-Hospitality': 0,
+    'C-Financial': 0,
+    'C-Logistical': 0,
+  };
+
+  quizQuestions.forEach(q => {
+    const val = parseInt(userAnswers['q' + q.id]);
+    if (val) {
+      // Scoring scale: Strongly Agree (5.0), Agree (4.5), Neutral (2.0),
+      // Disagree (2.5), Strongly Disagree (1.0). Boosts distinguish agree/disagree.
+      let points = 0;
+      if (val === 5) points = 5.0;
+      if (val === 4) points = 4.5;
+      if (val === 3) points = 2.0;
+      if (val === 2) points = 2.5;
+      if (val === 1) points = 1.0;
+
+      scores[q.cat] += points;
+
+      if (q.subcategory) {
+        subScores[q.subcategory] += points;
+      }
+
+      // Apply negative scoring if question specifies opposite category
+      if (q.negativeCategory) {
+        const negativePoints = points * 0.15;
+        scores[q.negativeCategory] -= negativePoints;
+      }
+    }
+  });
+
+  processRiasec(scores, subScores, (results) => {
+    res.render('results', { ...results, isDev: false });
+  });
+});
+
+// ============================================================================
+// ROUTE: Results (Shared Links & Dev Mode)
+/**
+ * GET /results
+ * Renders results page from shared link or dev mode query parameters.
+ * Supports score-based reconstruction and legacy shared result display.
+ */
+app.get('/results', (req, res) => {
+  // Check if this is a score-based request (shared link or dev mode)
+  const hasScores = req.query.r !== undefined || req.query.i !== undefined ||
+                    req.query.a !== undefined || req.query.s !== undefined ||
+                    req.query.e !== undefined || req.query.c !== undefined;
+
+  if (hasScores) {
+    const devScores = {
+      R: parseInt(req.query.r) || 0,
+      I: parseInt(req.query.i) || 0,
+      A: parseInt(req.query.a) || 0,
+      S: parseInt(req.query.s) || 0,
+      E: parseInt(req.query.e) || 0,
+      C: parseInt(req.query.c) || 0,
     };
 
-    quizQuestions.forEach(q => {
-        const val = parseInt(userAnswers['q' + q.id]);
-        if (val) {
-            let points = 0;
-            if (val === 5) points = 5;  
-            if (val === 4) points = 4;  
-            if (val === 3) points = 3;  
-            if (val === 2) points = 2; 
-            if (val === 1) points = 1; 
-            
-            scores[q.cat] += points;
-            
-            // Also accumulate subcategory score
-            if (q.subcategory) {
-                subScores[q.subcategory] += points;
-            }
-        }
-    });
+    // Parse actual subcategory scores from URL if provided
+    const hasSubcategoryParams =
+      req.query.rm !== undefined || req.query.rn !== undefined ||
+      req.query.ih !== undefined || req.query.ip !== undefined ||
+      req.query.ad !== undefined || req.query.al !== undefined ||
+      req.query.se !== undefined || req.query.ss !== undefined ||
+      req.query.em !== undefined || req.query.eh !== undefined ||
+      req.query.cf !== undefined || req.query.cl !== undefined;
 
-    processRiasec(scores, subScores, (results) => {
-        res.render('results', { ...results, isDev: false });
-    });
-});
+    let subScores;
 
-// ROUTE: Dev Tool
-app.get('/results', (req, res) => {
-    // PRIORITY: Check if this is a score-based shared link or dev mode request
-    // Both include r, i, a, s, e, c parameters for full reconstruction
-    const hasScores = req.query.r !== undefined || req.query.i !== undefined || 
-                      req.query.a !== undefined || req.query.s !== undefined || 
-                      req.query.e !== undefined || req.query.c !== undefined;
-    
-    if (hasScores) {
-        // Handle score-based results (shared links OR dev mode)
-        // This path processes the scores through RIASEC to get full results
-        const devScores = {
-            R: parseInt(req.query.r) || 0,
-            I: parseInt(req.query.i) || 0,
-            A: parseInt(req.query.a) || 0,
-            S: parseInt(req.query.s) || 0,
-            E: parseInt(req.query.e) || 0,
-            C: parseInt(req.query.c) || 0
-        };
-        
-        // Calculate proportional subcategory scores
-        // Divide each main score evenly between its two subcategories
-        const subScores = {
-            "R-Mechanical": Math.round(devScores.R / 2), "R-Natural": Math.round(devScores.R / 2),
-            "I-Health": Math.round(devScores.I / 2), "I-Physical": Math.round(devScores.I / 2),
-            "A-Digital": Math.round(devScores.A / 2), "A-Literary": Math.round(devScores.A / 2),
-            "S-Educational": Math.round(devScores.S / 2), "S-Service": Math.round(devScores.S / 2),
-            "E-Management": Math.round(devScores.E / 2), "E-Hospitality": Math.round(devScores.E / 2),
-            "C-Financial": Math.round(devScores.C / 2), "C-Logistical": Math.round(devScores.C / 2)
-        };
-        
-        processRiasec(devScores, subScores, (results) => {
-            // Mark as shared if code parameter is present
-            const markedResults = { 
-                ...results, 
-                isDev: false,
-                isShared: req.query.code ? true : false 
-            };
-            res.render('results', markedResults);
-        });
-    } else if (req.query.code && req.query.path) {
-        // Fallback: Handle legacy minimal shared result display (no scores available)
-        const sharedResult = {
-            hollandCode: req.query.code,
-            topPath: decodeURIComponent(req.query.path),
-            major: decodeURIComponent(req.query.major || ''),
-            rank: parseInt(req.query.rank) || 1,
-            isShared: true
-        };
-        
-        res.render('results', { 
-            hollandCode: sharedResult.hollandCode,
-            scores: { R: 20, I: 20, A: 20, S: 20, E: 20, C: 20 },
-            topMatches: [],
-            isShared: true,
-            sharedResult: sharedResult,
-            isDev: false
-        });
+    if (hasSubcategoryParams) {
+      subScores = {
+        'R-Mechanical': parseInt(req.query.rm) || 0,
+        'R-Natural': parseInt(req.query.rn) || 0,
+        'I-Health': parseInt(req.query.ih) || 0,
+        'I-Physical': parseInt(req.query.ip) || 0,
+        'A-Digital': parseInt(req.query.ad) || 0,
+        'A-Literary': parseInt(req.query.al) || 0,
+        'S-Educational': parseInt(req.query.se) || 0,
+        'S-Service': parseInt(req.query.ss) || 0,
+        'E-Management': parseInt(req.query.em) || 0,
+        'E-Hospitality': parseInt(req.query.eh) || 0,
+        'C-Financial': parseInt(req.query.cf) || 0,
+        'C-Logistical': parseInt(req.query.cl) || 0,
+      };
     } else {
-        // No parameters provided - return 400 Bad Request
-        res.status(400).send('Missing required parameters for results page.');
+      // Fallback: Proportional subcategory split for backward compatibility
+      subScores = {
+        'R-Mechanical': Math.round(devScores.R / 2),
+        'R-Natural': Math.round(devScores.R / 2),
+        'I-Health': Math.round(devScores.I / 2),
+        'I-Physical': Math.round(devScores.I / 2),
+        'A-Digital': Math.round(devScores.A / 2),
+        'A-Literary': Math.round(devScores.A / 2),
+        'S-Educational': Math.round(devScores.S / 2),
+        'S-Service': Math.round(devScores.S / 2),
+        'E-Management': Math.round(devScores.E / 2),
+        'E-Hospitality': Math.round(devScores.E / 2),
+        'C-Financial': Math.round(devScores.C / 2),
+        'C-Logistical': Math.round(devScores.C / 2),
+      };
     }
-});
 
-// ROUTE: Search/Browse Courses Page
-app.get('/explore', (req, res) => {
-    res.render('explore', { 
-        searchQuery: '',
-        filterRiasec: '',
-        results: [],
-        totalResults: 0 
+    processRiasec(devScores, subScores, (results) => {
+      const markedResults = {
+        ...results,
+        isDev: false,
+        isShared: req.query.code ? true : false,
+      };
+      res.render('results', markedResults);
     });
+  } else if (req.query.code && req.query.path) {
+    // Legacy: Fallback for minimal shared result display
+    const sharedResult = {
+      hollandCode: req.query.code,
+      topPath: decodeURIComponent(req.query.path),
+      major: decodeURIComponent(req.query.major || ''),
+      rank: parseInt(req.query.rank) || 1,
+      isShared: true,
+    };
+
+    res.render('results', {
+      hollandCode: sharedResult.hollandCode,
+      scores: { R: 20, I: 20, A: 20, S: 20, E: 20, C: 20 },
+      topMatches: [],
+      isShared: true,
+      sharedResult: sharedResult,
+      isDev: false,
+    });
+  } else {
+    res.status(400).send('Missing required parameters for results page.');
+  }
 });
 
-// ROUTE: Search API
+// ============================================================================
+// ROUTE: Explore Courses
+// ============================================================================
+
+/**
+ * GET /explore
+ * Renders the course exploration/browsing page.
+ */
+app.get('/explore', (req, res) => {
+  res.render('explore', {
+    searchQuery: '',
+    filterRiasec: '',
+    results: [],
+    totalResults: 0,
+  });
+});
+
+// ============================================================================
+// API ROUTES: Search & University Data
+// ============================================================================
+
+/**
+ * GET /api/search
+ * Searches course database by query and RIASEC filter.
+ * Query params: q (search term), riasec (filter code)
+ */
 app.get('/api/search', (req, res) => {
-    const query = (req.query.q || '').toLowerCase();
-    const riasecFilter = (req.query.riasec || '').toUpperCase();
-    const results = [];
+  const query = (req.query.q || '').toLowerCase();
+  const riasecFilter = (req.query.riasec || '').toUpperCase();
+  const results = [];
 
     fs.createReadStream('schools_database.csv')
         .pipe(csv())

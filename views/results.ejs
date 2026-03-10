@@ -630,6 +630,10 @@
             box-shadow: 0 4px 12px rgba(26, 115, 232, 0.2);
         }
 
+        #load-more-btn:hover {
+            color: #666;
+        }
+
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } } }
 
@@ -906,9 +910,6 @@
 <div class="content-wrapper">
     
     <div class="header-box">
-        <% if (false) { %>
-            <div style="color: #e67e22; font-weight: bold; margin-bottom: 10px; border: 1px dashed #e67e22; padding: 4px 10px; display:inline-block; border-radius: 6px; font-size: 0.7rem;">DEV MODE</div>
-        <% } %>
         <h1 style="margin:0; font-size: 1.4rem;">Your Holland Code:</h1>
         <div class="holland-badge"><%= hollandCode %></div>
     </div>
@@ -969,11 +970,12 @@
     <div style="margin-top: 40px; margin-bottom: 0;">
         <h3 style="margin: 0 0 24px 0; font-size: 0.9rem; text-align: center; color: var(--text-muted); text-transform: uppercase;">Top Career &amp; Degree Paths</h3>
         
-        <div class="unified-courses-container">
+        <div class="unified-courses-container" id="courses-container">
             <% topMatches.forEach((group, courseIndex) => {
                 const rank = courseIndex + 1;
                 const isTopThree = rank <= 3;
                 const rankColors = { 1: '#d4a574', 2: '#c0c0c0', 3: '#cd7f32' }; // Gold, Silver, Bronze
+                const isHidden = courseIndex >= 10; // Hide courses beyond index 9 (top 10)
                 
                 // Group providers by university with campuses
                 const groupedProviders = {};
@@ -995,7 +997,9 @@
                 const hasCampusGroups = providerList.some(p => p.campuses.length > 1);
             %>
                 <div class="course-card <%= isTopThree ? 'course-card-top-' + rank : '' %>" 
-                     style="<%= isTopThree ? `border-left: 5px solid ${rankColors[rank]};` : '' %>">
+                     data-course-index="<%= courseIndex %>"
+                     style="<%= isHidden ? 'display: none;' : '' %><%= isTopThree ? `border-left: 5px solid ${rankColors[rank]};` : '' %>"
+                     >
                     
                     <div class="course-card-header">
                         <div class="course-rank-section">
@@ -1066,6 +1070,13 @@
                     </div>
                 </div>
             <% }) %>
+        </div>
+        
+        <!-- Load More Text -->
+        <div style="text-align: center; margin-top: 30px; margin-bottom: 20px;">
+            <button id="load-more-btn" style="background: none; border: none; color: #999; font-size: 0.95rem; cursor: pointer; padding: 8px 0; transition: color 0.2s ease; font-weight: 700; font-family: var(--main-font);">
+                Load More Courses
+            </button>
         </div>
     </div>
 
@@ -1291,6 +1302,53 @@
 
     // ========== PAGE INITIALIZATION ==========
     
+    // Initialize Pagination for Load More
+    let currentlyShown = 10; // Start by showing first 10 courses
+    const loadMoreBtn = document.getElementById('load-more-btn');
+    const coursesContainer = document.getElementById('courses-container');
+    const allCourses = coursesContainer ? Array.from(coursesContainer.querySelectorAll('.course-card')) : [];
+    const totalCourses = allCourses.length;
+
+    function updateLoadMoreButton() {
+        if (currentlyShown >= totalCourses) {
+            // Hide button when all courses are shown
+            if (loadMoreBtn) {
+                loadMoreBtn.style.display = 'none';
+            }
+        } else {
+            // Show button if there are more courses
+            if (loadMoreBtn) {
+                loadMoreBtn.style.display = 'inline-flex';
+            }
+        }
+    }
+
+    function loadMoreCourses() {
+        const nextCount = Math.min(currentlyShown + 10, totalCourses);
+        
+        for (let i = currentlyShown; i < nextCount; i++) {
+            if (allCourses[i]) {
+                allCourses[i].style.display = '';
+            }
+        }
+        
+        currentlyShown = nextCount;
+        updateLoadMoreButton();
+
+        // Smooth scroll to the newly loaded courses
+        if (allCourses[currentlyShown - 10]) {
+            allCourses[currentlyShown - 10].scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            loadMoreCourses();
+        });
+        updateLoadMoreButton();
+    }
+
     // Initialize Unified Course List Accordions
     document.addEventListener('DOMContentLoaded', function() {
         // Handle main accordion buttons for each course card
@@ -1378,6 +1436,3 @@
 </script>
 </body>
 </html>
-
-
-
